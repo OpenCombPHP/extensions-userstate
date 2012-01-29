@@ -1,0 +1,15 @@
+<Extension>
+
+	<name>userstate</name>
+	<version>0.1</version>
+	<title>用户状态</title>
+	
+ 
+	<class>org.opencomb.userstate.UserState</class>
+	<package folder="/class" namespace="org.opencomb.userstate" />
+ 
+	<template folder="/template" />
+	
+	<publicFolder folder="/public" />
+	
+</Extension>
