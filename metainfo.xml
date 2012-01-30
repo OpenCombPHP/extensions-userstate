@@ -9,6 +9,7 @@
 	<package folder="/class" namespace="org.opencomb.userstate" />
  
 	<template folder="/template" />
+	<beanFolder folder="/bean" />
 	
 	<publicFolder folder="/public" />
 	
