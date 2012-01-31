@@ -27,9 +27,21 @@ class Add extends Controller
 				'class' => 'form' ,
 				'widgets' => array(
 					array('id'=>'system','class'=>'text','exchange'=>'system')  ,    //exchange 自动交换数据所对应然数据库字段名
-					array('id'=>'title_data','class'=>'text','exchange'=>'title_data') ,
-					array('id'=>'body_data','class'=>'text','exchange'=>'body_data') ,
-					array('id'=>'type1','class'=>'text') ,
+					array('id'=>'title_template','class'=>'text','exchange'=>'title_template') ,
+					array('id'=>'body_template','class'=>'text','exchange'=>'body_template') ,
+				        
+				        
+					array('id'=>'actor','class'=>'text','formName'=>'params[actor]') ,    //formName 设置name
+					array('id'=>'picnum','class'=>'text','formName'=>'params[picnum]') ,
+					array('id'=>'subject','class'=>'text','formName'=>'params[subject]') ,
+					array('id'=>'summary','class'=>'text','formName'=>'params[summary]') ,
+					array('id'=>'touser','class'=>'text','formName'=>'params[touser]') ,
+					array('id'=>'blog','class'=>'text','formName'=>'params[blog]') ,
+					array('id'=>'doing','class'=>'text','formName'=>'params[doing]') ,
+					array('id'=>'thread','class'=>'text','formName'=>'params[thread]') ,
+					array('id'=>'album','class'=>'text','formName'=>'params[album]') ,
+
+				    array('id'=>'type1','class'=>'text') ,
 					array('id'=>'url1','class'=>'text') ,
 					array('id'=>'link1','class'=>'text') ,
 					array('id'=>'type2','class'=>'text') ,
@@ -48,28 +60,44 @@ class Add extends Controller
 	    
 	    if( $this->view->isSubmit( $this->params ) )
 	    {
-	        $this->params['username'] = trim($this->params['username']) ;
 	    
 	        // 加载 视图窗体的数据
 	        $this->view->loadWidgets( $this->params ) ;
 	    
+	        
 	        // 校验 视图窗体的数据
 	        if( $this->view->verifyWidgets() )
 	        {
 	            $this->view->exchangeData(DataExchanger::WIDGET_TO_MODEL) ;
-	    
+	            
 	            $this->state->setData('time',time()) ;
 	            
-	            try {
-	                $this->state->save() ;
+	            if(empty($this->params['title_template']))
+	            {
+	                $oState = new State();
+	                $aTemplate = $oState->getTemplate($this->params['system']);
 	                
+	                if(!empty($aTemplate))
+	                {
+	                    $this->state->setData('title_template',$aTemplate["title_template"]) ;
+	                    $this->state->setData('body_template',$aTemplate["body_template"]) ;
+	                }
+	            }else{
+	                $this->state->setData('system','other') ;
+	            }
+	            
+	            
+	            $this->state->setData('title_data',json_encode($this->params['params'])) ;
+	            $this->state->setData('body_data',json_encode($this->params['params'])) ;
+	            
+	            
+	            try {
 	                
 // 	                DB::singleton()->executeLog() ;    打印SQL语句
 
                     for($i = 1; $i <= 3; $i++){
                         if($this->params['type'.$i] && $this->params['url'.$i])
                         {
-                            echo "<pre>";print_r($this->params['link'.$i]);echo "</pre>";
                             $this->state->child("attachments")->createChild()
                             ->setData("stid",$this->params['stid'.$i])
                             ->setData("url",$this->params['url'.$i])
@@ -77,6 +105,7 @@ class Add extends Controller
                             ->setData("type",$this->params['type'.$i]) ;
                         }
                     }
+	                $this->state->save() ;
 
 	                $this->view->createMessage( Message::success, "注册成功！" ) ;
 	    

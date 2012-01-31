@@ -1,0 +1,25 @@
+<lib name="jquery"/>
+
+有XX条新动态
+<hr/>
+<model:foreach ><!-- //for="$theModel->child('attachments')" item="aChildModelABC" -->
+	{=$theModel['title_html']}<br/>
+	{=$theModel['body_html']}
+	
+	{*ssssssssssss}
+	<model:foreach_ for="$theModel->child('attachments')" >
+		{=$theModel['url']}
+	</model:foreach_>
+	
+	
+	<foreach for="$theModel->child('attachments')->childIterator()" item="value">
+		<if "$value['type']=='image'">
+			<a href="{=$value['link']}"><img border="0" src="{=$value['url']}" /></a>
+		</if>
+	</foreach>
+	
+	
+	<div>评论</div>
+	<hr/>
+</model:foreach>
+查看更多动态
