@@ -51,6 +51,9 @@ class State
 	
     public function getStateHtml($sTemplate,$aParams)
     {
+        if(empty($sTemplate) || empty($aParams)){
+            return "";
+        }
         preg_match_all("/\{(.*?)\}/", $sTemplate, $aTemplate);
         
         for($i = 0; $i < sizeof($aTemplate[0]); $i++){
