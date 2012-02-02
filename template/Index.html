@@ -1,5 +1,17 @@
 <lib name="jquery"/>
 
+    <a href="/?c=org.opencomb.userstate.Index&channel={=$theController->params()->get('channel')}">全部</a>
+    <a href="/?c=org.opencomb.userstate.Index&system=blog&channel={=$theController->params()->get('channel')}">日志</a>
+    <a href="/?c=org.opencomb.userstate.Index&system=album&channel={=$theController->params()->get('channel')}">相册</a>
+    <a href="/?c=org.opencomb.userstate.Index&system=doing&channel={=$theController->params()->get('channel')}">心情碎语</a>
+    <a href="/?c=org.opencomb.userstate.Index&system=thread&channel={=$theController->params()->get('channel')}">话题</a>
+    <a href="/?c=org.opencomb.userstate.Index&system=bbs&channel={=$theController->params()->get('channel')}">论坛</a>
+    <a href="/?c=org.opencomb.userstate.Index&sex=female&channel={=$theController->params()->get('channel')}">妹子</a>
+    <a href="/?c=org.opencomb.userstate.Index&sex=male&channel={=$theController->params()->get('channel')}">基友</a>
+    
+    <a href="/?c=org.opencomb.userstate.Index&channel">世界</a>
+    <a href="/?c=org.opencomb.userstate.Index&channel=friends">好友</a>
+
 <div class="newStateDisplayDiv" style="display:none">有<span class="newStateNumberSpan" updateTime=""></span>条新动态 <a href="javascript:;" onClick="loadNewStateHtml()">查看</a></div>
 <hr/>
 <div class="StateDiv">
@@ -7,14 +19,14 @@
 </div>
 
 <hr/>
-<a href="javascript:;" onClick="loadMoreStateHtml()">查看更多动态</a>
+<a href="javascript:;" onClick="loadMoreStateHtml()" nowRow = "{=$theController->params()->get('pageNum')}" class="moreState">查看更多动态</a>
 
 <script type="text/javascript">
 
 function loadNewStateHtml(){
 	jQuery.ajax({
 	    type: "GET",
-	    url: "/?c=org.opencomb.userstate.Index&rspn=view.noframe&limit="+jQuery(".newStateNumberSpan").html(),
+	    url: "/?c=org.opencomb.userstate.Index&rspn=view.noframe&limitlen="+jQuery(".newStateNumberSpan").html(),
 	    dataType: "html",
 	    success: function(html) {
 	    	jQuery(".StateDiv").prepend(html);
@@ -27,10 +39,11 @@ function loadNewStateHtml(){
 function loadMoreStateHtml(){
 	jQuery.ajax({
 	    type: "GET",
-	    url: "/?c=org.opencomb.userstate.Index&rspn=view.noframe",
+	    url: "/?c=org.opencomb.userstate.Index&rspn=view.noframe&limitfrom="+jQuery(".moreState").attr("nowRow"),
 	    dataType: "html",
 	    success: function(html) {
 	    	jQuery(".StateDiv").append(html);
+	    	jQuery(".moreState").attr("nowRow",jQuery(".moreState").attr("nowRow")*2)
 	    }
 	});
 }

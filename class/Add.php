@@ -86,15 +86,14 @@ class Add extends Controller
 	                $this->state->setData('system','other') ;
 	            }
 	            
-	            
+	            $aId = $this->requireLogined() ;
+	            $this->state->setData('uid',$aId->userId()) ;
 	            $this->state->setData('title_data',json_encode($this->params['params'])) ;
 	            $this->state->setData('body_data',json_encode($this->params['params'])) ;
 	            
 	            
 	            try {
 	                
-// 	                DB::singleton()->executeLog() ;    打印SQL语句
-
                     for($i = 1; $i <= 3; $i++){
                         if($this->params['type'.$i] && $this->params['url'.$i])
                         {
