@@ -11,13 +11,30 @@ class Index extends Controller
 {
 	public function createBeanConfig()
 	{
-		return array(
+	    $aOrm = array(
 		
     		/**
     		 * 模型
     		 * list = true 返回多条记录
     		 */
-            'model:state' => array( 'conf' => 'model/state', 'list'=>true)  ,
+            'model:state' => array(
+            		'class' => 'model' ,
+            		'orm' => array(
+            			'table' => 'state' ,
+            			'hasOne:info' => array(    //一对一
+            				'table' => 'coresystem:userinfo',
+            				'fromkeys'=>'uid',
+            				'tokeys'=>'uid',
+                            //'columns' => '*' ,        
+            			) ,
+                		'hasMany:attachments'=>array(    //一对多
+                				'fromkeys'=>'stid',
+                				'tokeys'=>'stid',
+                		        'table'=>'state_attachment',
+                		)
+            		) ,
+                    'list'=>true,
+            ) ,
 			
 		    /**
 		     * frame
@@ -45,6 +62,60 @@ class Index extends Controller
 				'model' => 'state' ,
 			) ,
 		) ;
+	    
+	    
+	    if($this->params["channel"] == "friends")
+	    {
+	        $aOrm['model:state'] = array(
+            		'class' => 'model' ,
+            		'orm' => array(
+            			'table' => 'friends:subscription' ,
+            	        'keys'=>array(
+            	                'fromkeys'=>'from',
+            		            'tokeys'=>'to',
+            	        ),
+            	        'alias' => array(
+            	                'state.system' => 'system' ,
+            	                'state.uid' => 'uid' ,
+            	                'state.time' => 'time' ,
+            	                'state.title_template' => 'title_template' ,
+            	                'state.title_data' => 'title_data' ,
+            	                'state.body_template' => 'body_template' ,
+            	                'state.body_data' => 'body_data' ,
+            	                'state.client' => 'client' ,
+            	                'state.stid' => 'stid' ,
+            	                
+            	                'state.state.attachments.type' => 'attachments.type' ,
+            	                'state.state.attachments.url' => 'attachments.url' ,
+            	                'state.state.attachments.link' => 'attachments.link' ,
+            	                
+            	                'state.state.info.nickname' => 'info.nickname' ,
+            	                'state.state.info.sex' => 'info.sex' ,
+            	                
+            	                
+            	        ),
+                		'hasMany:state'=>array(    //一对多
+            		        'table'=>'userstate:state',
+            				'fromkeys'=>'to',
+            				'tokeys'=>'uid',
+            		        'hasOne:info' => array(    //一对一
+            		                'table' => 'coresystem:userinfo',
+            		                'fromkeys'=>'to',
+            		                'tokeys'=>'uid',
+            		                //'columns' => '*' ,
+            		        ) ,
+              		        'hasMany:attachments'=>array(    //一对多
+            		                'table'=>'userstate:state_attachment',
+            		                'fromkeys'=>'stid',
+            		                'tokeys'=>'stid',
+    		                )
+                		),
+            		) ,
+                    'list'=>true,
+            );
+	    }
+	    
+	    return  $aOrm;
 	}
 	
 	public function process()
@@ -100,7 +171,6 @@ class Index extends Controller
 	        $o->setData("body_html",$oState->getStateHtml($o->body_template,json_decode($o->body_data,true)));
 	    }
 
-	    $this->state->printStruct();
 	    /**
 	     * 打印model
 	     * $this->state->printStruct();
