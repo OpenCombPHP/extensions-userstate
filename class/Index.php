@@ -59,7 +59,7 @@ class Index extends Controller
 	     * 获得登陆信息（未登陆自动跳转到登陆界面）
 	     */
 	    {
-	    $aId = $this->requireLogined() ;
+	        //$aId = $this->requireLogined() ;
 	    }
 	    
 	    /**
@@ -68,7 +68,7 @@ class Index extends Controller
 	     * 获得登陆信息
 	     */
 	    {
-	        //$aId = IdManager::singleton()->currentId() ;
+	        $aId = IdManager::singleton()->currentId() ;
 	    }
 	    
 	    $oState = new State();
@@ -100,7 +100,7 @@ class Index extends Controller
 	        $o->setData("body_html",$oState->getStateHtml($o->body_template,json_decode($o->body_data,true)));
 	    }
 
-	    
+	    $this->state->printStruct();
 	    /**
 	     * 打印model
 	     * $this->state->printStruct();
