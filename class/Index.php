@@ -48,7 +48,7 @@ class Index extends Controller
 	             */
 		         'params' => array('pageNum'=>'30'),
 		         'frameview' => array(
-                    'template' => 'Index.html' ,
+                    'template' => 'userstate:Index.html' ,
 	                 /**
 	                  * 给视图变量
 	                  * 'vars' => array('pageNum'=>'2'), 
@@ -64,54 +64,65 @@ class Index extends Controller
 		) ;
 	    
 	    
-	    if($this->params["channel"] == "friends")
+	    $aId = IdManager::singleton()->currentId() ;
+	    if( $aId and $this->params["channel"] == "friends")
 	    {
 	        $aOrm['model:state'] = array(
-            		'class' => 'model' ,
+	        		
+            		// 'class' => 'model' ,	(可省略)
+                    'list'=>true,
+	        		
             		'orm' => array(
             			'table' => 'friends:subscription' ,
-            	        'keys'=>array(
-            	                'fromkeys'=>'from',
-            		            'tokeys'=>'to',
-            	        ),
-            	        'alias' => array(
-            	                'system' => 'state.system' ,
-            	                'uid' => 'state.uid' ,
-            	                'time' => 'state.time' ,
-            	                'title_template' => 'state.title_template' ,
-            	                'title_data' => 'state.title_data' ,
-            	                'body_template' => 'state.body_template' ,
-            	                'body_data' => 'state.body_data' ,
-            	                'client' => 'state.client' ,
-            	                'stid' => 'state.stid' ,
-            	                
-            	                'attachments.type' => 'state.attachments.type' ,
-            	                'attachments.url' => 'state.attachments.url' ,
-            	                'attachments.link' => 'state.attachments.link' ,
-            	                
-            	                'info.nickname' => 'state.info.nickname' ,
-            	                'info.sex' => 'state.info.sex' ,
-            	                
-            	                
-            	        ),
-                		'hasMany:state'=>array(    //一对多
-            		        'table'=>'userstate:state',
+            	        'keys'=>array('from','to') ,
+            			'columns' => array() ,
+            			'where' => array(
+            				// 'logic' => 'and' , (可省略)
+            				array('eq','from',$aId->userId()) ,
+            			) ,
+            	        
+            			//一对多
+                		'hasOne:state'=>array(
+            		        'table'=>'state',
             				'fromkeys'=>'to',
             				'tokeys'=>'uid',
-            		        'hasOne:info' => array(    //一对一
-            		                'table' => 'coresystem:userinfo',
-            		                'fromkeys'=>'to',
-            		                'tokeys'=>'uid',
-            		                //'columns' => '*' ,
+                			'join'=>'inner',
+                			
+                			//一对一
+            		        'hasOne:info' => array(
+	            		        'table' => 'coresystem:userinfo',
+	            		        'fromkeys'=>'uid',
+	            		        'tokeys'=>'uid',
             		        ) ,
-              		        'hasMany:attachments'=>array(    //一对多
-            		                'table'=>'userstate:state_attachment',
-            		                'fromkeys'=>'stid',
-            		                'tokeys'=>'stid',
+                			
+                			//一对多
+              		        'hasMany:attachments'=>array(
+	            		        'table'=>'state_attachment',
+	            		        'fromkeys'=>'stid',
+	            		        'tokeys'=>'stid',
     		                )
                 		),
+            				
+            			// 字段的别名
+            			'alias' => array(
+            					'system' => 'state.system' ,
+            					'uid' => 'state.uid' ,
+            					'time' => 'state.time' ,
+            					'title_template' => 'state.title_template' ,
+            					'title_data' => 'state.title_data' ,
+            					'body_template' => 'state.body_template' ,
+            					'body_data' => 'state.body_data' ,
+            					'client' => 'state.client' ,
+            					'stid' => 'state.stid' ,
+            				
+            					'attachments.type' => 'state.attachments.type' ,
+            					'attachments.url' => 'state.attachments.url' ,
+            					'attachments.link' => 'state.attachments.link' ,
+            				   	
+            					'info.nickname' => 'state.info.nickname' ,
+            					'info.sex' => 'state.info.sex' ,
+            			),
             		) ,
-                    'list'=>true,
             );
 	    }
 	    
@@ -150,7 +161,7 @@ class Index extends Controller
 	     */
 	    {
         $this->state->prototype()->criteria()->addOrderBy('time',true);
-        $this->state->prototype()->criteria()->where()->eq('uid',$aId->userId());
+        //$this->state->prototype()->criteria()->where()->eq('uid',$aId->userId());
 	    }
         if($this->params["system"])
         {
@@ -170,7 +181,8 @@ class Index extends Controller
 	        $o->setData("title_html",$oState->getStateHtml($o->title_template,json_decode($o->title_data,true)));
 	        $o->setData("body_html",$oState->getStateHtml($o->body_template,json_decode($o->body_data,true)));
 	    }
-
+	    $this->state->printStruct();
+	    DB::singleton()->executeLog() ;
 	    /**
 	     * 打印model
 	     * $this->state->printStruct();
@@ -180,6 +192,58 @@ class Index extends Controller
 	     */
 	}
 	
+	/**
+	 * @example /MVC模式/模型/Bean配置/Where条件
+	 * 
+	 * （这个方法不会被执行，它只是做为 model/orm 的 bean config 数组的例子）
+	 */
+	private function exampleBeanOrmWhere()
+	{
+		// 定一个 model 的 bean config
+		$arrConfig = array(
+			'class' => 'model' ,
+			'list' => true ,
+			'orm' => array(
+				'table' => 'some_table_name' ,	// 数据表
+				'keys' => 'id' ,				// 数据表主键
+				'columns' => array('column_a','column_b','column_c') ,	// 返回字段
+				'order' => array('column_e','column_f') ,
+				'limit' => 10 ,
+				'where' => array(
+					
+					// where数组中的第一项元素如果字符串，则表示条件之间的逻辑关系，缺省为 and
+					'and' , 
+						
+					// where 数组中的每一项array元素都做为一项sql条件表达式
+					// array内的第一个元素必须时字符串格式，做为条件表达式的运算符(Restriction 类的方法名称)，
+					// 后面的元素是参与运算的内容
+					array('eq','column_a','abc') ,		// column_a='abc'
+					array('gt','column_b',123) ,		// column_b>123
+						
+					// restriction 类型的 array，是一个条件分组，
+					// 第二个元素必须是一个数组，其结构跟 where 数组完全一致（where - restriction 构成了一个无穷递归的结构）。
+					array( 'restriction' , array(
+						'or' ,
+						array('le','column_c',56) ,		// column_c<=56
+						array('ge','column_d',789) ,	// column_d>=789
+					) )
+				)
+			)
+		) ;
+		
+		// 用 bean config 数组创建 model 对象
+		$aModel = BeanFactory::singleton()->createBean($arrConfig) ;
+		
+		// model 载入数据
+		$aModel->load() ;
+		
+		// 打印sql执行日志，输出：
+		// select column_a, column_b, column_c from some_table_name  
+		// 		where column_a='abc' and column_b>123 and (
+		//			column_c<=56 or column_d>=789
+		//		)
+		//		order by column_e desc, column_f desc
+		// 		limit 20 ;
+		DB::singleton()->executeLog() ;
+	} 
 }
-
-?>
