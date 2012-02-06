@@ -68,6 +68,38 @@ class Index extends Controller
 	    if( $aId and $this->params["channel"] == "friends")
 	    {
 	        $aOrm['model:state'] = array(
+            		'class' => 'model' ,
+            		'orm' => array(
+            			'table' => 'state' ,
+            			'hasOne:info' => array(    //一对一
+            				'table' => 'coresystem:userinfo',
+            				'fromkeys'=>'uid',
+            				'tokeys'=>'uid',
+                            //'columns' => '*' ,  
+            			) ,
+                		'hasMany:attachments'=>array(    //一对多
+                				'fromkeys'=>'stid',
+                				'tokeys'=>'stid',
+                		        'table'=>'state_attachment',
+                		),
+    			        'hasMany:subscription'=>array(    //一对多
+    			                'keys'=>array('from','to') ,
+    			                'fromkeys'=>'uid',
+    			                'tokeys'=>'to',
+    			                'table'=>'friends:subscription',
+    			        ),
+            			'where' => array(
+            				// 'logic' => 'and' , (可省略)
+            				array('eq','subscription.from',$aId->userId()) ,
+            			) ,
+            		) ,
+                    'list'=>true,
+            );
+	        
+	        
+	        
+	        
+	        /*array(
 	        		
             		// 'class' => 'model' ,	(可省略)
                     'list'=>true,
@@ -124,6 +156,7 @@ class Index extends Controller
             			),
             		) ,
             );
+            */
 	    }
 	    
 	    return  $aOrm;
@@ -181,8 +214,7 @@ class Index extends Controller
 	        $o->setData("title_html",$oState->getStateHtml($o->title_template,json_decode($o->title_data,true)));
 	        $o->setData("body_html",$oState->getStateHtml($o->body_template,json_decode($o->body_data,true)));
 	    }
-	    $this->state->printStruct();
-	    DB::singleton()->executeLog() ;
+	    
 	    /**
 	     * 打印model
 	     * $this->state->printStruct();
