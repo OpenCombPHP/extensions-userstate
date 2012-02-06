@@ -9,27 +9,27 @@ class State
     			'body_template'=>'<strong>{subject}</strong><br />{summary}' ,
     	) ,
     	'album' => array(
-    			'title_template'=>'{actor} 上传了新图片至相册 {album}' ,
-    			'body_template'=>'<div class="clear">共 {picnum} 张图片</div>' ,
+    			'title_template'=>'{actor} 上传了新图片至相册 {article_title}' ,
+    			'body_template'=>'' ,
     	) ,
     	'doing' => array(
     			'title_template'=>'{actor}：{subject}' ,
     			'body_template'=>'' ,
     	) ,
     	'thread' => array(
-    			'title_template'=>'{actor} 在 {title} 发起了新话题 ' ,
+    			'title_template'=>'{actor} 在 {article_title} 发起了新话题 ' ,
     			'body_template'=>'<b>{subject}</b><br>{summary}' ,
     	) ,
     	'blog_comment' => array(
-    			'title_template'=>'{actor} 评论了 {touser} 的日志 {title}' ,
+    			'title_template'=>'{actor} 评论了 {touser} 的日志 {article_title}' ,
     			'body_template'=>'{summary}' ,
     	) ,
     	'doing_comment' => array(
-    			'title_template'=>'{actor} 回复了 {touid} 的心情碎语 {title}' ,
+    			'title_template'=>'{actor} 回复了 {touid} 的心情碎语 {article_title}' ,
     			'body_template'=>'{summary}' ,
     	) ,
     	'thread_comment' => array(
-    			'title_template'=>'{actor} 回复了 {touid} 的话题 {title}' ,
+    			'title_template'=>'{actor} 回复了 {touid} 的话题 {article_title}' ,
     			'body_template'=>'{summary}' ,
     	) ,
     ) ;
@@ -76,10 +76,9 @@ class State
             preg_match_all("/\{(.*?)\}/", $sTemplate, $aTemplate);
             
             $aData_tmp["actor"] = $o->child("info")->nickname; 
-            $aData_tmp["picnum"] = $o->picnum; 
             $aData_tmp["subject"] = $o->subject; 
             $aData_tmp["summary"] = $o->summary; 
-            $aData_tmp["title"] = $o->title; 
+            $aData_tmp["article_title"] = $o->article_title; 
             $aData_tmp["touid"] = $o->child("toinfo")->nickname; 
             
             

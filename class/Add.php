@@ -33,10 +33,9 @@ class Add extends Controller
 					array('id'=>'body_data','class'=>'text','exchange'=>'body_data') ,
 				        
 				        
-					array('id'=>'picnum','class'=>'text','exchange'=>'picnum') ,
 					array('id'=>'subject','class'=>'text','exchange'=>'subject') ,
 					array('id'=>'summary','class'=>'text','exchange'=>'summary') ,
-					array('id'=>'title','class'=>'text','exchange'=>'title') ,
+					array('id'=>'article_title','class'=>'text','exchange'=>'article_title') ,
 					array('id'=>'touid','class'=>'text','exchange'=>'touid') ,
 
 				    array('id'=>'type1','class'=>'text') ,
