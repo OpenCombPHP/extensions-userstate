@@ -29,17 +29,15 @@ class Add extends Controller
 					array('id'=>'system','class'=>'text','exchange'=>'system')  ,    //exchange 自动交换数据所对应然数据库字段名
 					array('id'=>'title_template','class'=>'text','exchange'=>'title_template') ,
 					array('id'=>'body_template','class'=>'text','exchange'=>'body_template') ,
+					array('id'=>'title_data','class'=>'text','exchange'=>'title_data') ,
+					array('id'=>'body_data','class'=>'text','exchange'=>'body_data') ,
 				        
 				        
-					array('id'=>'actor','class'=>'text','formName'=>'params[actor]') ,    //formName 设置name
-					array('id'=>'picnum','class'=>'text','formName'=>'params[picnum]') ,
-					array('id'=>'subject','class'=>'text','formName'=>'params[subject]') ,
-					array('id'=>'summary','class'=>'text','formName'=>'params[summary]') ,
-					array('id'=>'touser','class'=>'text','formName'=>'params[touser]') ,
-					array('id'=>'blog','class'=>'text','formName'=>'params[blog]') ,
-					array('id'=>'doing','class'=>'text','formName'=>'params[doing]') ,
-					array('id'=>'thread','class'=>'text','formName'=>'params[thread]') ,
-					array('id'=>'album','class'=>'text','formName'=>'params[album]') ,
+					array('id'=>'picnum','class'=>'text','exchange'=>'picnum') ,
+					array('id'=>'subject','class'=>'text','exchange'=>'subject') ,
+					array('id'=>'summary','class'=>'text','exchange'=>'summary') ,
+					array('id'=>'title','class'=>'text','exchange'=>'title') ,
+					array('id'=>'touid','class'=>'text','exchange'=>'touid') ,
 
 				    array('id'=>'type1','class'=>'text') ,
 					array('id'=>'url1','class'=>'text') ,
@@ -72,25 +70,8 @@ class Add extends Controller
 	            
 	            $this->state->setData('time',time()) ;
 	            
-	            if(empty($this->params['title_template']))
-	            {
-	                $oState = new State();
-	                $aTemplate = $oState->getTemplate($this->params['system']);
-	                
-	                if(!empty($aTemplate))
-	                {
-	                    $this->state->setData('title_template',$aTemplate["title_template"]) ;
-	                    $this->state->setData('body_template',$aTemplate["body_template"]) ;
-	                }
-	            }else{
-	                $this->state->setData('system','other') ;
-	            }
-	            
 	            $aId = $this->requireLogined() ;
 	            $this->state->setData('uid',$aId->userId()) ;
-	            $this->state->setData('title_data',json_encode($this->params['params'])) ;
-	            $this->state->setData('body_data',json_encode($this->params['params'])) ;
-	            
 	            
 	            try {
 	                

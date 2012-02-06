@@ -21,9 +21,16 @@ class Index extends Controller
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'state' ,
+                        'columns' => array("system","uid","picnum","subject","summary","title","touid","time","title_template","title_data","body_template","body_data","client") ,     
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'uid',
+            				'tokeys'=>'uid',
+                            //'columns' => '*' ,        
+            			) ,    
+            			'hasOne:toinfo' => array(    //一对一
+            				'table' => 'coresystem:userinfo',
+            				'fromkeys'=>'touid',
             				'tokeys'=>'uid',
                             //'columns' => '*' ,        
             			) ,
@@ -31,7 +38,10 @@ class Index extends Controller
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
                 		        'table'=>'state_attachment',
-                		)
+                		),
+//             			'where' => array(
+//             				array('eq','stid',"23") ,
+//             			) ,
             		) ,
                     'list'=>true,
             ) ,
@@ -71,11 +81,18 @@ class Index extends Controller
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'state' ,
+                        'columns' => array("system","uid","picnum","subject","summary","title","touid","time","title_template","title_data","body_template","body_data","client") ,  
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'uid',
             				'tokeys'=>'uid',
                             //'columns' => '*' ,  
+            			) ,
+            			'hasOne:toinfo' => array(    //一对一
+            				'table' => 'coresystem:userinfo',
+            				'fromkeys'=>'touid',
+            				'tokeys'=>'uid',
+                            //'columns' => '*' ,        
             			) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
@@ -204,16 +221,16 @@ class Index extends Controller
         {
             $this->state->prototype()->criteria()->where()->eq('info.sex',$this->params["sex"]);
         }
-        
-        
+
         $this->state->prototype()->criteria()->setLimit($this->params['limitlen']?$this->params['limitlen']:$this->frame()->params()->get("pageNum"),$this->params['limitfrom']?$this->params['limitfrom']:0);
 	        
 	    $this->state->load() ;
 	    foreach($this->state->childIterator() as $o)
 	    {
-	        $o->setData("title_html",$oState->getStateHtml($o->title_template,json_decode($o->title_data,true)));
-	        $o->setData("body_html",$oState->getStateHtml($o->body_template,json_decode($o->body_data,true)));
+	        $o->setData("title_html",$oState->getStateHtml("title",$o));
+	        $o->setData("body_html",$oState->getStateHtml("body",$o));
 	    }
+	    
 	    
 	    /**
 	     * 打印model
