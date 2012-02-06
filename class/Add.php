@@ -36,7 +36,7 @@ class Add extends Controller
 					array('id'=>'subject','class'=>'text','exchange'=>'subject') ,
 					array('id'=>'summary','class'=>'text','exchange'=>'summary') ,
 					array('id'=>'article_title','class'=>'text','exchange'=>'article_title') ,
-					array('id'=>'touid','class'=>'text','exchange'=>'touid') ,
+					array('id'=>'article_uid','class'=>'text','exchange'=>'article_uid') ,
 
 				    array('id'=>'type1','class'=>'text') ,
 					array('id'=>'url1','class'=>'text') ,

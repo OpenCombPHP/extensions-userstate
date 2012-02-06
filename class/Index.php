@@ -21,7 +21,7 @@ class Index extends Controller
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'state' ,
-                        'columns' => array("system","uid","subject","summary","article_title","touid","time","title_template","title_data","body_template","body_data","client") ,     
+                        'columns' => array("system","uid","subject","summary","article_title","article_uid","time","title_template","title_data","body_template","body_data","client") ,     
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'uid',
@@ -30,7 +30,7 @@ class Index extends Controller
             			) ,    
             			'hasOne:toinfo' => array(    //一对一
             				'table' => 'coresystem:userinfo',
-            				'fromkeys'=>'touid',
+            				'fromkeys'=>'article_uid',
             				'tokeys'=>'uid',
                             //'columns' => '*' ,        
             			) ,
@@ -81,7 +81,7 @@ class Index extends Controller
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'state' ,
-                        'columns' => array("system","uid","subject","summary","article_title","touid","time","title_template","title_data","body_template","body_data","client") ,  
+                        'columns' => array("system","uid","subject","summary","article_title","article_uid","time","title_template","title_data","body_template","body_data","client") ,  
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'uid',
@@ -90,7 +90,7 @@ class Index extends Controller
             			) ,
             			'hasOne:toinfo' => array(    //一对一
             				'table' => 'coresystem:userinfo',
-            				'fromkeys'=>'touid',
+            				'fromkeys'=>'article_uid',
             				'tokeys'=>'uid',
                             //'columns' => '*' ,        
             			) ,

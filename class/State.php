@@ -25,11 +25,11 @@ class State
     			'body_template'=>'{summary}' ,
     	) ,
     	'doing_comment' => array(
-    			'title_template'=>'{actor} 回复了 {touid} 的心情碎语 {article_title}' ,
+    			'title_template'=>'{actor} 回复了 {article_uid} 的心情碎语 {article_title}' ,
     			'body_template'=>'{summary}' ,
     	) ,
     	'thread_comment' => array(
-    			'title_template'=>'{actor} 回复了 {touid} 的话题 {article_title}' ,
+    			'title_template'=>'{actor} 回复了 {article_uid} 的话题 {article_title}' ,
     			'body_template'=>'{summary}' ,
     	) ,
     ) ;
@@ -79,7 +79,7 @@ class State
             $aData_tmp["subject"] = $o->subject; 
             $aData_tmp["summary"] = $o->summary; 
             $aData_tmp["article_title"] = $o->article_title; 
-            $aData_tmp["touid"] = $o->child("toinfo")->nickname; 
+            $aData_tmp["article_uid"] = $o->child("toinfo")->nickname; 
             
             
             for($i = 0; $i < sizeof($aTemplate[0]); $i++){
