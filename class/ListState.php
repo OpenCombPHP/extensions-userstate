@@ -7,7 +7,7 @@ use org\jecat\framework\auth\IdManager;
 use org\jecat\framework\message\Message;
 use org\opencomb\coresystem\mvc\controller\Controller ;
 
-class Index extends Controller
+class ListState extends Controller
 {
 	public function createBeanConfig()
 	{
@@ -32,7 +32,7 @@ class Index extends Controller
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'article_uid',
             				'tokeys'=>'uid',
-                            //'columns' => '*' ,        
+                            //'columns' => '*' , 
             			) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
@@ -58,7 +58,7 @@ class Index extends Controller
 	             */
 		         'params' => array('pageNum'=>'30'),
 		         'frameview' => array(
-                    'template' => 'userstate:Index.html' ,
+                    'template' => 'userstate:ListState.html' ,
 	                 /**
 	                  * 给视图变量
 	                  * 'vars' => array('pageNum'=>'2'), 

@@ -11,7 +11,7 @@ use org\jecat\framework\auth\IdManager;
 use org\jecat\framework\message\Message;
 use org\opencomb\coresystem\mvc\controller\Controller ;
 
-class Add extends Controller
+class CreateState extends Controller
 {
 	public function createBeanConfig()
 	{
@@ -22,7 +22,7 @@ class Add extends Controller
 			
 			// 视图
 			'view' => array(
-				'template' => 'Add.html' ,
+				'template' => 'CreateState.html' ,
 				'model' => 'state' ,
 				'class' => 'form' ,
 				'widgets' => array(
