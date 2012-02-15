@@ -1,6 +1,6 @@
 <model:foreach ><!-- //for="$theModel->child('attachments')" item="aChildModelABC" -->
 <li>
-	{=$theModel['title_html']}<br/>
+	{=$theModel['system']}:{=$theModel['title_html']}<br/>
 	{=$theModel['body_html']}
 	
 	{*注释}
@@ -15,7 +15,5 @@
 		</if>
 	</foreach>
 	
-	
-	<div>评论</div>
 </li>
 </model:foreach>
