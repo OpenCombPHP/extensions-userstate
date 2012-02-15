@@ -51,21 +51,12 @@ class ListState extends Controller
 		     * frameview 子视图。子视图包含父视图。
 		     */
 		    'frame' => array(
-		         
-	            /**
-	             * 'params' => array('pageNum'=>'2'),
-	             * 控制器传参数
-	             */
-		         'params' => array('pageNum'=>'30'),
-		         'frameview' => array(
-                    'template' => 'userstate:ListState.html' ,
-	                 /**
-	                  * 给视图变量
-	                  * 'vars' => array('pageNum'=>'2'), 
-	                  */
-		          ) 
-		     ) ,
-		        
+		    	'class'=>'com\\wonei\\woneibridge\\frame\\WoneiSNSFrame' ,
+		        'params' => array('pageNum'=>'30'),
+ 	    		'frameview' => array(
+ 	    			'template' => 'userstate:ListState.html' ,
+     			)
+			) ,
 			// 视图
 			'view' => array(
 				'template' => 'StatusFrame.html' ,
@@ -293,5 +284,5 @@ class ListState extends Controller
 		//		order by column_e desc, column_f desc
 		// 		limit 20 ;
 		DB::singleton()->executeLog() ;
-	} 
+	}
 }
