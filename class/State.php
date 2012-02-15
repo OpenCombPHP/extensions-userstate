@@ -38,16 +38,6 @@ class State
     {
         return $this->aTemplates[$system];
     }
-    
-    public function getTitleTemplate($system)
-    {
-        return $this->aTemplates[$system]["title_template"];
-    }
-    
-    public function getBodyTemplate($system)
-    {
-        return $this->aTemplates[$system]["body_template"];
-    }
 	
     public function getStateHtml($type,$o)
     {

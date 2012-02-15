@@ -43,7 +43,7 @@ function loadMoreStateHtml(){
 	    dataType: "html",
 	    success: function(html) {
 	    	jQuery(".StateDiv").append(html);
-	    	jQuery(".moreState").attr("nowRow",jQuery(".moreState").attr("nowRow")*2)
+	    	jQuery(".moreState").attr("nowRow",parseInt(jQuery(".moreState").attr("nowRow")) + parseInt(jQuery(".moreState").attr("nowRow")))
 	    }
 	});
 }
@@ -51,24 +51,32 @@ function loadMoreStateHtml(){
 
 function checkNewState(){
 	
-	var updateTime=jQuery(".newStateNumberSpan").attr("updateTime");
-	if(updateTime == ""){
-		jQuery(".newStateNumberSpan").attr("updateTime",Date.parse(new Date())/1000);
-	}else{
-		jQuery.ajax({
-		    type: "GET",
-		    url: "/?c=org.opencomb.userstate.NewStateNumber&time="+updateTime,
-		    dataType: "html",
-		    success: function(html) {
-		    	if(html!="0"){
-			    	jQuery(".newStateDisplayDiv").show();
-			    	jQuery(".newStateNumberSpan").html(html);
-		    	}else{
-		    		jQuery(".newStateDisplayDiv").hide();
-		    	}
-		    }
-		});
-	}
+	jQuery.ajax({
+	    type: "GET",
+	    url: "/?c=org.opencomb.oauth.api.PullState",
+	    dataType: "html",
+	    success: function(html) {
+	    	var updateTime=jQuery(".newStateNumberSpan").attr("updateTime");
+	    	if(updateTime == ""){
+	    		jQuery(".newStateNumberSpan").attr("updateTime",Date.parse(new Date())/1000);
+	    	}else{
+	    		jQuery.ajax({
+	    		    type: "GET",
+	    		    url: "/?c=org.opencomb.userstate.NewStateNumber&time="+updateTime,
+	    		    dataType: "html",
+	    		    success: function(html) {
+	    		    	if(html!="0"){
+	    			    	jQuery(".newStateDisplayDiv").show();
+	    			    	jQuery(".newStateNumberSpan").html(html);
+	    		    	}else{
+	    		    		jQuery(".newStateDisplayDiv").hide();
+	    		    	}
+	    		    }
+	    		});
+	    	}
+	    }
+	});
+	
 }
 window.setInterval("checkNewState()",3000);
 </script>

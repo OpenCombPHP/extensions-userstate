@@ -211,7 +211,6 @@ class ListState extends Controller
         {
             $this->state->prototype()->criteria()->where()->eq('info.sex',$this->params["sex"]);
         }
-
         $this->state->prototype()->criteria()->setLimit($this->params['limitlen']?$this->params['limitlen']:$this->frame()->params()->get("pageNum"),$this->params['limitfrom']?$this->params['limitfrom']:0);
 	        
 	    $this->state->load() ;

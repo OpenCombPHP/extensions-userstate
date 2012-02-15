@@ -36,7 +36,7 @@ class CreateState extends Controller
 	    $this->state->setData("uid",$this->params['uid']);
 	    $this->state->setData("subject",$this->params['subject']);
 	    $this->state->setData("summary",$this->params['summary']);
-        $this->state->setData('time',time()) ;
+        $this->state->setData('time',$this->params['time']) ;
 	    $this->state->setData("data",$this->params['data']);
 	    $this->state->setData("client",$this->params['client']);
 	    $this->state->setData("client_url",$this->params['client_url']);
