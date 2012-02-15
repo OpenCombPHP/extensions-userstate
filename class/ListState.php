@@ -21,7 +21,7 @@ class ListState extends Controller
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'state' ,
-                        'columns' => array("system","uid","subject","summary","article_title","article_uid","time","title_template","title_data","body_template","body_data","client") ,     
+                        'columns' => array("system","uid","subject","summary","article_title","article_uid","time","data","client") ,     
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'uid',
@@ -81,7 +81,7 @@ class ListState extends Controller
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'state' ,
-                        'columns' => array("system","uid","subject","summary","article_title","article_uid","time","title_template","title_data","body_template","body_data","client") ,  
+                        'columns' => array("system","uid","subject","summary","article_title","article_uid","time","data","client") ,  
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'uid',
@@ -157,7 +157,6 @@ class ListState extends Controller
             					'system' => 'state.system' ,
             					'uid' => 'state.uid' ,
             					'time' => 'state.time' ,
-            					'title_template' => 'state.title_template' ,
             					'title_data' => 'state.title_data' ,
             					'body_template' => 'state.body_template' ,
             					'body_data' => 'state.body_data' ,

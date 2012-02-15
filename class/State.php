@@ -51,48 +51,37 @@ class State
 	
     public function getStateHtml($type,$o)
     {
-        if($o->title_template)
+        $sTemplate = $this->aTemplates[$o->system][$type."_template"];
+        $html = "";
+        
+        if(!empty($sTemplate))
         {
-            if($type == "title")
-            {
-                $sTemplate = $o->title_template;
-                $aParams = json_decode($o->title_data,true);
-            }
-            if($type == "body")
-            {
-                $sTemplate = $o->body_template;
-                $aParams = json_decode($o->body_data,true);
-            }
-            
             preg_match_all("/\{(.*?)\}/", $sTemplate, $aTemplate);
             
-            for($i = 0; $i < sizeof($aTemplate[0]); $i++){
-                $aData[] =  $aParams[$aTemplate[1][$i]];
-            }
-            
-        }else{
-            $sTemplate = $this->aTemplates[$o->system][$type."_template"];
-            
-            preg_match_all("/\{(.*?)\}/", $sTemplate, $aTemplate);
-            
-            $aData_tmp["actor"] = $o->child("info")->nickname; 
-            $aData_tmp["subject"] = $o->subject; 
-            $aData_tmp["summary"] = $o->summary; 
-            $aData_tmp["article_title"] = $o->article_title; 
-            $aData_tmp["article_uid"] = $o->child("toinfo")->nickname; 
+            $aData_tmp["actor"] = $o->child("info")->nickname;
+            $aData_tmp["subject"] = $o->subject;
+            $aData_tmp["summary"] = $o->summary;
+            $aData_tmp["article_title"] = $o->article_title;
+            $aData_tmp["article_uid"] = $o->child("toinfo")->nickname;
             
             
             for($i = 0; $i < sizeof($aTemplate[0]); $i++){
                 $aData[] =  $aData_tmp[$aTemplate[1][$i]];
             }
-        }
-
-        if($aTemplate[0] && $aData)
-        {
-            $html = str_replace($aTemplate[0], $aData,$sTemplate);
+            
+            if($aTemplate[0] && $aData)
+            {
+                $html = str_replace($aTemplate[0], $aData,$sTemplate);
+            }
         }else{
-            $html = "";
+            if($type == "title"){
+                $html = $o->child('info')->nickname.":".$o->subject;
+            }
+            if ($type == "body"){
+                $html = $o->summary;
+            }
         }
+       
         
 
         return $html;

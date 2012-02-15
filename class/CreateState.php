@@ -24,30 +24,6 @@ class CreateState extends Controller
 			'view' => array(
 				'template' => 'CreateState.html' ,
 				'model' => 'state' ,
-				'class' => 'form' ,
-				'widgets' => array(
-					array('id'=>'system','class'=>'text','exchange'=>'system')  ,    //exchange 自动交换数据所对应然数据库字段名
-					array('id'=>'title_template','class'=>'text','exchange'=>'title_template') ,
-					array('id'=>'body_template','class'=>'text','exchange'=>'body_template') ,
-					array('id'=>'title_data','class'=>'text','exchange'=>'title_data') ,
-					array('id'=>'body_data','class'=>'text','exchange'=>'body_data') ,
-				        
-				        
-					array('id'=>'subject','class'=>'text','exchange'=>'subject') ,
-					array('id'=>'summary','class'=>'text','exchange'=>'summary') ,
-					array('id'=>'article_title','class'=>'text','exchange'=>'article_title') ,
-					array('id'=>'article_uid','class'=>'text','exchange'=>'article_uid') ,
-
-				    array('id'=>'type1','class'=>'text') ,
-					array('id'=>'url1','class'=>'text') ,
-					array('id'=>'link1','class'=>'text') ,
-					array('id'=>'type2','class'=>'text') ,
-					array('id'=>'url2','class'=>'text') ,
-					array('id'=>'link2','class'=>'text') ,
-					array('id'=>'type3','class'=>'text') ,
-					array('id'=>'url3','class'=>'text') ,
-					array('id'=>'link3','class'=>'text') ,
-				) ,
 			) ,
 		) ;
 	}
@@ -55,58 +31,28 @@ class CreateState extends Controller
 	public function process()
 	{
 	    
-	    if( $this->view->isSubmit( $this->params ) )
-	    {
+	    $this->state->setData("fstid",$this->params['fstid']);
+	    $this->state->setData("system",$this->params['system']);
+	    $this->state->setData("uid",$this->params['uid']);
+	    $this->state->setData("subject",$this->params['subject']);
+	    $this->state->setData("summary",$this->params['summary']);
+        $this->state->setData('time',time()) ;
+	    $this->state->setData("data",$this->params['data']);
+	    $this->state->setData("client",$this->params['client']);
+	    $this->state->setData("client_url",$this->params['client_url']);
 	    
-	        // 加载 视图窗体的数据
-	        $this->view->loadWidgets( $this->params ) ;
-	    
-	        
-	        // 校验 视图窗体的数据
-	        if( $this->view->verifyWidgets() )
-	        {
-	            $this->view->exchangeData(DataExchanger::WIDGET_TO_MODEL) ;
-	            
-	            $this->state->setData('time',time()) ;
-	            
-	            $aId = $this->requireLogined() ;
-	            $this->state->setData('uid',$aId->userId()) ;
-	            
-	            try {
-	                
-                    for($i = 1; $i <= 3; $i++){
-                        if($this->params['type'.$i] && $this->params['url'.$i])
-                        {
-                            $this->state->child("attachments")->createChild()
-                            ->setData("stid",$this->params['stid'.$i])
-                            ->setData("url",$this->params['url'.$i])
-                            ->setData("link",$this->params['link'.$i])
-                            ->setData("type",$this->params['type'.$i]) ;
-                        }
-                    }
-	                $this->state->save() ;
+        
+        for($i = 0; $i < count($this->params['attachment']); $i++){
+            $this->state->child("attachments")->createChild()
+                ->setData("url",$this->params['attachment'][$i]['url'])
+                ->setData("link",@$this->params['attachment'][$i]['link'])
+                ->setData("type",$this->params['attachment'][$i]['type'])
+                ->setData("title",@$this->params['attachment'][$i]['title']) ;
+        }
+        $this->state->save() ;
+        
+        return $this->state->stid;
 
-	                $this->view->createMessage( Message::success, "注册成功！" ) ;
-	    
-	                $this->view->hideForm() ;
-	    
-	            } catch (ExecuteException $e) {
-	    
-	                if($e->isDuplicate())
-	                {
-	                    $this->view->createMessage(
-	                            Message::error
-	                            , "用户名：%s 已经存在"
-	                            , $this->params->get('username')
-	                    ) ;
-	                }
-	                else
-	                {
-	                    throw $e ;
-	                }
-	            }
-	        }
-	    }
 	}
 	
 }
