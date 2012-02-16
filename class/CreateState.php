@@ -31,7 +31,7 @@ class CreateState extends Controller
 	public function process()
 	{
 	    
-	    $this->state->setData("fstid",$this->params['fstid']);
+	    $this->state->setData("forwardtid",$this->params['forwardtid']);
 	    $this->state->setData("system",$this->params['system']);
 	    $this->state->setData("uid",$this->params['uid']);
 	    $this->state->setData("title",$this->params['title']);
