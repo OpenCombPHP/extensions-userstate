@@ -41,9 +41,10 @@ class State
 	
     public function getStateHtml($type,$o)
     {
-        $sTemplate = @$this->aTemplates[$o->system][$type."_template"];
+        //$sTemplate = @$this->aTemplates[$o->system][$type."_template"];
         $html = "";
         
+        /*
         if(!empty($sTemplate))
         {
             preg_match_all("/\{(.*?)\}/", $sTemplate, $aTemplate);
@@ -63,14 +64,14 @@ class State
             {
                 $html = str_replace($aTemplate[0], $aData,$sTemplate);
             }
-        }else{
+        }else{*/
             if($type == "title"){
                 $html = $o->child('info')->nickname.":".$o->title;
             }
             if ($type == "body"){
                 $html = $o->body;
             }
-        }
+        /*}*/
        
         
 
