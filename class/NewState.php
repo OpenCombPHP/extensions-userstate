@@ -27,7 +27,6 @@ class NewState extends Controller
 	
 	public function process()
 	{
-// 		$this->requireLogined('您没有使用这个功能的权限,无法继续浏览',array());
 		$this->checkPermissions('您没有使用这个功能的权限,无法继续浏览',array()) ;
 	}
 }
