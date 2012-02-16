@@ -52,10 +52,6 @@ class ListState extends Controller
 		     */
 		    'frame' => array(
 		    	'class'=>'com\\wonei\\woneibridge\\frame\\WoneiSNSFrame' ,
-		        'params' => array('pageNum'=>'30'),
- 	    		'frameview' => array(
- 	    			'template' => 'userstate:ListState.html' ,
-     			)
 			) ,
 			// 视图
 			'view' => array(
@@ -214,6 +210,7 @@ class ListState extends Controller
         $this->state->prototype()->criteria()->setLimit($this->params['limitlen']?$this->params['limitlen']:$this->frame()->params()->get("pageNum"),$this->params['limitfrom']?$this->params['limitfrom']:0);
 	        
 	    $this->state->load() ;
+	    
 	    foreach($this->state->childIterator() as $o)
 	    {
 	        $o->setData("title_html",$oState->getStateHtml("title",$o));
