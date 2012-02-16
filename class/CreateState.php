@@ -18,11 +18,11 @@ class CreateState extends Controller
 		return array(
 		
 			// 模型
-            'model:state' =>  array( 'conf' => 'model/state' ) ,
+            'model:state' =>  array( 'conf' => 'userstate:model/state' ) ,
 			
 			// 视图
 			'view' => array(
-				'template' => 'CreateState.html' ,
+				'template' => 'userstate:CreateState.html' ,
 				'model' => 'state' ,
 			) ,
 		) ;
@@ -32,14 +32,16 @@ class CreateState extends Controller
 	{
 	    
 	    $this->state->setData("forwardtid",$this->params['forwardtid']);
-	    $this->state->setData("system",$this->params['system']);
-	    $this->state->setData("uid",$this->params['uid']);
+	    $this->state->setData("system",$this->params['system']);  // NULL
+	    $this->state->setData("uid",$this->params['uid']);        //
 	    $this->state->setData("title",$this->params['title']);
-	    $this->state->setData("body",$this->params['body']);
-        $this->state->setData('time',$this->params['time']) ;
+	    $this->state->setData("body",$this->params['body']);    //0~140字符
+        $this->state->setData('time',$this->params['time']) ;   //
 	    $this->state->setData("data",$this->params['data']);
 	    $this->state->setData("client",$this->params['client']);
 	    $this->state->setData("client_url",$this->params['client_url']);
+	    
+	    
 	    
         
         for($i = 0; $i < count($this->params['attachment']); $i++){
