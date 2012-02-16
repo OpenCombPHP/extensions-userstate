@@ -1,5 +1,6 @@
 <lib name="jquery"/>
-
+<div class="community_middle">
+<div class="community_nav">
     <a href="/?c=org.opencomb.userstate.ListState&channel={=$theController->params()->get('channel')}">全部</a>
     <a href="/?c=org.opencomb.userstate.ListState&system=blog&channel={=$theController->params()->get('channel')}">日志</a>
     <a href="/?c=org.opencomb.userstate.ListState&system=album&channel={=$theController->params()->get('channel')}">相册</a>
@@ -11,14 +12,12 @@
     
     <a href="/?c=org.opencomb.userstate.ListState&channel">世界</a>
     <a href="/?c=org.opencomb.userstate.ListState&channel=friends">好友</a>
-
+</div>
 <div class="newStateDisplayDiv" style="display:none">有<span class="newStateNumberSpan" updateTime=""></span>条新动态 <a href="javascript:;" onClick="loadNewStateHtml()">查看</a></div>
-<hr/>
+
 <div class="StateDiv">
 <views/>
 </div>
-
-<hr/>
 <a href="javascript:;" onClick="loadMoreStateHtml()" nowRow = "{=$theController->params()->get('pageNum')}" class="moreState">查看更多动态</a>
 
 <script type="text/javascript">
@@ -80,3 +79,4 @@ function checkNewState(){
 }
 window.setInterval("checkNewState()",3000);
 </script>
+</div>
