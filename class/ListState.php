@@ -21,7 +21,7 @@ class ListState extends Controller
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'state' ,
-                        'columns' => array("system","uid","subject","summary","article_title","article_uid","time","data","client") ,     
+                        'columns' => array("system","uid","title","body","article_title","article_uid","time","data","client") ,     
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'uid',
@@ -68,7 +68,7 @@ class ListState extends Controller
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'state' ,
-                        'columns' => array("system","uid","subject","summary","article_title","article_uid","time","data","client") ,  
+                        'columns' => array("system","uid","title","body","article_title","article_uid","time","data","client") ,  
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'uid',
@@ -216,7 +216,6 @@ class ListState extends Controller
 	        $o->setData("title_html",$oState->getStateHtml("title",$o));
 	        $o->setData("body_html",$oState->getStateHtml("body",$o));
 	    }
-	    
 	    
 	    /**
 	     * 打印model
