@@ -1,6 +1,12 @@
 <?php
 namespace org\opencomb\userstate ;
 
+use org\jecat\framework\lang\Exception;
+
+use org\jecat\framework\mvc\controller\Request;
+
+use org\opencomb\coresystem\auth\Id;
+
 use org\jecat\framework\db\DB;
 
 use org\jecat\framework\mvc\view\DataExchanger;
@@ -16,12 +22,11 @@ class CreateState extends Controller
 	public function createBeanConfig()
 	{
 		return array(
-		
 			// 模型
             'model:state' =>  array( 'conf' => 'userstate:model/state' ) ,
 			
 			// 视图
-			'view' => array(
+			'view:stateForm' => array(
 				'template' => 'userstate:CreateState.html' ,
 				'model' => 'state' ,
 			) ,
@@ -30,42 +35,61 @@ class CreateState extends Controller
 	
 	public function process()
 	{
-	    
-	    $this->state->setData("forwardtid",$this->params['forwardtid']);
-	    $this->state->setData("system",$this->params['system']);  // NULL
-	    $this->state->setData("uid",$this->params['uid']);        //
-	    $this->state->setData("title",$this->params['title']);
-	    $this->state->setData("body",$this->params['body']);    //0~140字符
-        $this->state->setData('time',$this->params['time']) ;   //
-	    $this->state->setData("data",$this->params['data']);
-	    $this->state->setData("client",$this->params['client']);
-	    $this->state->setData("client_url",$this->params['client_url']);
-	    
-	    
-	    
-        
-        for($i = 0; $i < count($this->params['attachment']); $i++){
-            $this->state->child("attachments")->createChild()
-                ->setData("url",$this->params['attachment'][$i]['url'])
-                ->setData("link",@$this->params['attachment'][$i]['link'])
-                ->setData("type",$this->params['attachment'][$i]['type'])
-                ->setData("title",@$this->params['attachment'][$i]['title']) ;
-        }
-        
+		//只是显示表单
+		if(!$this->params['body']){
+			return;
+		}
+		
+		//用户提交来的表单
+		if( Request::isUserRequest($this->params) ){
+			$this->state->setData('system',NULL) ;
+			$this->state->setData('uid',IdManager::singleton()->currentId()->userId()) ;
+			$this->state->setData('time',time()) ;
+		}else{ //系统内部直接保存数据
+			$this->state->setData("forwardtid",$this->params['forwardtid']);
+			if($this->params->has('system')){
+				$this->state->setData('system',$this->params['system']) ;
+			}else{
+				throw new Exception('没有指定system,无法保存数据');
+			}
+			if($this->params->has('uid')){
+				$this->state->setData('uid',$this->params['uid']) ;
+			}else{
+				throw new Exception('没有指定uid,无法保存数据');
+			}
+			$this->state->setData("title",$this->params['title']);
+			$this->state->setData("body",$this->params['body']);
+			if($this->params['time']){
+				$this->state->setData('time',$this->params['time']) ;
+			}else{
+				$this->state->setData('time',time()) ;
+			}
+			$this->state->setData("data",$this->params['data']);
+			$this->state->setData("client",$this->params['client']);
+			$this->state->setData("client_url",$this->params['client_url']);
+			
+			for($i = 0; $i < count($this->params['attachment']); $i++){
+				$this->state->child("attachments")->createChild()
+				->setData("url",$this->params['attachment'][$i]['url'])
+				->setData("link",@$this->params['attachment'][$i]['link'])
+				->setData("type",$this->params['attachment'][$i]['type'])
+				->setData("title",@$this->params['attachment'][$i]['title']) ;
+			}
+		}
+		
+		
         try{
-            $this->state->save() ;
+			$this->state->save();
         }catch (ExecuteException $e)
         {
-            if($e->isDuplicate())
+			if($e->isDuplicate())
             {
                 
             }
         }
         
         return $this->state->stid;
-
 	}
-	
 }
 
 ?>
