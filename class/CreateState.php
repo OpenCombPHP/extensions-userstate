@@ -42,9 +42,10 @@ class CreateState extends Controller
 		
 		//用户提交来的表单
 		if( Request::isUserRequest($this->params) ){
-			$this->state->setData('system',NULL) ;
+			$this->state->setData('system',NULL) ;  //防止作弊
 			$this->state->setData('uid',IdManager::singleton()->currentId()->userId()) ;
 			$this->state->setData('time',time()) ;
+			$this->state->setData("body",$this->params['body']);
 		}else{ //系统内部直接保存数据
 			$this->state->setData("forwardtid",$this->params['forwardtid']);
 			if($this->params->has('system')){
@@ -76,7 +77,6 @@ class CreateState extends Controller
 				->setData("title",@$this->params['attachment'][$i]['title']) ;
 			}
 		}
-		
 		
         try{
 			$this->state->save();
