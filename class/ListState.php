@@ -52,9 +52,9 @@ class ListState extends Controller
 		     * frame
 		     * frameview 子视图。子视图包含父视图。
 		     */
-		    'frame' => array(
-		    	'class'=>'com\\wonei\\woneibridge\\frame\\WoneiSNSFrame' ,
-			) ,
+// 		    'frame' => array(
+// 		    	'class'=>'com\\wonei\\woneibridge\\frame\\WoneiSNSFrame' ,
+// 			) ,
 			// 视图
 			'view' => array(
 				'template' => 'StatusFrame.html' ,
