@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\userstate ;
 
+use org\jecat\framework\util\String;
+
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\db\DB;
 use org\jecat\framework\auth\IdManager;

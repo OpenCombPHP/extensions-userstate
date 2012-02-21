@@ -1,24 +1,31 @@
-<lib name="jquery"/>
+<css src="userstate:css/userstate.css" />
 
-    <a href="/?c=org.opencomb.userstate.ListState&channel={=$theController->params()->get('channel')}">全部</a>
-    <a href="/?c=org.opencomb.userstate.ListState&system=blog&channel={=$theController->params()->get('channel')}">日志</a>
-    <a href="/?c=org.opencomb.userstate.ListState&system=album&channel={=$theController->params()->get('channel')}">相册</a>
-    <a href="/?c=org.opencomb.userstate.ListState&system=doing&channel={=$theController->params()->get('channel')}">心情碎语</a>
-    <a href="/?c=org.opencomb.userstate.ListState&system=thread&channel={=$theController->params()->get('channel')}">话题</a>
-    <a href="/?c=org.opencomb.userstate.ListState&system=bbs&channel={=$theController->params()->get('channel')}">论坛</a>
-    <a href="/?c=org.opencomb.userstate.ListState&sex=female&channel={=$theController->params()->get('channel')}">妹子</a>
-    <a href="/?c=org.opencomb.userstate.ListState&sex=male&channel={=$theController->params()->get('channel')}">基友</a>
-    
-    <a href="/?c=org.opencomb.userstate.ListState&channel">世界</a>
+<lib name="jquery"/>
+<div class="community_middle">
+<view name='createState'/>
+<div class="community_nav">
+	<ul class="nav_tabs">
+	<li class="on"><a href="/?c=org.opencomb.userstate.ListState&channel={=$theController->params()->get('channel')}">全部</a></li>
+    <li><a href="/?c=org.opencomb.userstate.ListState&system=blog&channel={=$theController->params()->get('channel')}">日志</a></li>
+    <li><a href="/?c=org.opencomb.userstate.ListState&system=album&channel={=$theController->params()->get('channel')}">相册</a></li>
+    <li><a href="/?c=org.opencomb.userstate.ListState&system=doing&channel={=$theController->params()->get('channel')}">心情碎语</a></li>
+    <li><a href="/?c=org.opencomb.userstate.ListState&system=thread&channel={=$theController->params()->get('channel')}">话题</a></li>
+    <li><a href="/?c=org.opencomb.userstate.ListState&system=bbs&channel={=$theController->params()->get('channel')}">论坛</a></li>
+    <li><a href="/?c=org.opencomb.userstate.ListState&sex=female&channel={=$theController->params()->get('channel')}">妹子</a></li>
+    <li><a href="/?c=org.opencomb.userstate.ListState&sex=male&channel={=$theController->params()->get('channel')}">基友</a></li>
+	</ul>
+	<div class="nav_swich">
+	<a href="/?c=org.opencomb.userstate.ListState&channel">世界</a>
     <a href="/?c=org.opencomb.userstate.ListState&channel=friends">好友</a>
+	</div>
+</div>
+<div class="community_feed">
 
 <div class="newStateDisplayDiv" style="display:none">有<span class="newStateNumberSpan" updateTime=""></span>条新动态 <a href="javascript:;" onClick="loadNewStateHtml()">查看</a></div>
-<hr/>
+
 <div class="StateDiv">
 <views/>
 </div>
-
-<hr/>
 <a href="javascript:;" onClick="loadMoreStateHtml()" nowRow = "{=$theController->params()->get('pageNum')}" class="moreState">查看更多动态</a>
 
 <script type="text/javascript">
@@ -80,3 +87,7 @@ function checkNewState(){
 }
 window.setInterval("checkNewState()",3000);
 </script>
+</div>
+</div>
+<div class="community_sidebar">
+</div>

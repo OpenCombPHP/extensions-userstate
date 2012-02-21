@@ -1,0 +1,14 @@
+/*community_middle*/
+
+.community_middle{ float:left; margin:0 5px 0 0;width:560px}
+.community_nav{width:560px;height:30px; position:relative; z-index:10}
+.nav_tabs{ float:left }
+.nav_tabs li{ float:left; }
+.nav_tabs li a{ display:block;padding:0 10px; text-align:center; color:#000; height:30px; line-height:30px;}
+.nav_tabs li.on{ background:url(../images/tabson_right.gif) no-repeat right 0;}
+.nav_tabs li.on a{ background:url(../images/tabson_left.gif) no-repeat 0 0;}
+.nav_swich{ float:right}
+
+.community_feed{border-top:1px solid #ccc; margin-top:-1px; padding-top:10px; position:relative; z-index:1;}
+/*community_sidebar*/
+.community_sidebar{ float:right; width:220px; background:#ccc; height:1000px;}

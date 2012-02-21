@@ -1,70 +1,10 @@
 <msgqueue />
 
-<if "$forwarding">
-	<a href="{=$forwarding}">正在前往您准备浏览的网页……</a>
-	<script type="text/javascript">
-	setInterval(function(){location='{=$forwarding}'},3000) ;
-	</script>
-</if>
+<form method='post'>
+<div>
+	<widget class='namecard' attr.mine='1' attr.template ='userstate:NewStateUserFace.html'/>
+	<textarea name='body' class='createStateContent'></textarea>
+</div>
 
-<form method="post">
-
-	<div>
-		system　：<widget id="system" />
-	</div>
-	<div>
-		title_data　：<widget id="title_data" />
-	</div>
-	<div>
-		body_data　：<widget id="body_data" />
-	</div>
-	
-	<hr/>
-	<div>
-		title　：<widget id="title" />
-	</div>
-	<div>
-		body　：<widget id="body" />
-	</div>
-	<div>
-		article_title　：<widget id="article_title" />
-	</div>
-	<div>
-		article_uid　：<widget id="article_uid" />
-	</div>
-	
-	<hr/>
-	<div>
-		type1　：<widget id="type1" />
-	</div>
-	<div>
-		url1　：<widget id="url1" />
-	</div>
-	<div>
-		link1　：<widget id="link1" />
-	</div>
-	
-	<br/>
-	<div>
-		type2　：<widget id="type2" />
-	</div>
-	<div>
-		url2　：<widget id="url2" />
-	</div>
-	<div>
-		link2　：<widget id="link2" />
-	</div>
-	
-	<br/>
-	<div>
-		type3　：<widget id="type3" />
-	</div>
-	<div>
-		url3　：<widget id="url3" />
-	</div>
-	<div>
-		link3　：<widget id="link3" />
-	</div>
-	<input type="submit" value="保存" /> 
-	
+<input type='submit' value='提交'/>
 </form>
