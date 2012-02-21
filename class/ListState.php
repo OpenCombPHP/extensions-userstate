@@ -36,6 +36,12 @@ class ListState extends Controller
             				'tokeys'=>'uid',
                             //'columns' => '*' , 
             			) ,
+            			'hasOne:auser' => array(    //一对一
+            				'table' => 'oauth:user',
+            	            'keys'=>array('uid','suid'),
+            				'fromkeys'=>'uid',
+            				'tokeys'=>'uid',
+            			) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
@@ -47,14 +53,29 @@ class ListState extends Controller
             		) ,
                     'list'=>true,
             ) ,
-			
+
 		    /**
 		     * frame
 		     * frameview 子视图。子视图包含父视图。
 		     */
-// 		    'frame' => array(
-// 		    	'class'=>'com\\wonei\\woneibridge\\frame\\WoneiSNSFrame' ,
-// 			) ,
+
+            'frame' => array(
+            
+                    /**
+                     * 'params' => array('pageNum'=>'2'),
+                     * 控制器传参数
+                     */
+                    'params' => array('pageNum'=>'30'),
+                    'frameview' => array(
+                            'template' => 'userstate:ListState.html' ,
+                            /**
+                             * 给视图变量
+                             * 'vars' => array('pageNum'=>'2'),
+                             */
+                    )
+            ) ,
+	            
+	            
 			// 视图
 			'view' => array(
 				'template' => 'StatusFrame.html' ,
@@ -81,7 +102,12 @@ class ListState extends Controller
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'article_uid',
             				'tokeys'=>'uid',
-                            //'columns' => '*' ,        
+            			) ,
+            		    'hasOne:auser' => array(    //一对一
+            				'table' => 'oauth:user',
+            	            'keys'=>array('uid','suid'),
+            				'fromkeys'=>'uid',
+            				'tokeys'=>'uid',
             			) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
