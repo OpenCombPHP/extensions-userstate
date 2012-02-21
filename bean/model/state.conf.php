@@ -3,6 +3,7 @@ return array(
 		'class' => 'model' ,
 		'orm' => array(
 			'table' => 'state' ,
+	        'keys'=>array('stid') ,
 	        'alias' => array(
 	                'info.nickname' => 'nickname' ,
 	        ),

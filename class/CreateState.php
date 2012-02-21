@@ -32,6 +32,7 @@ class CreateState extends Controller
 	{
 	    
 	    $this->state->setData("forwardtid",$this->params['forwardtid']);
+	    $this->state->setData("stid",$this->params['stid']);
 	    $this->state->setData("system",$this->params['system']);
 	    $this->state->setData("uid",$this->params['uid']);
 	    $this->state->setData("title",$this->params['title']);
@@ -51,12 +52,11 @@ class CreateState extends Controller
         }
         
         try{
-            $this->state->save() ;
+            $this->state->save(true) ;
         }catch (ExecuteException $e)
         {
             if($e->isDuplicate())
             {
-                
             }
         }
         
