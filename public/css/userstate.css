@@ -1,14 +1,38 @@
 /*community_middle*/
 
 .community_middle{ float:left; margin:0 5px 0 0;width:560px}
-.community_nav{width:560px;height:30px; position:relative; z-index:10}
-.nav_tabs{ float:left }
+
+.community_state{ margin-bottom:10px; position:relative}
+.namecard_normal{ float:left; width:55px; height:80px; overflow:hidden}
+.namecard_normal_card_face {width:48px; height:48px;padding:2px;margin-right:8px; box-shadow:0 0 2px rgba(0,0,0,0.3); border:1px solid #ccc; border-radius:2px;}
+.namecard_normal_card_full{
+	display:none;
+	padding:5px;
+	border:1px #333 solid;
+	width:228px;
+	height:58px;
+	position:absolute;
+	background:#fff;
+}
+.namecard_normal_card_simple{
+
+}
+.createState{ float:left; width:495px; background:url(../images/creatbg.gif) no-repeat 0 bottom;padding-bottom:10px; position:absolute; left:65px; top:0; z-index:10; overflow:hidden}
+.createState_inner{ background:#fff url(../images/creatbg.gif) no-repeat 0 0;width:473px;  padding:8px 8px 0 14px; position: relative;}
+.creatState_text{ height:44px; padding:0 6px; position:relative; z-index:10;}
+.createStateContent{height:32px; width:100%;padding:5px;margin:0 -6px; background:#fff; border:1px solid #eaeaea;font-size:12px; line-height:1.5em; overflow:auto;}
+
+.community_nav{height:29px;border-bottom:1px solid #ccc;margin-bottom:10px; position:relative; clear:both}
+.nav_tabs{ float:left; position:absolute;top:0; _top:1px;}
 .nav_tabs li{ float:left; }
-.nav_tabs li a{ display:block;padding:0 10px; text-align:center; color:#000; height:30px; line-height:30px;}
+.nav_tabs li a{ display:block; float:left;padding:0 10px; text-align:center; color:#000; height:30px; line-height:30px;}
 .nav_tabs li.on{ background:url(../images/tabson_right.gif) no-repeat right 0;}
 .nav_tabs li.on a{ background:url(../images/tabson_left.gif) no-repeat 0 0;}
-.nav_swich{ float:right}
+.nav_swich{ float:right; height:30px; line-height:30px;}
 
-.community_feed{border-top:1px solid #ccc; margin-top:-1px; padding-top:10px; position:relative; z-index:1;}
+.community_feed{ margin-top:-1px; padding-top:10px;}
+
+
+
 /*community_sidebar*/
 .community_sidebar{ float:right; width:220px; background:#ccc; height:1000px;}
