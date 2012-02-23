@@ -77,7 +77,7 @@ class ListState extends Controller
 				 * 控制器传参数
 				 */
 // 				'params' => array('pageNum'=>'30'),
-				'template' => 'userstate:StatusFrame.html' ,
+				'template' => 'userstate:UserState.html' ,
 				'model' => 'state' ,
 			) ,
 		) ;
