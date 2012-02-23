@@ -39,7 +39,7 @@ class CreateState extends Controller
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
-                		        'table'=>'state_attachment',
+                		        'table'=>'userstate:state_attachment',
                 		)
             		) ,
             ) ,
