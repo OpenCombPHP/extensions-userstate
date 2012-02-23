@@ -21,7 +21,7 @@ class ListState extends Controller
             'model:state' => array(
             		'class' => 'model' ,
             		'orm' => array(
-            			'table' => 'state' ,
+            			'table' => 'userstate:state' ,
                         'columns' => array("system","uid","title","body","article_title","article_uid","time","data","client") ,     
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
@@ -44,7 +44,7 @@ class ListState extends Controller
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
-                		        'table'=>'state_attachment',
+                		        'table'=>'userstate:state_attachment',
                 		),
 //             			'where' => array(
 //             				array('eq','stid',"23") ,
@@ -89,7 +89,7 @@ class ListState extends Controller
 	        $aOrm['model:state'] = array(
             		'class' => 'model' ,
             		'orm' => array(
-            			'table' => 'state' ,
+            			'table' => 'userstate:state' ,
                         'columns' => array("system","uid","title","body","article_title","article_uid","time","data","client") ,  
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
@@ -111,7 +111,7 @@ class ListState extends Controller
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
-                		        'table'=>'state_attachment',
+                		        'table'=>'userstate:state_attachment',
                 		),
     			        'hasMany:subscription'=>array(    //一对多
     			                'keys'=>array('from','to') ,
@@ -160,7 +160,7 @@ class ListState extends Controller
                 			
                 			//一对多
               		        'hasMany:attachments'=>array(
-	            		        'table'=>'state_attachment',
+	            		        'table'=>'userstate:state_attachment',
 	            		        'fromkeys'=>'stid',
 	            		        'tokeys'=>'stid',
     		                )
@@ -270,7 +270,7 @@ class ListState extends Controller
 			'class' => 'model' ,
 			'list' => true ,
 			'orm' => array(
-				'table' => 'some_table_name' ,	// 数据表
+				'table' => 'userstate:some_table_name' ,	// 数据表
 				'keys' => 'id' ,				// 数据表主键
 				'columns' => array('column_a','column_b','column_c') ,	// 返回字段
 				'order' => array('column_e','column_f') ,

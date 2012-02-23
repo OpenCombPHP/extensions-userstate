@@ -2,6 +2,6 @@
 return array(
 		'class' => 'model' ,
 		'orm' => array(
-			'table' => 'state_attachment' ,
+			'table' => 'userstate:state_attachment' ,
 		) ,
 );
