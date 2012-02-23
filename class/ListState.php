@@ -2,12 +2,11 @@
 namespace org\opencomb\userstate ;
 
 use org\jecat\framework\util\String;
-
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\db\DB;
 use org\jecat\framework\auth\IdManager;
 use org\jecat\framework\message\Message;
-use org\opencomb\coresystem\mvc\controller\Controller ;
+use org\opencomb\coresystem\mvc\controller\Controller;
 
 class ListState extends Controller
 {
@@ -59,26 +58,26 @@ class ListState extends Controller
 		     * frameview 子视图。子视图包含父视图。
 		     */
 
-            'frame' => array(
-            
-                    /**
-                     * 'params' => array('pageNum'=>'2'),
-                     * 控制器传参数
-                     */
-                    'params' => array('pageNum'=>'30'),
-                    'frameview' => array(
-                            'template' => 'userstate:ListState.html' ,
-                            /**
-                             * 给视图变量
-                             * 'vars' => array('pageNum'=>'2'),
-                             */
-                    )
-            ) ,
+//             'frame' => array(
+            		
+//                     'frameview' => array(
+//                             'template' => 'userstate:ListState.html' ,
+//                             /**
+//                              * 给视图变量
+//                              * 'vars' => array('pageNum'=>'2'),
+//                              */
+//                     )
+//             ) ,
 	            
-	            
+//     		'params' => array('pageNum'=>'30'),
 			// 视图
 			'view' => array(
-				'template' => 'StatusFrame.html' ,
+				/**
+				 * 'params' => array('pageNum'=>'2'),
+				 * 控制器传参数
+				 */
+// 				'params' => array('pageNum'=>'30'),
+				'template' => 'userstate:StatusFrame.html' ,
 				'model' => 'state' ,
 			) ,
 		) ;
@@ -235,7 +234,12 @@ class ListState extends Controller
         {
             $this->state->prototype()->criteria()->where()->eq('info.sex',$this->params["sex"]);
         }
-        $this->state->prototype()->criteria()->setLimit($this->params['limitlen']?$this->params['limitlen']:$this->frame()->params()->get("pageNum"),$this->params['limitfrom']?$this->params['limitfrom']:0);
+        //默认30个条目
+        $nPageNum = 30;
+        if($this->params()->has("pageNum")){
+        	$nPageNum = $this->params()->int("pageNum");
+        }
+        $this->state->prototype()->criteria()->setLimit($this->params['limitlen']?$this->params['limitlen']:$nPageNum,$this->params['limitfrom']?$this->params['limitfrom']:0);
 	        
 	    $this->state->load() ;
 	    
