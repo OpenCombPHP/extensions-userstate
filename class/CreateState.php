@@ -90,6 +90,7 @@ class CreateState extends Controller
 				->setData("url",$this->params['attachment'][$i]['url'])
 				->setData("link",@$this->params['attachment'][$i]['link'])
 				->setData("type",$this->params['attachment'][$i]['type'])
+				->setData("thumbnail_pic",$this->params['attachment'][$i]['thumbnail_pic'])
 				->setData("title",@$this->params['attachment'][$i]['title']) ;
 			}
 		}
