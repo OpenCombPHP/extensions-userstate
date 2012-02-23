@@ -23,7 +23,26 @@ class CreateState extends Controller
 	{
 		return array(
 			// 模型
-            'model:state' =>  array( 'conf' => 'userstate:model/state' ) ,
+            'model:state' =>  array(
+            		'class' => 'model' ,
+            		'orm' => array(
+            			'table' => 'state' ,
+            	        'keys'=>array('stid') ,
+            	        'alias' => array(
+            	                'info.nickname' => 'nickname' ,
+            	        ),
+            			'hasOne:info' => array(    //一对一
+            				'table' => 'coresystem:userinfo',
+            				'fromkeys'=>'uid',
+            				'tokeys'=>'uid',
+            			) ,
+                		'hasMany:attachments'=>array(    //一对多
+                				'fromkeys'=>'stid',
+                				'tokeys'=>'stid',
+                		        'table'=>'state_attachment',
+                		)
+            		) ,
+            ) ,
 			
 			// 视图
 			'view:stateForm' => array(
@@ -36,7 +55,7 @@ class CreateState extends Controller
 	public function process()
 	{
 		//只是显示表单
-		if(!$this->params['body']){
+		if(!$this->params['title'] && !$this->params['body'] && !$this->params['attachment']){
 			return;
 		}
 		
@@ -49,11 +68,7 @@ class CreateState extends Controller
 		}else{ //系统内部直接保存数据
 			$this->state->setData("forwardtid",$this->params['forwardtid']);
 			$this->state->setData("stid",$this->params['stid']);
-			if($this->params->has('system')){
-				$this->state->setData('system',$this->params['system']) ;
-			}else{
-				throw new Exception('没有指定system,无法保存数据');
-			}
+			$this->state->setData('system',$this->params['system']) ;
 			if($this->params->has('uid')){
 				$this->state->setData('uid',$this->params['uid']) ;
 			}else{
@@ -80,7 +95,9 @@ class CreateState extends Controller
 		}
 		
         try{
-			$this->state->save();
+            
+			$this->state->save(true);
+			
         }catch (ExecuteException $e)
         {
 			if($e->isDuplicate())
