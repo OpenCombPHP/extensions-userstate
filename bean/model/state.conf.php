@@ -3,6 +3,7 @@ return array(
 		'class' => 'model' ,
 		'orm' => array(
 			'table' => 'state' ,
+	        'keys'=>array('stid') ,
 	        'alias' => array(
 	                'info.nickname' => 'nickname' ,
 	        ),
@@ -10,7 +11,12 @@ return array(
 				'table' => 'coresystem:userinfo',
 				'fromkeys'=>'uid',
 				'tokeys'=>'uid',
-                //'columns' => '*' ,        
+			) ,
+			'hasOne:auser' => array(    //一对一
+				'table' => 'oauth:user',
+	            'keys'=>array('uid','suid'),
+				'fromkeys'=>'uid',
+				'tokeys'=>'uid',
 			) ,
     		'hasMany:attachments'=>array(    //一对多
     				'fromkeys'=>'stid',
