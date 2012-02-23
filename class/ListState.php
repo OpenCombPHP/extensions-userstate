@@ -35,12 +35,12 @@ class ListState extends Controller
             				'tokeys'=>'uid',
                             //'columns' => '*' , 
             			) ,
-            			'hasOne:auser' => array(    //一对一
-            				'table' => 'oauth:user',
-            	            'keys'=>array('uid','suid'),
-            				'fromkeys'=>'uid',
-            				'tokeys'=>'uid',
-            			) ,
+//             			'hasOne:auser' => array(    //一对一
+//             				'table' => 'oauth:user',
+//             	            'keys'=>array('uid','suid'),
+//             				'fromkeys'=>'uid',
+//             				'tokeys'=>'uid',
+//             			) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
@@ -102,12 +102,12 @@ class ListState extends Controller
             				'fromkeys'=>'article_uid',
             				'tokeys'=>'uid',
             			) ,
-            		    'hasOne:auser' => array(    //一对一
-            				'table' => 'oauth:user',
-            	            'keys'=>array('uid','suid'),
-            				'fromkeys'=>'uid',
-            				'tokeys'=>'uid',
-            			) ,
+//             		    'hasOne:auser' => array(    //一对一
+//             				'table' => 'oauth:user',
+//             	            'keys'=>array('uid','suid'),
+//             				'fromkeys'=>'uid',
+//             				'tokeys'=>'uid',
+//             			) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
@@ -247,8 +247,10 @@ class ListState extends Controller
 	    {
 	        $o->setData("title_html",$oState->getStateHtml("title",$o));
 	        $o->setData("body_html",$oState->getStateHtml("body",$o));
+	        preg_match("/(.*?)\|/", $o->stid,$aService);
+	        
+	        $o->setData("service",$aService['1']);
 	    }
-	    
 	    /**
 	     * 打印model
 	     * $this->state->printStruct();
