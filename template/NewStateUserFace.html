@@ -4,7 +4,7 @@
 <div class='namecard_normal' id="namecard_normal_{=$aModel['uid']}">
 <div class='namecard_normal_card_simple'>
 	<div class='namecard_normal_card_face'>
-		<img src='{=$theWidget->faceUrl()}' width=60 height=60/>
+		<img src='{=$theWidget->faceUrl()}' width=48 height=48/>
 	</div>
 </div>
 <div class='namecard_normal_card_full'>
@@ -47,26 +47,7 @@ function mouseOutFace(event){
 }
 </script>
 <style>
-.namecard_normal_card_full{
-	display:none;
-	padding:5px;
-	border:1px #333 solid;
-	width:228px;
-	height:58px;
-	position:absolute;
-	background:#fff;
-}
-.namecard_normal_card_simple{
-	padding:5px;
-	width:230px;
-	height:60px;
-}
-.namecard_normal_card_face {
-	width:60px;
-	height:60px;
-	margin-right:8px;
-	float:left;
-}
+
 </style>
 </div>
 </if>
