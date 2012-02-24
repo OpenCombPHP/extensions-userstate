@@ -22,13 +22,13 @@ class ListState extends Controller
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'userstate:state' ,
-                        'columns' => array("system","uid","title","body","article_title","article_uid","time","data","client") ,     
+                        'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,     
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'uid',
             				'tokeys'=>'uid',
                             //'columns' => '*' ,        
-            			) ,    
+            			) ,  
             			'hasOne:toinfo' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'article_uid',
@@ -90,7 +90,7 @@ class ListState extends Controller
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'userstate:state' ,
-                        'columns' => array("system","uid","title","body","article_title","article_uid","time","data","client") ,  
+                        'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
             			'hasOne:info' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'uid',
@@ -204,7 +204,7 @@ class ListState extends Controller
 	     * 获得登陆信息（未登陆自动跳转到登陆界面）
 	     */
 	    {
-	        //$aId = $this->requireLogined() ;
+	        $aId = $this->requireLogined() ;
 	    }
 	    
 	    /**
@@ -213,7 +213,7 @@ class ListState extends Controller
 	     * 获得登陆信息
 	     */
 	    {
-	        $aId = IdManager::singleton()->currentId() ;
+	        //$aId = IdManager::singleton()->currentId() ;
 	    }
 	    
 	    $oState = new State();
@@ -235,7 +235,7 @@ class ListState extends Controller
             $this->state->prototype()->criteria()->where()->eq('info.sex',$this->params["sex"]);
         }
         //默认30个条目
-        $nPageNum = 30;
+        $nPageNum = 1;
         if($this->params()->has("pageNum")){
         	$nPageNum = $this->params()->int("pageNum");
         }
@@ -250,7 +250,27 @@ class ListState extends Controller
 	        preg_match("/(.*?)\|/", $o->stid,$aService);
 	        
 	        $o->setData("service",$aService['1']);
+	        
+	        if($o->forwardtid)
+	        {
+	            $oStateClone = clone $this->state;
+	            $oStateClone->clearData();
+	            $oStateClone->prototype()->criteria()->where()->eq("stid",$o->forwardtid);
+	            $oStateClone->load() ;
+	            foreach($oStateClone->childIterator() as $oClone)
+	            {
+	                $oClone->setData("title_html",$oState->getStateHtml("title",$oClone));
+	                $oClone->setData("body_html",$oState->getStateHtml("body",$oClone));
+	                preg_match("/(.*?)\|/", $oClone->stid,$aService2);
+	            
+	                $oClone->setData("service",$aService2['1']);
+	            }
+	            
+	            
+	            $o->addChild($oStateClone,'source');
+	        }
 	    }
+	    
 	    /**
 	     * 打印model
 	     * $this->state->printStruct();
