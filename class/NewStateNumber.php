@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\userstate ;
 
+use org\opencomb\oauth\api\PullState;
+
 use org\jecat\framework\bean\BeanFactory;
 
 use org\jecat\framework\auth\IdManager;
@@ -24,6 +26,10 @@ class NewStateNumber extends Controller
 	
 	public function process()
 	{
+        $oAuth = new PullState();
+        $oAuth->process();
+	    
+	    
         $this->state->prototype()->criteria()->addOrderBy('time',true);
         $this->state->prototype()->criteria()->where()->gt('time',$this->params['time']);
         
