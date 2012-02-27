@@ -83,9 +83,9 @@ class ListState extends Controller
 		) ;
 	    
 	    
-	    $aId = IdManager::singleton()->currentId() ;
-	    if( $aId and $this->params["channel"] == "friends")
+	    if($this->params["channel"] == "friends")
 	    {
+	        $aId = IdManager::singleton()->currentId() ;
 	        $aOrm['model:state'] = array(
             		'class' => 'model' ,
             		'orm' => array(
@@ -204,7 +204,7 @@ class ListState extends Controller
 	     * 获得登陆信息（未登陆自动跳转到登陆界面）
 	     */
 	    {
-	        $aId = $this->requireLogined() ;
+	        //$aId = $this->requireLogined() ;
 	    }
 	    
 	    /**
