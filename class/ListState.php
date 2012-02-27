@@ -235,7 +235,7 @@ class ListState extends Controller
             $this->state->prototype()->criteria()->where()->eq('info.sex',$this->params["sex"]);
         }
         //默认30个条目
-        $nPageNum = 1;
+        $nPageNum = 30;
         if($this->params()->has("pageNum")){
         	$nPageNum = $this->params()->int("pageNum");
         }
