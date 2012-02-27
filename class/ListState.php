@@ -83,9 +83,9 @@ class ListState extends Controller
 		) ;
 	    
 	    
-	    $aId = IdManager::singleton()->currentId() ;
-	    if( $aId and $this->params["channel"] == "friends")
+	    if($this->params["channel"] == "friends")
 	    {
+	        $aId = IdManager::singleton()->currentId() ;
 	        $aOrm['model:state'] = array(
             		'class' => 'model' ,
             		'orm' => array(
@@ -204,7 +204,7 @@ class ListState extends Controller
 	     * 获得登陆信息（未登陆自动跳转到登陆界面）
 	     */
 	    {
-	        $aId = $this->requireLogined() ;
+	        //$aId = $this->requireLogined() ;
 	    }
 	    
 	    /**
@@ -235,7 +235,7 @@ class ListState extends Controller
             $this->state->prototype()->criteria()->where()->eq('info.sex',$this->params["sex"]);
         }
         //默认30个条目
-        $nPageNum = 1;
+        $nPageNum = 30;
         if($this->params()->has("pageNum")){
         	$nPageNum = $this->params()->int("pageNum");
         }
