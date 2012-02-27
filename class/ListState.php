@@ -204,7 +204,7 @@ class ListState extends Controller
 	     * 获得登陆信息（未登陆自动跳转到登陆界面）
 	     */
 	    {
-	        $aId = $this->requireLogined() ;
+// 	        $aId = $this->requireLogined() ;
 	    }
 	    
 	    /**
@@ -248,8 +248,12 @@ class ListState extends Controller
 	        $o->setData("title_html",$oState->getStateHtml("title",$o));
 	        $o->setData("body_html",$oState->getStateHtml("body",$o));
 	        preg_match("/(.*?)\|/", $o->stid,$aService);
+	        if($aService){
+	        	$o->setData("service",$aService['1']);
+	        }else{
+	        	$o->setData("service",'wonei');
+	        }
 	        
-	        $o->setData("service",$aService['1']);
 	        
 	        if($o->forwardtid)
 	        {
@@ -262,8 +266,11 @@ class ListState extends Controller
 	                $oClone->setData("title_html",$oState->getStateHtml("title",$oClone));
 	                $oClone->setData("body_html",$oState->getStateHtml("body",$oClone));
 	                preg_match("/(.*?)\|/", $oClone->stid,$aService2);
-	            
-	                $oClone->setData("service",$aService2['1']);
+	            	if($aService2){
+	            		$oClone->setData("service",$aService2['1']);
+	            	}else{
+	            		$oClone->setData("service",'wonei');
+	            	}
 	            }
 	            
 	            

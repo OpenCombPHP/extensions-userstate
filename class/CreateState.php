@@ -26,7 +26,7 @@ class CreateState extends Controller
             'model:state' =>  array(
             		'class' => 'model' ,
             		'orm' => array(
-            			'table' => 'state' ,
+            			'table' => 'userstate:state' ,
             	        'keys'=>array('stid') ,
             	        'alias' => array(
             	                'info.nickname' => 'nickname' ,
@@ -61,6 +61,7 @@ class CreateState extends Controller
 		$arrAttachment = array();
 		if( Request::isUserRequest($this->params) ){//用户提交来的表单
 			$this->state->setData('system',NULL) ;  //防止作弊
+			$this->state->setData('forwardtid',0);
 			$this->state->setData('uid',IdManager::singleton()->currentId()->userId()) ;
 			$this->state->setData('time',time()) ;
 			//分离附件链接
@@ -116,9 +117,11 @@ class CreateState extends Controller
 		}
 		
         try{
-// 			$this->state->save(true);
+        	$this->state->printStruct();
+			$this->state->save(true);
         }catch (ExecuteException $e)
         {
+        	echo $e;
 			if($e->isDuplicate())
             {
             }
