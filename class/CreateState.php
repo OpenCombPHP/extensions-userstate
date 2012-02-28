@@ -40,10 +40,27 @@ class CreateState extends Controller
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
                 		        'table'=>'userstate:state_attachment',
-                		)
+                		),
+                		'hasMany:at'=>array(    //一对多
+                				'fromkeys'=>'stid',
+        	                    'keys'=>array('stid',"username") ,
+                				'tokeys'=>'stid',
+                		        'table'=>'userstate:state_at',
+                		),
+                		'hasMany:tag'=>array(    //一对多
+                				'fromkeys'=>'stid',
+                				'tokeys'=>'stid',
+                		        'table'=>'userstate:state_tag',
+                		),
             		) ,
             ) ,
-			
+		        
+	        'model:user' => array(
+	                'orm' => array(
+	                        'table' => 'coresystem:user' ,
+	                ) ,
+	        ) ,
+		        
 			// 视图
 			'view:stateForm' => array(
 				'template' => 'userstate:CreateState.html' ,
@@ -54,6 +71,36 @@ class CreateState extends Controller
 	
 	public function process()
 	{
+	    $title = "@sf333 sfef@aarongao gr @gggggg sss @wsssssssef";
+	    preg_match_all("/@(.*? |.*$)/", $title, $aTitle);
+	    
+	    if(!empty($aTitle[1]))
+	    {
+	        foreach ($aTitle[1] as $v){
+	    
+	            $uid = 0;
+	            //测试用户是否存在
+	            $this->user->clearData();
+	            $this->user->prototype()->criteria()->where()->eq('username',$this->params['service']."#".trim($v));
+	            $this->user->load() ;
+	            
+	            DB::singleton()->executeLog() ;
+	            
+	            
+	            
+	            if($this->user->uid)
+	            {
+	                $uid = $this->user->uid;
+	            }
+	    
+	            $this->state->child("at")->createChild()
+	            ->setData("username",trim($v))
+	            ->setData("uid",$uid) ;
+	        }
+	    }
+	    
+	    exit;
+	    
 		//只是显示表单
 		if(!$this->params['title'] && !$this->params['body'] && !$this->params['attachment']){
 			return;
@@ -94,6 +141,49 @@ class CreateState extends Controller
 				->setData("title",@$this->params['attachment'][$i]['title']) ;
 			}
 		}
+		
+		
+		//at
+		$title = $this->params['title'];
+		//$title = "@sf333 sfef@aarongao gr @gggggg sss @wsssssssef";
+		preg_match_all("/@(.*? |.*$)/", $title, $aTitle);
+		
+		if(!empty($aTitle[1]))
+		{
+		    foreach ($aTitle[1] as $v){
+		
+		        $uid = 0;
+		        //测试用户是否存在
+		        $this->user->clearData();
+		        $this->user->prototype()->criteria()->where()->eq('username',$this->params['service']."#".trim($v));
+		        $this->user->load() ;
+		
+		        if($this->user->his("uid"))
+		        {
+		            $uid = $this->user->uid;
+		        }
+		
+		        $this->state->child("at")->createChild()
+		        ->setData("username",trim($v))
+		        ->setData("uid",$uid) ;
+		    }
+		}
+		
+		
+		//tag
+		$title = $this->params['title'];
+		//$title = "#sssssssssssssss# wfef#给w#wefss sd,we wef #fff#";
+		preg_match_all("/#(.*?)#/", $title, $aTag);
+		
+		if(!empty($aTag[1]))
+		{
+		    foreach ($aTag[1] as $v){
+		
+		        $this->state->child("tag")->createChild()
+		        ->setData("title",trim($v));
+		    }
+		}
+		
 		
         try{
             
