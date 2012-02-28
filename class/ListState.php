@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\userstate ;
 
+use com\wonei\woneibridge\aspect\NamecardAspect;
+
 use org\jecat\framework\util\String;
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\db\DB;
@@ -83,9 +85,9 @@ class ListState extends Controller
 		) ;
 	    
 	    
-	    if($this->params["channel"] == "friends")
+	    $aId = IdManager::singleton()->currentId() ;
+	    if( $aId and $this->params["channel"] == "friends")
 	    {
-	        $aId = IdManager::singleton()->currentId() ;
 	        $aOrm['model:state'] = array(
             		'class' => 'model' ,
             		'orm' => array(
@@ -204,7 +206,7 @@ class ListState extends Controller
 	     * 获得登陆信息（未登陆自动跳转到登陆界面）
 	     */
 	    {
-	        //$aId = $this->requireLogined() ;
+// 	        $aId = $this->requireLogined() ;
 	    }
 	    
 	    /**
@@ -235,7 +237,7 @@ class ListState extends Controller
             $this->state->prototype()->criteria()->where()->eq('info.sex',$this->params["sex"]);
         }
         //默认30个条目
-        $nPageNum = 30;
+        $nPageNum = 1;
         if($this->params()->has("pageNum")){
         	$nPageNum = $this->params()->int("pageNum");
         }
@@ -248,22 +250,27 @@ class ListState extends Controller
 	        $o->setData("title_html",$oState->getStateHtml("title",$o));
 	        $o->setData("body_html",$oState->getStateHtml("body",$o));
 	        preg_match("/(.*?)\|/", $o->stid,$aService);
+	        if($aService){
+	        	$o->setData("service",$aService['1']);
+	        }else{
+	        	$o->setData("service",'wonei');
+	        }
 	        
-	        $o->setData("service",$aService['1']);
 	        
 	        if($o->forwardtid)
 	        {
 	            $oStateClone = clone $this->state;
-	            $oStateClone->clearData();
-	            $oStateClone->prototype()->criteria()->where()->eq("stid",$o->forwardtid);
-	            $oStateClone->load() ;
+	            $oStateClone->load($o->forwardtid,'stid') ;
 	            foreach($oStateClone->childIterator() as $oClone)
 	            {
 	                $oClone->setData("title_html",$oState->getStateHtml("title",$oClone));
 	                $oClone->setData("body_html",$oState->getStateHtml("body",$oClone));
 	                preg_match("/(.*?)\|/", $oClone->stid,$aService2);
-	            
-	                $oClone->setData("service",$aService2['1']);
+	            	if($aService2){
+	            		$oClone->setData("service",$aService2['1']);
+	            	}else{
+	            		$oClone->setData("service",'wonei');
+	            	}
 	            }
 	            
 	            
