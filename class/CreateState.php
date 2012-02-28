@@ -174,11 +174,9 @@ class CreateState extends Controller
 		
 		
         try{
-        	//$this->state->printStruct();
 			$this->state->save(true);
         }catch (ExecuteException $e)
         {
-        	echo $e;
 			if($e->isDuplicate())
             {
             }
