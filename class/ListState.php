@@ -258,9 +258,7 @@ class ListState extends Controller
 	        if($o->forwardtid)
 	        {
 	            $oStateClone = clone $this->state;
-	            $oStateClone->clearData();
-	            $oStateClone->prototype()->criteria()->where()->eq("stid",$o->forwardtid);
-	            $oStateClone->load() ;
+	            $oStateClone->load($o->forwardtid,'stid') ;
 	            foreach($oStateClone->childIterator() as $oClone)
 	            {
 	                $oClone->setData("title_html",$oState->getStateHtml("title",$oClone));
