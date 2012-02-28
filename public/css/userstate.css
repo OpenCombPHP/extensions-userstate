@@ -31,7 +31,8 @@
 .nav_swich{ float:right; height:30px; line-height:30px;}
 
 .community_feed{ margin-top:-1px; padding-top:10px;}
-
+.article-avatar{ float:left; width:60px;}
+.article-details{ margin-left:65px;}
 
 
 /*community_sidebar*/
