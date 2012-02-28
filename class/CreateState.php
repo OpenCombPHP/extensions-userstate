@@ -71,36 +71,6 @@ class CreateState extends Controller
 	
 	public function process()
 	{
-	    $title = "@sf333 sfef@aarongao gr @gggggg sss @wsssssssef";
-	    preg_match_all("/@(.*? |.*$)/", $title, $aTitle);
-	    
-	    if(!empty($aTitle[1]))
-	    {
-	        foreach ($aTitle[1] as $v){
-	    
-	            $uid = 0;
-	            //测试用户是否存在
-	            $this->user->clearData();
-	            $this->user->prototype()->criteria()->where()->eq('username',$this->params['service']."#".trim($v));
-	            $this->user->load() ;
-	            
-	            DB::singleton()->executeLog() ;
-	            
-	            
-	            
-	            if($this->user->uid)
-	            {
-	                $uid = $this->user->uid;
-	            }
-	    
-	            $this->state->child("at")->createChild()
-	            ->setData("username",trim($v))
-	            ->setData("uid",$uid) ;
-	        }
-	    }
-	    
-	    exit;
-	    
 		//只是显示表单
 		if(!$this->params['title'] && !$this->params['body'] && !$this->params['attachment']){
 			return;
@@ -145,33 +115,30 @@ class CreateState extends Controller
 		
 		//at
 		$title = $this->params['title'];
-		//$title = "@sf333 sfef@aarongao gr @gggggg sss @wsssssssef";
-		preg_match_all("/@(.*? |.*$)/", $title, $aTitle);
+		//$title = "@sf333 sfef@aarongao gr @gggggg sss @wss @aa<sss @dfe:ssef @sas";
+		preg_match_all("/@(.*?)[ |:|<]|@(.*)$/", $title, $aTitle);
 		
-		if(!empty($aTitle[1]))
-		{
-		    foreach ($aTitle[1] as $v){
-		
-		        $uid = 0;
-		        //测试用户是否存在
-		        $this->user->clearData();
-		        $this->user->prototype()->criteria()->where()->eq('username',$this->params['service']."#".trim($v));
-		        $this->user->load() ;
-		
-		        if($this->user->his("uid"))
-		        {
-		            $uid = $this->user->uid;
-		        }
-		
-		        $this->state->child("at")->createChild()
-		        ->setData("username",trim($v))
-		        ->setData("uid",$uid) ;
-		    }
-		}
+		$aTitle = array_filter(array_merge($aTitle[1],$aTitle[2]));
+	    
+        foreach ($aTitle as $v){
+    
+            $uid = 0;
+            //测试用户是否存在
+            
+            $this->user->load($this->params['service']."#".trim($v),'username') ;
+            
+            if($this->user->uid)
+            {
+                $uid = $this->user->uid;
+            }
+    
+            $this->state->child("at")->createChild()
+            ->setData("username",trim($v))
+            ->setData("uid",$uid) ;
+	        }
 		
 		
 		//tag
-		$title = $this->params['title'];
 		//$title = "#sssssssssssssss# wfef#给w#wefss sd,we wef #fff#";
 		preg_match_all("/#(.*?)#/", $title, $aTag);
 		
@@ -187,7 +154,7 @@ class CreateState extends Controller
 		
         try{
             
-			//$this->state->save(true);
+			$this->state->save(true);
 			
         }catch (ExecuteException $e)
         {
