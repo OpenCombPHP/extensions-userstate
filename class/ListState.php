@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\userstate ;
 
+use com\wonei\woneibridge\aspect\NamecardAspect;
+
 use org\jecat\framework\util\String;
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\db\DB;
@@ -194,6 +196,7 @@ class ListState extends Controller
 	
 	public function process()
 	{
+		NamecardAspect::getbuff(32);
 	    /**
 	     * @wiki /CoreSystem
 	     * 用户系统
