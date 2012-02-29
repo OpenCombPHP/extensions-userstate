@@ -32,11 +32,12 @@
 
 .community_feed{ margin-top:-1px; padding-top:10px;}
 
-.article{margin-bottom:15px; padding-bottom:15px; border-bottom:1px dotted #eee;}
+.article{margin-bottom:15px; padding-bottom:15px; border-bottom:1px dotted #ccc;}
 .article-avatar{ float:left; width:60px;}
 .article-details{ margin-left:65px; line-height:22px;}
 .article-title{color:#333; font-size:14px;}
-.article-title span{ padding:0 4px; margin-right:4px;background:#29D9C2; color:#fff; text-shadow:1px 1px 2px rgba(1,1,1,0.3); border-radius:2px;}
+.article-title span,.forward-title span{ margin-right:4px;}
+.article-title span img,.forward-title span img{ vertical-align:-2px;}
 .article-details a{color:#894D12; text-decoration:none;}
 .article-details a:hover{ text-decoration:underline}
 
@@ -44,10 +45,12 @@
 .article-img span{margin-right:10px;}
 
 /* 转发 forward */
-.forward{ background:#eee; padding:15px;margin-top:10px; border-radius:4px;}
+.forward{ background:#f1f1f1; padding:15px;margin-top:10px; border-radius:4px;}
 
+a.newState{display:block;width:558px; padding:5px 0; border-radius:2px; border:1px solid #f60; background:#ffffc8; text-align:center; margin-bottom:15px; color:#f60}
 
-
+a.moreState{ display:block;width:100%; padding:5px 0; border-radius:2px; background:#999; text-align:center;color:#fff;}
+a:hover.moreState{ /*background:#894D12; color:#FFC; -moz-transition:all 0.4s ease; text-decoration:none;*/}
 /*community_sidebar*/
 .community_sidebar{ float:right; width:220px; }
 .sidebox{clear:both;border-top:1px solid #f1f1f1; margin:0 0 15px; padding-top:5px;}
