@@ -37,12 +37,6 @@ class ListState extends Controller
             				'tokeys'=>'uid',
                             //'columns' => '*' , 
             			) ,
-//             			'hasOne:auser' => array(    //一对一
-//             				'table' => 'oauth:user',
-//             	            'keys'=>array('uid','suid'),
-//             				'fromkeys'=>'uid',
-//             				'tokeys'=>'uid',
-//             			) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
@@ -85,9 +79,9 @@ class ListState extends Controller
 		) ;
 	    
 	    
-	    $aId = IdManager::singleton()->currentId() ;
-	    if( $aId and $this->params["channel"] == "friends")
+	    if( $this->params["channel"] == "friends")
 	    {
+	        $aId = IdManager::singleton()->currentId() ;
 	        $aOrm['model:state'] = array(
             		'class' => 'model' ,
             		'orm' => array(
@@ -104,12 +98,6 @@ class ListState extends Controller
             				'fromkeys'=>'article_uid',
             				'tokeys'=>'uid',
             			) ,
-//             		    'hasOne:auser' => array(    //一对一
-//             				'table' => 'oauth:user',
-//             	            'keys'=>array('uid','suid'),
-//             				'fromkeys'=>'uid',
-//             				'tokeys'=>'uid',
-//             			) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
@@ -129,66 +117,6 @@ class ListState extends Controller
                     'list'=>true,
             );
 	        
-	        
-	        
-	        
-	        /*array(
-	        		
-            		// 'class' => 'model' ,	(可省略)
-                    'list'=>true,
-	        		
-            		'orm' => array(
-            			'table' => 'friends:subscription' ,
-            	        'keys'=>array('from','to') ,
-            			'columns' => array() ,
-            			'where' => array(
-            				// 'logic' => 'and' , (可省略)
-            				array('eq','from',$aId->userId()) ,
-            			) ,
-            	        
-            			//一对多
-                		'hasOne:state'=>array(
-            		        'table'=>'state',
-            				'fromkeys'=>'to',
-            				'tokeys'=>'uid',
-                			'join'=>'inner',
-                			
-                			//一对一
-            		        'hasOne:info' => array(
-	            		        'table' => 'coresystem:userinfo',
-	            		        'fromkeys'=>'uid',
-	            		        'tokeys'=>'uid',
-            		        ) ,
-                			
-                			//一对多
-              		        'hasMany:attachments'=>array(
-	            		        'table'=>'userstate:state_attachment',
-	            		        'fromkeys'=>'stid',
-	            		        'tokeys'=>'stid',
-    		                )
-                		),
-            				
-            			// 字段的别名
-            			'alias' => array(
-            					'system' => 'state.system' ,
-            					'uid' => 'state.uid' ,
-            					'time' => 'state.time' ,
-            					'title_data' => 'state.title_data' ,
-            					'body_template' => 'state.body_template' ,
-            					'body_data' => 'state.body_data' ,
-            					'client' => 'state.client' ,
-            					'stid' => 'state.stid' ,
-            				
-            					'attachments.type' => 'state.attachments.type' ,
-            					'attachments.url' => 'state.attachments.url' ,
-            					'attachments.link' => 'state.attachments.link' ,
-            				   	
-            					'info.nickname' => 'state.info.nickname' ,
-            					'info.sex' => 'state.info.sex' ,
-            			),
-            		) ,
-            );
-            */
 	    }
 	    
 	    return  $aOrm;
@@ -247,8 +175,6 @@ class ListState extends Controller
 	    
 	    foreach($this->state->childIterator() as $o)
 	    {
-	        $o->setData("title_html",$oState->getStateHtml("title",$o));
-	        $o->setData("body_html",$oState->getStateHtml("body",$o));
 	        preg_match("/(.*?)\|/", $o->stid,$aService);
 	        if($aService){
 	        	$o->setData("service",$aService['1']);
@@ -263,8 +189,6 @@ class ListState extends Controller
 	            $oStateClone->load($o->forwardtid,'stid') ;
 	            foreach($oStateClone->childIterator() as $oClone)
 	            {
-	                $oClone->setData("title_html",$oState->getStateHtml("title",$oClone));
-	                $oClone->setData("body_html",$oState->getStateHtml("body",$oClone));
 	                preg_match("/(.*?)\|/", $oClone->stid,$aService2);
 	            	if($aService2){
 	            		$oClone->setData("service",$aService2['1']);
