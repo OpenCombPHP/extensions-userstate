@@ -196,6 +196,7 @@ class ListState extends Controller
 	
 	public function process()
 	{
+		NamecardAspect::getbuff(32);
 	    /**
 	     * @wiki /CoreSystem
 	     * 用户系统
