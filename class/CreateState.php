@@ -78,6 +78,7 @@ class CreateState extends Controller
 		
 		$arrAttachment = array();
 		if( Request::isUserRequest($this->params) ){//用户提交来的表单
+			$aId = $this->requireLogined() ;
 			$this->state->setData('system',NULL) ;  //防止作弊
 			$this->state->setData('forwardtid',0);
 			$this->state->setData('uid',IdManager::singleton()->currentId()->userId()) ;
