@@ -75,6 +75,7 @@ class CreateState extends Controller
 		if(!$this->params['title'] && !$this->params['body'] && !$this->params['attachment']){
 			return;
 		}
+		
 		$arrAttachment = array();
 		if( Request::isUserRequest($this->params) ){//用户提交来的表单
 			$this->state->setData('system',NULL) ;  //防止作弊
