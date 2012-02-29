@@ -66,7 +66,7 @@ class State
             }
         }else{*/
             if($type == "title"){
-                $html = $o->child('info')->nickname.":".$o->title;
+                $html = $o->title;
             }
             if ($type == "body"){
                 $html = $o->body;
