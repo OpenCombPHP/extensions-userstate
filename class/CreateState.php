@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\userstate ;
 
+use org\opencomb\oauth\api\PushState;
+
 use org\jecat\framework\lang\Exception;
 
 use org\jecat\framework\mvc\controller\Request;
@@ -76,6 +78,24 @@ class CreateState extends Controller
 			return;
 		}
 		
+		
+		/**
+		 * push weibo
+		 * @var unknown_type
+		 */
+		$aWeibo = $this->params['pushweibo'];
+		
+		$aParams = array(
+		        'service'=>$aWeibo,
+		        'title'=>$this->params['body'],
+        );
+		$oOauthPush = new PushState($aParams);
+		$oOauthPush->process();
+		
+		
+		
+		
+		
 		$arrAttachment = array();
 		if( Request::isUserRequest($this->params) ){//用户提交来的表单
 			$this->state->setData('system',NULL) ;  //防止作弊
@@ -90,6 +110,7 @@ class CreateState extends Controller
 					$arrAttachment[$sUrl] = array('link'=>$sUrl,'type'=>'');
 				}
 			}
+			
 		}else{ //系统内部直接保存数据
 			$this->state->setData("forwardtid",$this->params['forwardtid']);
 			$this->state->setData("stid",$this->params['stid']);

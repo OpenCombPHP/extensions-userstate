@@ -48,7 +48,19 @@ class ListState extends Controller
             		) ,
                     'list'=>true,
             ) ,
-
+	            
+            /**
+             * 用来快速获取，判断认证信息
+             */
+            'model:auser' => array(
+                    'orm' => array(
+                            'table' => 'oauth:user' ,
+                            'keys'=>array('uid','suid'),
+                    ) ,
+                    'list' => true,
+            ) ,
+	            
+	            
 		    /**
 		     * frame
 		     * frameview 子视图。子视图包含父视图。
@@ -202,6 +214,21 @@ class ListState extends Controller
 	            $o->addChild($oStateClone,'source');
 	        }
 	    }
+	    
+	    
+	    
+	    /**
+	     * 获得oauth信息，以后放到oauth扩展
+	     */
+	    
+	    $aId = IdManager::singleton()->currentId() ;
+	    
+	    $auserModelWhere = clone $this->auser->prototype()->criteria()->where();
+	    $auserModelWhere->eq('uid',$aId->userId());
+	    $this->auser->load($auserModelWhere) ;
+	    
+	    
+	    
 	    
 	    /**
 	     * 打印model
