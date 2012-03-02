@@ -98,7 +98,6 @@ class CreateState extends Controller
 		
 		$arrAttachment = array();
 		if( Request::isUserRequest($this->params) ){//用户提交来的表单
-			$aId = $this->requireLogined() ;
 			$this->state->setData('system',NULL) ;  //防止作弊
 			$this->state->setData('forwardtid',0);
 			$this->state->setData('uid',IdManager::singleton()->currentId()->userId()) ;
@@ -108,7 +107,7 @@ class CreateState extends Controller
 			$this->state->setData("body",$arrBodyResult[0]);
 			if($arrBodyResult[1]){
 				foreach($arrBodyResult[1] as $sUrl){
-					$arrAttachment[$sUrl] = array('link'=>$sUrl,'type'=>'');
+					$arrAttachment[$sUrl] = array('link'=>$sUrl,'type'=>'','url'=>'','thumbnail_pic'=>'','title'=>'');
 				}
 			}
 			
@@ -137,7 +136,7 @@ class CreateState extends Controller
 				$arrAttachmentFromParams['link'] =@$this->params['attachment'][$i]['link'];
 // 				$arrAttachmentFromParams['type'] =$this->params['attachment'][$i]['type']; 
 				$arrAttachmentFromParams['type'] =''; //舍弃了原先的type,我们自行判断type
-				$arrAttachmentFromParams['thumbnail_pic'] =$this->params['attachment'][$i]['thumbnail_pic'];
+				$arrAttachmentFromParams['thumbnail_pic'] =@$this->params['attachment'][$i]['thumbnail_pic'];
 				$arrAttachmentFromParams['title'] =@$this->params['attachment'][$i]['title'];
 				$arrAttachment[$arrAttachmentFromParams['link']] = $arrAttachmentFromParams;
 			}
@@ -159,6 +158,7 @@ class CreateState extends Controller
 		
 		//at
 		$title = $this->params['title'];
+		
 		//$title = "@sf333 sfef@aarongao gr @gggggg sss @wss @aa<sss @dfe:ssef @sas";
 		preg_match_all("/@(.*?)[ |:|<]|@(.*)$/", $title, $aTitle);
 		
@@ -179,7 +179,7 @@ class CreateState extends Controller
             $this->state->child("at")->createChild()
             ->setData("username",trim($v))
             ->setData("uid",$uid) ;
-	        }
+        }
 		
 		
 		//tag
