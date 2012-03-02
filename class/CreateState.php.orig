@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\userstate ;
 
+use org\opencomb\oauth\api\PushState;
+
 use org\jecat\framework\lang\Exception;
 
 use org\jecat\framework\mvc\controller\Request;
@@ -75,6 +77,25 @@ class CreateState extends Controller
 		if(!$this->params['title'] && !$this->params['body'] && !$this->params['attachment']){
 			return;
 		}
+		
+		
+		/**
+		 * push weibo
+		 * @var unknown_type
+		 */
+		$aWeibo = $this->params['pushweibo'];
+		
+		$aParams = array(
+		        'service'=>$aWeibo,
+		        'title'=>$this->params['body'],
+        );
+		$oOauthPush = new PushState($aParams);
+		$oOauthPush->process();
+		
+		
+		
+		
+		
 		$arrAttachment = array();
 		if( Request::isUserRequest($this->params) ){//用户提交来的表单
 			$this->state->setData('system',NULL) ;  //防止作弊
@@ -86,9 +107,14 @@ class CreateState extends Controller
 			$this->state->setData("body",$arrBodyResult[0]);
 			if($arrBodyResult[1]){
 				foreach($arrBodyResult[1] as $sUrl){
-					$arrAttachment[$sUrl] = array('link'=>$sUrl,'type'=>'');
+<<<<<<< HEAD
+					$arrAttachment[$sUrl] = array('link'=>$sUrl,'type'=>'','url'=>'','thumbnail_pic'=>'','title'=>'');
+=======
+					$arrAttachment[$sUrl] = array('url'=>$sUrl,'type'=>'');
+>>>>>>> ce8b91ddfc1a337a7a8b78bb4827ce82831d8e43
 				}
 			}
+			
 		}else{ //系统内部直接保存数据
 			$this->state->setData("forwardtid",$this->params['forwardtid']);
 			$this->state->setData("stid",$this->params['stid']);
@@ -114,9 +140,9 @@ class CreateState extends Controller
 				$arrAttachmentFromParams['link'] =@$this->params['attachment'][$i]['link'];
 // 				$arrAttachmentFromParams['type'] =$this->params['attachment'][$i]['type']; 
 				$arrAttachmentFromParams['type'] =''; //舍弃了原先的type,我们自行判断type
-				$arrAttachmentFromParams['thumbnail_pic'] =$this->params['attachment'][$i]['thumbnail_pic'];
+				$arrAttachmentFromParams['thumbnail_pic'] =@$this->params['attachment'][$i]['thumbnail_pic'];
 				$arrAttachmentFromParams['title'] =@$this->params['attachment'][$i]['title'];
-				$arrAttachment[$arrAttachmentFromParams['link']] = $arrAttachmentFromParams;
+				$arrAttachment[$arrAttachmentFromParams['url']] = $arrAttachmentFromParams;
 			}
 		}
 		
@@ -136,6 +162,7 @@ class CreateState extends Controller
 		
 		//at
 		$title = $this->params['title'];
+		
 		//$title = "@sf333 sfef@aarongao gr @gggggg sss @wss @aa<sss @dfe:ssef @sas";
 		preg_match_all("/@(.*?)[ |:|<]|@(.*)$/", $title, $aTitle);
 		
@@ -156,7 +183,7 @@ class CreateState extends Controller
             $this->state->child("at")->createChild()
             ->setData("username",trim($v))
             ->setData("uid",$uid) ;
-	        }
+        }
 		
 		
 		//tag
@@ -174,17 +201,10 @@ class CreateState extends Controller
 		
 		
         try{
-<<<<<<< HEAD
-            
+        	$this->state->printStruct();exit;
 			$this->state->save(true);
-			
-=======
-        	$this->state->printStruct();
-			$this->state->save(true);
->>>>>>> 44aaa769ab5178a6edc1c7cf49f56815bb1416bc
         }catch (ExecuteException $e)
         {
-        	echo $e;
 			if($e->isDuplicate())
             {
             }
@@ -296,7 +316,11 @@ class CreateState extends Controller
 			if($arrUrl['type']!==''){
 				continue;
 			}
+<<<<<<< HEAD
 			$arrUrlPart = parse_url ( $arrUrl['link'] );
+=======
+			$arrUrlPart = parse_url ( $arrUrl['url'] );
+>>>>>>> ce8b91ddfc1a337a7a8b78bb4827ce82831d8e43
 			$address = $arrUrlPart ['host'];
 			$query = @$arrUrlPart ['query'] ? '?'.$arrUrlPart ['query'] : '';
 			$fragment = @$arrUrlPart ['fragment'] ? $arrUrlPart ['fragment'] : '';
@@ -371,7 +395,7 @@ class CreateState extends Controller
 				unset ( $arrSockets [$sSocketIdx] );
 				@fclose ( $hSocket );
 				$arrUrls[$sSocketIdx]['type'] = '';
-				$arrUrls[$sSocketIdx]['link'] = $arrHeaderInfo['location'];
+				$arrUrls[$sSocketIdx]['url'] = $arrHeaderInfo['location'];
 // 				$arrUrls[$arrHeaderInfo['location']] = $arrUrls[$sSocketIdx];
 // 				unset($arrUrls[$sSocketIdx]);
 				continue;

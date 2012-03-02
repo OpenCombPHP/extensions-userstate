@@ -41,11 +41,11 @@ class CreateState extends Controller
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
+                		        'keys'=>'aid' ,
                 		        'table'=>'userstate:state_attachment',
                 		),
                 		'hasMany:at'=>array(    //一对多
                 				'fromkeys'=>'stid',
-        	                    'keys'=>array('stid',"username") ,
                 				'tokeys'=>'stid',
                 		        'table'=>'userstate:state_at',
                 		),
@@ -79,18 +79,6 @@ class CreateState extends Controller
 		}
 		
 		
-		/**
-		 * push weibo
-		 * @var unknown_type
-		 */
-		$aWeibo = $this->params['pushweibo'];
-		
-		$aParams = array(
-		        'service'=>$aWeibo,
-		        'title'=>$this->params['body'],
-        );
-		$oOauthPush = new PushState($aParams);
-		$oOauthPush->process();
 		
 		
 		
@@ -107,9 +95,25 @@ class CreateState extends Controller
 			$this->state->setData("body",$arrBodyResult[0]);
 			if($arrBodyResult[1]){
 				foreach($arrBodyResult[1] as $sUrl){
-					$arrAttachment[$sUrl] = array('link'=>$sUrl,'type'=>'','url'=>'','thumbnail_pic'=>'','title'=>'');
+					$arrAttachment[$sUrl] = array('url'=>$sUrl,'type'=>'');
 				}
 			}
+			
+			
+			/**
+			 * push weibo
+			 * @var unknown_type
+			 */
+			$aWeibo = $this->params['pushweibo'];
+			
+			$aParams = array(
+			        'service'=>$aWeibo,
+			        'title'=>$this->params['body'],
+			);
+			$oOauthPush = new PushState($aParams);
+			$oOauthPush->process();
+			
+			
 			
 		}else{ //系统内部直接保存数据
 			$this->state->setData("forwardtid",$this->params['forwardtid']);
@@ -138,7 +142,7 @@ class CreateState extends Controller
 				$arrAttachmentFromParams['type'] =''; //舍弃了原先的type,我们自行判断type
 				$arrAttachmentFromParams['thumbnail_pic'] =@$this->params['attachment'][$i]['thumbnail_pic'];
 				$arrAttachmentFromParams['title'] =@$this->params['attachment'][$i]['title'];
-				$arrAttachment[$arrAttachmentFromParams['link']] = $arrAttachmentFromParams;
+				$arrAttachment[$arrAttachmentFromParams['url']] = $arrAttachmentFromParams;
 			}
 		}
 		
@@ -147,15 +151,13 @@ class CreateState extends Controller
 			$arrAttachment = $this->getUrlType($arrAttachment);
 			foreach($arrAttachment as $sKey => $arrAttachment){
 				$this->state->child("attachments")->createChild()
-				->setData("url",@$arrAttachment['url'])
-				->setData("link",$sKey)
+				->setData("url",$arrAttachment['url'])
+				->setData("link",@$arrAttachment['link'])
 				->setData("type",$this->getDisplayType($arrAttachment['type']))
 				->setData("thumbnail_pic",@$arrAttachment['thumbnail_pic'])
 				->setData("title",@$arrAttachment['title']) ;
 			}
 		}
-		
-		
 		//at
 		$title = $this->params['title'];
 		
@@ -200,9 +202,14 @@ class CreateState extends Controller
 			$this->state->save(true);
         }catch (ExecuteException $e)
         {
-			if($e->isDuplicate())
+			if(!$e->isDuplicate())
             {
+                throw $e ;
             }
+            else 
+          {
+              echo 'duplicate' ;
+          }
         }
         
         return $this->state->stid;
@@ -311,7 +318,7 @@ class CreateState extends Controller
 			if($arrUrl['type']!==''){
 				continue;
 			}
-			$arrUrlPart = parse_url ( $arrUrl['link'] );
+			$arrUrlPart = parse_url ( $arrUrl['url'] );
 			$address = $arrUrlPart ['host'];
 			$query = @$arrUrlPart ['query'] ? '?'.$arrUrlPart ['query'] : '';
 			$fragment = @$arrUrlPart ['fragment'] ? $arrUrlPart ['fragment'] : '';
@@ -386,7 +393,7 @@ class CreateState extends Controller
 				unset ( $arrSockets [$sSocketIdx] );
 				@fclose ( $hSocket );
 				$arrUrls[$sSocketIdx]['type'] = '';
-				$arrUrls[$sSocketIdx]['link'] = $arrHeaderInfo['location'];
+				$arrUrls[$sSocketIdx]['url'] = $arrHeaderInfo['location'];
 // 				$arrUrls[$arrHeaderInfo['location']] = $arrUrls[$sSocketIdx];
 // 				unset($arrUrls[$sSocketIdx]);
 				continue;
