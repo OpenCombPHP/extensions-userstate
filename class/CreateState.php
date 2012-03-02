@@ -88,7 +88,7 @@ class CreateState extends Controller
 			$this->state->setData("body",$arrBodyResult[0]);
 			if($arrBodyResult[1]){
 				foreach($arrBodyResult[1] as $sUrl){
-					$arrAttachment[$sUrl] = array('link'=>$sUrl,'type'=>'');
+					$arrAttachment[$sUrl] = array('url'=>$sUrl,'type'=>'');
 				}
 			}
 		}else{ //系统内部直接保存数据
@@ -118,7 +118,7 @@ class CreateState extends Controller
 				$arrAttachmentFromParams['type'] =''; //舍弃了原先的type,我们自行判断type
 				$arrAttachmentFromParams['thumbnail_pic'] =$this->params['attachment'][$i]['thumbnail_pic'];
 				$arrAttachmentFromParams['title'] =@$this->params['attachment'][$i]['title'];
-				$arrAttachment[$arrAttachmentFromParams['link']] = $arrAttachmentFromParams;
+				$arrAttachment[$arrAttachmentFromParams['url']] = $arrAttachmentFromParams;
 			}
 		}
 		
@@ -176,6 +176,7 @@ class CreateState extends Controller
 		
 		
         try{
+        	$this->state->printStruct();exit;
 			$this->state->save(true);
         }catch (ExecuteException $e)
         {
@@ -290,7 +291,7 @@ class CreateState extends Controller
 			if($arrUrl['type']!==''){
 				continue;
 			}
-			$arrUrlPart = parse_url ( $arrUrl['link'] );
+			$arrUrlPart = parse_url ( $arrUrl['url'] );
 			$address = $arrUrlPart ['host'];
 			$query = @$arrUrlPart ['query'] ? '?'.$arrUrlPart ['query'] : '';
 			$fragment = @$arrUrlPart ['fragment'] ? $arrUrlPart ['fragment'] : '';
@@ -365,7 +366,7 @@ class CreateState extends Controller
 				unset ( $arrSockets [$sSocketIdx] );
 				@fclose ( $hSocket );
 				$arrUrls[$sSocketIdx]['type'] = '';
-				$arrUrls[$sSocketIdx]['link'] = $arrHeaderInfo['location'];
+				$arrUrls[$sSocketIdx]['url'] = $arrHeaderInfo['location'];
 // 				$arrUrls[$arrHeaderInfo['location']] = $arrUrls[$sSocketIdx];
 // 				unset($arrUrls[$sSocketIdx]);
 				continue;
