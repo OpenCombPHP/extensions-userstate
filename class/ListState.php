@@ -129,8 +129,52 @@ class ListState extends Controller
                     'list'=>true,
             );
 	        
+	        
+	        
 	    }
 	    
+	    
+	    if( $this->params["channel"] == "wownei")
+	    {
+	        $aId = IdManager::singleton()->currentId() ;
+	        $aOrm['model:state'] = array(
+	                'class' => 'model' ,
+	                'orm' => array(
+	                        'table' => 'userstate:state' ,
+	                        'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,
+	                        'hasOne:info' => array(    //一对一
+	                                'table' => 'coresystem:userinfo',
+	                                'fromkeys'=>'uid',
+	                                'tokeys'=>'uid',
+	                                //'columns' => '*' ,
+	                        ) ,
+	                        'hasOne:toinfo' => array(    //一对一
+	                                'table' => 'coresystem:userinfo',
+	                                'fromkeys'=>'article_uid',
+	                                'tokeys'=>'uid',
+	                        ) ,
+	                        'hasMany:attachments'=>array(    //一对多
+	                                'fromkeys'=>'stid',
+	                                'tokeys'=>'stid',
+	                                'table'=>'userstate:state_attachment',
+	                        ),
+	                        'hasMany:subscription'=>array(    //一对多
+	                                'keys'=>array('from','to') ,
+	                                'fromkeys'=>'uid',
+	                                'tokeys'=>'to',
+	                                'table'=>'friends:subscription',
+	                        ),
+	                        'where' => array(
+	                                array('eq','subscription.from',$aId->userId()) ,
+	                                array('eq','stid',"pull|") ,
+	                        ) ,
+	                ) ,
+	                'list'=>true,
+	        );
+	    
+	    
+	    
+	    }
 	    return  $aOrm;
 	}
 	
@@ -182,12 +226,12 @@ class ListState extends Controller
         	$nPageNum = $this->params()->int("pageNum");
         }
         $this->state->prototype()->criteria()->setLimit($this->params['limitlen']?$this->params['limitlen']:$nPageNum,$this->params['limitfrom']?$this->params['limitfrom']:0);
-	        
+        
 	    $this->state->load() ;
 	    
 	    foreach($this->state->childIterator() as $o)
 	    {
-	        preg_match("/(.*?)\|/", $o->stid,$aService);
+	        preg_match("/pull\|(.*?)\|/", $o->stid,$aService);
 	        if($aService){
 	        	$o->setData("service",$aService['1']);
 	        }else{
@@ -201,7 +245,7 @@ class ListState extends Controller
 	            $oStateClone->load($o->forwardtid,'stid') ;
 	            foreach($oStateClone->childIterator() as $oClone)
 	            {
-	                preg_match("/(.*?)\|/", $oClone->stid,$aService2);
+	                preg_match("/pull\|(.*?)\|/", $oClone->stid,$aService2);
 	            	if($aService2){
 	            		$oClone->setData("service",$aService2['1']);
 	            	}else{
