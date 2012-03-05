@@ -47,6 +47,7 @@ class CreateState extends Controller
                 		'hasMany:at'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
+            	                'keys'=>array('stid','username') ,
                 		        'table'=>'userstate:state_at',
                 		),
                 		'hasMany:tag'=>array(    //一对多
@@ -77,9 +78,6 @@ class CreateState extends Controller
 		if(!$this->params['title'] && !$this->params['body'] && !$this->params['attachment']){
 			return;
 		}
-		
-		
-		
 		
 		
 		
@@ -158,13 +156,14 @@ class CreateState extends Controller
 				->setData("title",@$arrAttachment['title']) ;
 			}
 		}
+		
+		
+		
 		//at
 		$title = $this->params['title'];
-		
-		//$title = "@sf333 sfef@aarongao gr @gggggg sss @wss @aa<sss @dfe:ssef @sas";
 		preg_match_all("/@(.*?)[ |:|<]|@(.*)$/", $title, $aTitle);
 		
-		$aTitle = array_filter(array_merge($aTitle[1],$aTitle[2]));
+		$aTitle = array_filter(array_unique(array_merge($aTitle[1],$aTitle[2])));
 	    
         foreach ($aTitle as $v){
     
@@ -185,7 +184,6 @@ class CreateState extends Controller
 		
 		
 		//tag
-		//$title = "#sssssssssssssss# wfef#给w#wefss sd,we wef #fff#";
 		preg_match_all("/#(.*?)#/", $title, $aTag);
 		
 		if(!empty($aTag[1]))
@@ -199,17 +197,17 @@ class CreateState extends Controller
 		
 		
         try{
+            
 			$this->state->save(true);
         }catch (ExecuteException $e)
         {
-			if(!$e->isDuplicate())
+            if(!$e->isDuplicate())
             {
                 throw $e ;
             }
             else 
-          {
-              echo 'duplicate' ;
-          }
+            {
+            }
         }
         
         return $this->state->stid;
