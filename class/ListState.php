@@ -220,12 +220,14 @@ class ListState extends Controller
 	     * 获得oauth信息，以后放到oauth扩展
 	     */
 	    
-	    $aId = IdManager::singleton()->currentId() ;
-	    
-	    $auserModelWhere = clone $this->auser->prototype()->criteria()->where();
-	    $auserModelWhere->eq('uid',$aId->userId());
-	    $this->auser->load($auserModelWhere) ;
-	    
+	    if(IdManager::singleton()->currentId())
+	    {
+	        $aId = IdManager::singleton()->currentId() ;
+	        
+	        $auserModelWhere = clone $this->auser->prototype()->criteria()->where();
+	        $auserModelWhere->eq('uid',$aId->userId());
+	        $this->auser->load($auserModelWhere) ;
+	    }
 	    
 	    
 	    
