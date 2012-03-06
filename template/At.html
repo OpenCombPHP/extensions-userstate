@@ -1,0 +1,9 @@
+<ul>
+	<foreach for="$theModel->childIterator()" item="value">
+	<li>
+		<!-- 这行是title -->
+		<div>{=$value['state.title']}</div>
+	</li>
+	<hr/>
+	</foreach>
+</ul>

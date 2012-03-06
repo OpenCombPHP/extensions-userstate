@@ -166,7 +166,7 @@ class ListState extends Controller
 	                        ),
 	                        'where' => array(
 	                                array('eq','subscription.from',$aId->userId()) ,
-	                                array('eq','stid',"pull|") ,
+	                                array('notLike','stid',"pull|%") ,
 	                        ) ,
 	                ) ,
 	                'list'=>true,
@@ -231,12 +231,14 @@ class ListState extends Controller
 	    
 	    foreach($this->state->childIterator() as $o)
 	    {
+	        
 	        preg_match("/pull\|(.*?)\|/", $o->stid,$aService);
 	        if($aService){
 	        	$o->setData("service",$aService['1']);
 	        }else{
-	        	$o->setData("service",'wonei');
+	        	$o->setData("service",'wownei');
 	        }
+	        $o->setData("title",$this->filterLink($o->title,$o->service));
 	        
 	        
 	        if($o->forwardtid)
@@ -249,8 +251,9 @@ class ListState extends Controller
 	            	if($aService2){
 	            		$oClone->setData("service",$aService2['1']);
 	            	}else{
-	            		$oClone->setData("service",'wonei');
+	            		$oClone->setData("service",'wownei');
 	            	}
+	                $oClone->setData("title",$this->filterLink($oClone->title,$oClone->service));
 	            }
 	            
 	            
@@ -283,6 +286,27 @@ class ListState extends Controller
 	     * DB::singleton()->executeLog() ;
 	     */
 	}
+	
+	
+	function filterLink($str,$service)
+	{
+	    //$str = '我爱问连岳之《一百万的烦恼》 http://163.fm/RQmmxF0 《我爱问连岳》系列 http://163.fm/D9qCZwJ';
+	    
+	    //去掉现有然A
+	    $str = preg_replace("/<a.*?>(.*)>/u", "$1", $str);
+	    
+	    //增加#
+	    $str = preg_replace("/#(.*)#/u", "<a href='/?c=org.opencomb.userstate.Tag&tag=$1'>#$1#</a>", $str);
+	    
+	    //增加@
+	    $str = preg_replace("/@(.*?)[：| ]/u", '<a href="/?c=com.wonei.woneibridge.index.JumpWownei&uname='.$service.'|$1">@$1</a>', $str);
+	    
+	    //增加A
+	    $str = preg_replace(array("/http:\/\/(.*?) /u","/ http:\/\/(.*)$/u"), array("<a href='http://$1'>http://$1</a>","<a href='http://$1'>http://$1</a>"), $str);
+	    
+	    return $str;
+	}
+	
 	
 	/**
 	 * @example /MVC模式/模型/Bean配置/Where条件

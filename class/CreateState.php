@@ -161,7 +161,7 @@ class CreateState extends Controller
 		
 		//at
 		$title = $this->params['title'];
-		preg_match_all("/@(.*?)[ |:|<]|@(.*)$/", $title, $aTitle);
+		preg_match_all("/@(.*?)[ |:|：|<]|@(.*)$/u", $title, $aTitle);
 		
 		$aTitle = array_filter(array_unique(array_merge($aTitle[1],$aTitle[2])));
 	    
