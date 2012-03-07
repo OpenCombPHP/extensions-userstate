@@ -231,7 +231,11 @@ class ListState extends Controller
 	    
 	    foreach($this->state->childIterator() as $o)
 	    {
-	        
+	        if(!$o->title)
+	        {
+	            $o->setData("title",$o->body);
+	            $o->setData("body","");
+	        }
 	        preg_match("/pull\|(.*?)\|/", $o->stid,$aService);
 	        if($aService){
 	        	$o->setData("service",$aService['1']);
@@ -247,6 +251,11 @@ class ListState extends Controller
 	            $oStateClone->load($o->forwardtid,'stid') ;
 	            foreach($oStateClone->childIterator() as $oClone)
 	            {
+        	        if(!$oClone->title)
+        	        {
+        	            $oClone->setData("title",$oClone->body);
+        	            $oClone->setData("body","");
+        	        }
 	                preg_match("/pull\|(.*?)\|/", $oClone->stid,$aService2);
 	            	if($aService2){
 	            		$oClone->setData("service",$aService2['1']);

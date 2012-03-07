@@ -97,10 +97,6 @@ class CreateState extends Controller
 				}
 			}
 			
-			//////////////////////////////////
-			
-			
-			
 		}else{ //系统内部直接保存数据
 			$this->state->setData("forwardtid",$this->params['forwardtid']);
 			$this->state->setData("stid","pull|".$this->params['stid']);
