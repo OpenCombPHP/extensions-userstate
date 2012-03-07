@@ -290,8 +290,6 @@ class ListState extends Controller
 	
 	function filterLink($str,$service)
 	{
-	    //$str = '我爱问连岳之《一百万的烦恼》 http://163.fm/RQmmxF0 《我爱问连岳》系列 http://163.fm/D9qCZwJ';
-	    
 	    //去掉现有然A
 	    $str = preg_replace("/<a.*?>(.*)>/u", "$1", $str);
 	    
@@ -299,7 +297,7 @@ class ListState extends Controller
 	    $str = preg_replace("/#(.*)#/u", "<a href='/?c=org.opencomb.userstate.Tag&tag=$1'>#$1#</a>", $str);
 	    
 	    //增加@
-	    $str = preg_replace("/@(.*?)[：| ]/u", '<a href="/?c=com.wonei.woneibridge.index.JumpWownei&uname='.$service.'|$1">@$1</a>', $str);
+	    $str = preg_replace("/@(.*?)[：| ]/u", '<a href="javascript:;">@$1</a>', $str);
 	    
 	    //增加A
 	    $str = preg_replace(array("/http:\/\/(.*?) /u","/ http:\/\/(.*)$/u"), array("<a href='http://$1'>http://$1</a>","<a href='http://$1'>http://$1</a>"), $str);

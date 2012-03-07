@@ -97,19 +97,7 @@ class CreateState extends Controller
 				}
 			}
 			
-			
-			/**
-			 * push weibo
-			 * @var unknown_type
-			 */
-			$aWeibo = $this->params['pushweibo'];
-			
-			$aParams = array(
-			        'service'=>$aWeibo,
-			        'title'=>$this->params['body'],
-			);
-			$oOauthPush = new PushState($aParams);
-			$oOauthPush->process();
+			//////////////////////////////////
 			
 			
 			
