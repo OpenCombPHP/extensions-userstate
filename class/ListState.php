@@ -103,7 +103,7 @@ class ListState extends Controller
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'uid',
             				'tokeys'=>'uid',
-                            //'columns' => '*' ,  
+                            'columns' => 'uid' ,  
             			) ,
             			'hasOne:toinfo' => array(    //一对一
             				'table' => 'coresystem:userinfo',
@@ -227,7 +227,9 @@ class ListState extends Controller
         }
         $this->state->prototype()->criteria()->setLimit($this->params['limitlen']?$this->params['limitlen']:$nPageNum,$this->params['limitfrom']?$this->params['limitfrom']:0);
         
+        $t = microtime(1) ;
 	    $this->state->load() ;
+	    echo 'load: ', microtime(1) - $t ;
 	    
 	    foreach($this->state->childIterator() as $o)
 	    {
@@ -276,13 +278,9 @@ class ListState extends Controller
 	     * 获得oauth信息，以后放到oauth扩展
 	     */
 	    
-	    if(IdManager::singleton()->currentId())
+	    if( $aId=IdManager::singleton()->currentId() )
 	    {
-	        $aId = IdManager::singleton()->currentId() ;
-	        
-	        $auserModelWhere = clone $this->auser->prototype()->criteria()->where();
-	        $auserModelWhere->eq('uid',$aId->userId());
-	        $this->auser->load($auserModelWhere) ;
+	        $this->auser->load($aId->userId(),'uid') ;
 	    }
 	    
 	    
