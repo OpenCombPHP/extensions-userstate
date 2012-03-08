@@ -93,7 +93,7 @@ class ListState extends Controller
 	    
 	    if( $this->params["channel"] == "friends")
 	    {
-	        $aId = IdManager::singleton()->currentId() ;
+	        $aId = $this->requireLogined() ;
 	        $aOrm['model:state'] = array(
             		'class' => 'model' ,
             		'orm' => array(
@@ -136,7 +136,7 @@ class ListState extends Controller
 	    
 	    if( $this->params["channel"] == "wownei")
 	    {
-	        $aId = IdManager::singleton()->currentId() ;
+	        $aId = $this->requireLogined() ;
 	        $aOrm['model:state'] = array(
 	                'class' => 'model' ,
 	                'orm' => array(
@@ -180,6 +180,7 @@ class ListState extends Controller
 	
 	public function process()
 	{
+	    
 	    /**
 	     * @wiki /CoreSystem
 	     * 用户系统
