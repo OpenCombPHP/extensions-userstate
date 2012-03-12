@@ -30,7 +30,13 @@ class ListState extends Controller
             				'fromkeys'=>'uid',
             				'tokeys'=>'uid',
                             //'columns' => '*' ,        
-            			) ,  
+            			) ,    
+//             			'hasOne:auser' => array(    //一对一
+//             				'table' => 'oauth:user',
+//             				'fromkeys'=>'uid',
+//             				'tokeys'=>'uid',
+//         		            'keys'=>array('service','suid'),
+//             			) , 
             			'hasOne:toinfo' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'article_uid',
@@ -230,7 +236,7 @@ class ListState extends Controller
         
         $t = microtime(1) ;
 	    $this->state->load() ;
-	    echo 'load: ', microtime(1) - $t ;
+	    //echo 'load: ', microtime(1) - $t ;
 	    
 	    foreach($this->state->childIterator() as $o)
 	    {
@@ -273,8 +279,6 @@ class ListState extends Controller
 	        }
 	    }
 	    
-	    
-	    
 	    /**
 	     * 获得oauth信息，以后放到oauth扩展
 	     */
@@ -283,7 +287,6 @@ class ListState extends Controller
 	    {
 	        $this->auser->load($aId->userId(),'uid') ;
 	    }
-	    
 	    
 	    /**
 	     * 打印model

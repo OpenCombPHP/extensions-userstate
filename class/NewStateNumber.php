@@ -26,7 +26,6 @@ class NewStateNumber extends Controller
 	
 	public function process()
 	{
-	    
         $this->state->prototype()->criteria()->addOrderBy('time',true);
         $this->state->prototype()->criteria()->where()->gt('time',$this->params['time']);
         

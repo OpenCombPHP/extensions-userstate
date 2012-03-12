@@ -95,12 +95,10 @@ class CreateState extends Controller
 		}
 		
 		
-		
-		
 		$arrAttachment = array();
 		if( Request::isUserRequest($this->params) ){//用户提交来的表单
 			$this->state->setData('system',NULL) ;  //防止作弊
-			$this->state->setData('forwardtid',0);
+			$this->state->setData('forwardtid',$this->params['forwardtid']);
 			$this->state->setData('uid',IdManager::singleton()->currentId()->userId()) ;
 			$this->state->setData('time',time()) ;
 			//分离附件链接
