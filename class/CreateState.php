@@ -55,12 +55,27 @@ class CreateState extends Controller
                 				'tokeys'=>'stid',
                 		        'table'=>'userstate:state_tag',
                 		),
+                		'hasMany:astate'=>array(    //一对多
+                				'fromkeys'=>'stid',
+                				'tokeys'=>'stid',
+                		        'table'=>'oauth:state',
+    		                    'keys'=>array('sid','service'),
+                		),
             		) ,
             ) ,
 		        
 	        'model:user' => array(
 	                'orm' => array(
 	                        'table' => 'coresystem:user' ,
+	                ) ,
+	        ) ,
+		        
+	        'model:astate' => array(
+	                'orm' => array(
+            				'fromkeys'=>'stid',
+            				'tokeys'=>'stid',
+            		        'table'=>'oauth:state',
+		                    'keys'=>array('sid','service'),
 	                ) ,
 	        ) ,
 		        
@@ -98,6 +113,21 @@ class CreateState extends Controller
 			}
 			
 		}else{ //系统内部直接保存数据
+		    
+		    /**
+		     * 判断是否重复
+		     */
+		    $aStateModelInfo = clone $this->astate->prototype()->criteria()->where();
+		    $this->astate->clearData();
+		    $aStateModelInfo->eq('service',$this->params['service']);
+		    $aStateModelInfo->eq('sid',$this->params['id']);
+		    $this->astate->load($aStateModelInfo);
+		    if($this->astate->stid)
+		    {
+		        return;
+		    }
+		    
+		    
 			$this->state->setData("forwardtid",$this->params['forwardtid']);
 			$this->state->setData("stid","pull|".$this->params['stid']);
 			$this->state->setData('system',$this->params['system']) ;
@@ -116,6 +146,13 @@ class CreateState extends Controller
 			$this->state->setData("data",$this->params['data']);
 			$this->state->setData("client",$this->params['client']);
 			$this->state->setData("client_url",$this->params['client_url']);
+			
+			
+			$this->state->child("astate")->createChild()
+			->setData("stid","pull|".$this->params['stid'])
+			->setData("service",$this->params['service'])
+			->setData("sid",$this->params['id']);
+			
 			
 			for($i = 0; $i < count($this->params['attachment']); $i++){
 				$arrAttachmentFromParams['url'] =$this->params['attachment'][$i]['url'];

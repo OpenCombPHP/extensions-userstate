@@ -287,7 +287,6 @@ class ListState extends Controller
 	    }
 	    
 	    
-	    
 	    /**
 	     * 打印model
 	     * $this->state->printStruct();
