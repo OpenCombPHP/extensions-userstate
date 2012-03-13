@@ -49,6 +49,7 @@ class CreateState extends Controller
                 				'tokeys'=>'stid',
             	                'keys'=>array('stid','username') ,
                 		        'table'=>'userstate:state_at',
+                		        
                 		),
                 		'hasMany:tag'=>array(    //一对多
                 				'fromkeys'=>'stid',
