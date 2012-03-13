@@ -252,6 +252,7 @@ class ListState extends Controller
 	        	$o->setData("service",'wownei');
 	        }
 	        $o->setData("title",$this->filterLink($o->title,$o->service));
+	        $o->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $o->title));
 	        
 	        
 	        if($o->forwardtid)
@@ -272,6 +273,7 @@ class ListState extends Controller
 	            		$oClone->setData("service",'wownei');
 	            	}
 	                $oClone->setData("title",$this->filterLink($oClone->title,$oClone->service));
+	                $oClone->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $oClone->title));
 	            }
 	            
 	            
