@@ -31,12 +31,12 @@ class ListState extends Controller
             				'tokeys'=>'uid',
                             //'columns' => '*' ,        
             			) ,    
-//             			'hasOne:auser' => array(    //一对一
-//             				'table' => 'oauth:user',
-//             				'fromkeys'=>'uid',
-//             				'tokeys'=>'uid',
-//         		            'keys'=>array('service','suid'),
-//             			) , 
+            			'hasMany:astate' => array(    //一对一
+            				'table' => 'oauth:state',
+            				'fromkeys'=>'stid',
+            				'tokeys'=>'stid',
+        		            'keys'=>array('service','sid'),
+            			) , 
             			'hasOne:toinfo' => array(    //一对一
             				'table' => 'coresystem:userinfo',
             				'fromkeys'=>'article_uid',
@@ -116,6 +116,12 @@ class ListState extends Controller
             				'fromkeys'=>'article_uid',
             				'tokeys'=>'uid',
             			) ,
+            			'hasMany:astate' => array(    //一对一
+            				'table' => 'oauth:state',
+            				'fromkeys'=>'stid',
+            				'tokeys'=>'stid',
+        		            'keys'=>array('service','sid'),
+            			) , 
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
@@ -159,6 +165,12 @@ class ListState extends Controller
 	                                'fromkeys'=>'article_uid',
 	                                'tokeys'=>'uid',
 	                        ) ,
+                			'hasMany:astate' => array(    //一对一
+                				'table' => 'oauth:state',
+                				'fromkeys'=>'stid',
+                				'tokeys'=>'stid',
+            		            'keys'=>array('service','sid'),
+                			) , 
 	                        'hasMany:attachments'=>array(    //一对多
 	                                'fromkeys'=>'stid',
 	                                'tokeys'=>'stid',
