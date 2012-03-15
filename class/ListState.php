@@ -25,29 +25,23 @@ class ListState extends Controller
             		'orm' => array(
             			'table' => 'userstate:state' ,
                         'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,     
-            			'hasOne:info' => array(    //一对一
-            				'table' => 'coresystem:userinfo',
-            				'fromkeys'=>'uid',
-            				'tokeys'=>'uid',
-                            //'columns' => '*' ,        
-            			) ,    
             			'hasMany:astate' => array(    //一对一
             				'table' => 'oauth:state',
             				'fromkeys'=>'stid',
             				'tokeys'=>'stid',
         		            'keys'=>array('service','sid'),
             			) , 
-            			'hasOne:toinfo' => array(    //一对一
-            				'table' => 'coresystem:userinfo',
-            				'fromkeys'=>'article_uid',
-            				'tokeys'=>'uid',
-                            //'columns' => '*' , 
-            			) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
                 		        'table'=>'userstate:state_attachment',
                 		),
+    			        'hasOne:subscription'=>array(    //一对多
+    			                'keys'=>array('from','to') ,
+    			                'fromkeys'=>'uid',
+    			                'tokeys'=>'to',
+    			                'table'=>'friends:subscription',
+    			        ),
 //             			'where' => array(
 //             				array('eq','stid',"23") ,
 //             			) ,
@@ -67,23 +61,7 @@ class ListState extends Controller
             ) ,
 	            
 	            
-		    /**
-		     * frame
-		     * frameview 子视图。子视图包含父视图。
-		     */
 
-//             'frame' => array(
-            		
-//                     'frameview' => array(
-//                             'template' => 'userstate:ListState.html' ,
-//                             /**
-//                              * 给视图变量
-//                              * 'vars' => array('pageNum'=>'2'),
-//                              */
-//                     )
-//             ) ,
-	            
-//     		'params' => array('pageNum'=>'30'),
 			// 视图
 			'view' => array(
 				/**
@@ -105,17 +83,6 @@ class ListState extends Controller
             		'orm' => array(
             			'table' => 'userstate:state' ,
                         'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
-            			'hasOne:info' => array(    //一对一
-            				'table' => 'coresystem:userinfo',
-            				'fromkeys'=>'uid',
-            				'tokeys'=>'uid',
-                            'columns' => 'uid' ,  
-            			) ,
-            			'hasOne:toinfo' => array(    //一对一
-            				'table' => 'coresystem:userinfo',
-            				'fromkeys'=>'article_uid',
-            				'tokeys'=>'uid',
-            			) ,
             			'hasMany:astate' => array(    //一对一
             				'table' => 'oauth:state',
             				'fromkeys'=>'stid',
@@ -127,7 +94,7 @@ class ListState extends Controller
                 				'tokeys'=>'stid',
                 		        'table'=>'userstate:state_attachment',
                 		),
-    			        'hasMany:subscription'=>array(    //一对多
+    			        'hasOne:subscription'=>array(    //一对多
     			                'keys'=>array('from','to') ,
     			                'fromkeys'=>'uid',
     			                'tokeys'=>'to',
@@ -154,17 +121,6 @@ class ListState extends Controller
 	                'orm' => array(
 	                        'table' => 'userstate:state' ,
 	                        'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,
-	                        'hasOne:info' => array(    //一对一
-	                                'table' => 'coresystem:userinfo',
-	                                'fromkeys'=>'uid',
-	                                'tokeys'=>'uid',
-	                                //'columns' => '*' ,
-	                        ) ,
-	                        'hasOne:toinfo' => array(    //一对一
-	                                'table' => 'coresystem:userinfo',
-	                                'fromkeys'=>'article_uid',
-	                                'tokeys'=>'uid',
-	                        ) ,
                 			'hasMany:astate' => array(    //一对一
                 				'table' => 'oauth:state',
                 				'fromkeys'=>'stid',
@@ -176,7 +132,7 @@ class ListState extends Controller
 	                                'tokeys'=>'stid',
 	                                'table'=>'userstate:state_attachment',
 	                        ),
-	                        'hasMany:subscription'=>array(    //一对多
+	                        'hasOne:subscription'=>array(    //一对多
 	                                'keys'=>array('from','to') ,
 	                                'fromkeys'=>'uid',
 	                                'tokeys'=>'to',
@@ -190,9 +146,8 @@ class ListState extends Controller
 	                'list'=>true,
 	        );
 	    
-	    
-	    
 	    }
+	    
 	    return  $aOrm;
 	}
 	
