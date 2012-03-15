@@ -1,7 +1,7 @@
 <?php
 namespace org\opencomb\userstate ;
 
-use org\opencomb\oauth\api\PushState;
+use org\opencomb\oauth_userstate_adapter\PushState;
 
 use org\jecat\framework\lang\Exception;
 

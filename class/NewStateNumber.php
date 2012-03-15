@@ -1,8 +1,6 @@
 <?php
 namespace org\opencomb\userstate ;
 
-use org\opencomb\oauth\api\PullState;
-
 use org\jecat\framework\bean\BeanFactory;
 
 use org\jecat\framework\auth\IdManager;

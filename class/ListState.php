@@ -248,6 +248,9 @@ class ListState extends Controller
         
         $t = microtime(1) ;
 	    $this->state->load() ;
+	    
+	    
+	    
 	    //echo 'load: ', microtime(1) - $t ;
 	    
 	    foreach($this->state->childIterator() as $o)
