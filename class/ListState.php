@@ -31,6 +31,12 @@ class ListState extends Controller
             				'tokeys'=>'stid',
         		            'keys'=>array('service','sid'),
             			) , 
+        		        'hasOne:info' => array(    //一对一
+        		                'table' => 'coresystem:userinfo',
+        		                'fromkeys'=>'uid',
+        		                'tokeys'=>'uid',
+        		                //'columns' => '*' ,
+        		        ) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
@@ -89,6 +95,12 @@ class ListState extends Controller
             				'tokeys'=>'stid',
         		            'keys'=>array('service','sid'),
             			) , 
+        		        'hasOne:info' => array(    //一对一
+        		                'table' => 'coresystem:userinfo',
+        		                'fromkeys'=>'uid',
+        		                'tokeys'=>'uid',
+        		                //'columns' => '*' ,
+        		        ) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
@@ -127,6 +139,12 @@ class ListState extends Controller
                 				'tokeys'=>'stid',
             		            'keys'=>array('service','sid'),
                 			) , 
+            		        'hasOne:info' => array(    //一对一
+            		                'table' => 'coresystem:userinfo',
+            		                'fromkeys'=>'uid',
+            		                'tokeys'=>'uid',
+            		                //'columns' => '*' ,
+            		        ) ,
 	                        'hasMany:attachments'=>array(    //一对多
 	                                'fromkeys'=>'stid',
 	                                'tokeys'=>'stid',
@@ -250,13 +268,14 @@ class ListState extends Controller
 	            $o->addChild($oStateClone,'source');
 	        }
 	        
-	        
 	        /**
 	         * 
 	         */
 	        
             $aLastData[$o->service]['time'] =  $o->time;
             $aLastData[$o->service]['id'] =  $o->child('astate')->child(0)->sid;
+            $aData = json_decode($o->data,true);
+            $aLastData[$o->service]['max_id'] =  @$aData['cursor_id'];
             @$aLastData[$o->service]['num'] ++;
 	            
 	            
