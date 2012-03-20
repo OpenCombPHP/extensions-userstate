@@ -171,7 +171,6 @@ class ListState extends Controller
 	
 	public function process()
 	{
-	    
 	    /**
 	     * @wiki /CoreSystem
 	     * 用户系统
@@ -222,10 +221,6 @@ class ListState extends Controller
         $t = microtime(1) ;
 	    $this->state->load() ;
 	    
-	    
-	    
-	    //echo 'load: ', microtime(1) - $t ;
-	    
 	    foreach($this->state->childIterator() as $k => $o)
 	    {
 	        if(!$o->title)
@@ -273,7 +268,7 @@ class ListState extends Controller
 	         */
 	        
             $aLastData[$o->service]['time'] =  $o->time;
-            $aLastData[$o->service]['id'] =  $o->child('astate')->child(0)->sid;
+            $aLastData[$o->service]['id'] =  @$o->child('astate')->child(0)->sid;
             $aData = json_decode($o->data,true);
             $aLastData[$o->service]['max_id'] =  @$aData['cursor_id'];
             @$aLastData[$o->service]['num'] ++;
