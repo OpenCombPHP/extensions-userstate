@@ -48,9 +48,6 @@ class ListState extends Controller
     			                'tokeys'=>'to',
     			                'table'=>'friends:subscription',
     			        ),
-//             			'where' => array(
-//             				array('eq','stid',"23") ,
-//             			) ,
             		) ,
                     'list'=>true,
             ) ,
@@ -240,8 +237,11 @@ class ListState extends Controller
 	        
 	        if($o->forwardtid)
 	        {
-	            $oStateClone = clone $this->state;
-	            $oStateClone->load($o->forwardtid,'stid') ;
+	            $oStateClone = $this->state->prototype()->createModel(true);
+                $oStateClone->prototype()->criteria()->where()->clear();
+                $oStateClone->prototype()->criteria()->setLimit(1);
+	            $oStateClone->load($o->forwardtid,'stid');
+	            
 	            foreach($oStateClone->childIterator() as $oClone)
 	            {
         	        if(!$oClone->title)
@@ -250,6 +250,7 @@ class ListState extends Controller
         	            $oClone->setData("body","");
         	        }
 	                preg_match("/pull\|(.*?)\|/", $oClone->stid,$aService2);
+	                
 	            	if($aService2){
 	            		$oClone->setData("service",$aService2['1']);
 	            	}else{
@@ -258,7 +259,6 @@ class ListState extends Controller
 	                $oClone->setData("title",$this->filterLink($oClone->title,$oClone->service));
 	                $oClone->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $oClone->title));
 	            }
-	            
 	            
 	            $o->addChild($oStateClone,'source');
 	        }
@@ -280,7 +280,6 @@ class ListState extends Controller
 	        }
 	        
 	    }
-	    
 	    /**
 	     * 获得oauth信息，以后放到oauth扩展
 	     */
@@ -289,7 +288,6 @@ class ListState extends Controller
 	    {
 	        $this->auser->load($aId->userId(),'uid') ;
 	    }
-	    
 	    /**
 	     * 打印model
 	     * $this->state->printStruct();
