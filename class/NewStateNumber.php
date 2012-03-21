@@ -11,15 +11,71 @@ class NewStateNumber extends Controller
 {
 	public function createBeanConfig()
 	{
-		return array(
-		
-    		/**
-    		 * 模型
-    		 * list = true 返回多条记录
-    		 */
-            'model:state' => array( 'conf' => 'model/state', 'list'=>true)  ,
-			
-		) ;
+	    
+	    $aOrm = array(
+	    
+	    /**
+	     * 模型
+	    * list = true 返回多条记录
+	    */
+	            'model:state' => array(
+	                    'class' => 'model' ,
+	                    'orm' => array(
+	                            'table' => 'userstate:state' ,
+	                    ) ,
+	                    'list'=>true,
+	            ) ,
+	    
+	    ) ;
+	    
+	    
+	    if( $this->params["channel"] == "friends")
+	    {
+	        $aId = $this->requireLogined() ;
+	        $aOrm['model:state'] = array(
+	                'class' => 'model' ,
+	                'orm' => array(
+	                        'table' => 'userstate:state' ,
+	                        'hasOne:subscription'=>array(    //一对多
+	                                'keys'=>array('from','to') ,
+	                                'fromkeys'=>'uid',
+	                                'tokeys'=>'to',
+	                                'table'=>'friends:subscription',
+	                        ),
+	                        'where' => array(
+	                                array('eq','subscription.from',$aId->userId()) ,
+	                        ) ,
+	                ) ,
+	                'list'=>true,
+	        );
+	    
+	    }
+	    
+	    
+	    if( $this->params["channel"] == "wownei")
+	    {
+	        $aId = $this->requireLogined() ;
+	        $aOrm['model:state'] = array(
+	                'class' => 'model' ,
+	                'orm' => array(
+	                        'table' => 'userstate:state' ,
+	                        'hasOne:subscription'=>array(    //一对多
+	                                'keys'=>array('from','to') ,
+	                                'fromkeys'=>'uid',
+	                                'tokeys'=>'to',
+	                                'table'=>'friends:subscription',
+	                        ),
+	                        'where' => array(
+	                                array('eq','subscription.from',$aId->userId()) ,
+	                                array('notLike','stid',"pull|%") ,
+	                        ) ,
+	                ) ,
+	                'list'=>true,
+	        );
+	    
+	    }
+	    
+	    return  $aOrm;
 	}
 	
 	public function process()
