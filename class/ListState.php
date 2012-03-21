@@ -238,9 +238,11 @@ class ListState extends Controller
 	        if($o->forwardtid)
 	        {
 	            $oStateClone = $this->state->prototype()->createModel(true);
-                $oStateClone->prototype()->criteria()->where()->clear();
-                $oStateClone->prototype()->criteria()->setLimit(1);
-	            $oStateClone->load($o->forwardtid,'stid');
+	            $oStateCloneCriteria = $oStateClone->createCriteria();
+                $oStateCloneCriteria->where()->clear();
+                $oStateCloneCriteria->where()->eq('stid',$o->forwardtid);
+                $oStateCloneCriteria->setLimit(1);
+	            $oStateClone->load($oStateCloneCriteria);
 	            
 	            foreach($oStateClone->childIterator() as $oClone)
 	            {
