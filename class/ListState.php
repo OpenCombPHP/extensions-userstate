@@ -110,8 +110,12 @@ class ListState extends Controller
     			                'table'=>'friends:subscription',
     			        ),
             			'where' => array(
-            				// 'logic' => 'and' , (可省略)
-            				array('eq','subscription.from',$aId->userId()) ,
+            				//'logic' => 'or' , 
+	                        array(
+	                                "or",
+	                                array('eq','subscription.from',$aId->userId()) ,
+	                                array('eq','uid',$aId->userId()) ,
+                            ),
             			) ,
             		) ,
                     'list'=>true,
@@ -154,8 +158,15 @@ class ListState extends Controller
 	                                'table'=>'friends:subscription',
 	                        ),
 	                        'where' => array(
-	                                array('eq','subscription.from',$aId->userId()) ,
-	                                array('notLike','stid',"pull|%") ,
+	                                array(
+	                                        "or",
+	                                        array('eq','uid',$aId->userId()) ,
+	                                        array('eq','subscription.from',$aId->userId()) ,
+	                                        array(
+	                                                "and",
+	                                                array('notLike','stid',"pull|%") ,
+	                                        )
+                                    ),
 	                        ) ,
 	                ) ,
 	                'list'=>true,
