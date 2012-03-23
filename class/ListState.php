@@ -288,7 +288,6 @@ class ListState extends Controller
 	        }
 	        
 	    }
-	     //$this->state->printStruct();
 	    /**
 	     * 获得oauth信息，以后放到oauth扩展
 	     */
