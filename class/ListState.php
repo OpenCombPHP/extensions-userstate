@@ -314,7 +314,14 @@ class ListState extends Controller
 	        $aRs = array();
 	        if(@$o->type)
 	        {
-	            $aRs[$o->type] = "1";
+	            $a['aid'] = @$o->aid;
+	            $a['stid'] = @$o->stid;
+	            $a['type'] = @$o->type;
+	            $a['title'] = @$o->title;
+	            $a['url'] = @$o->url;
+	            $a['thumbnail_pic'] = @$o->thumbnail_pic;
+	            $a['link'] = @$o->link;
+	            $aRs[$o->type][] = $a;
 	        }
             
 	    }
