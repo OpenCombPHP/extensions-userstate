@@ -2,7 +2,6 @@
 namespace org\opencomb\userstate ;
 
 use com\wonei\woneibridge\aspect\NamecardAspect;
-
 use org\jecat\framework\util\String;
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\db\DB;
