@@ -43,7 +43,9 @@ class NewStateNumber extends Controller
 	                                'table'=>'friends:subscription',
 	                        ),
 	                        'where' => array(
-	                                array('eq','subscription.from',$aId->userId()) ,
+                                    "or",
+                                    array('eq','subscription.from',$aId->userId()) ,
+                                    array('eq','uid',$aId->userId()) ,
 	                        ) ,
 	                ) ,
 	                'list'=>true,
@@ -66,8 +68,12 @@ class NewStateNumber extends Controller
 	                                'table'=>'friends:subscription',
 	                        ),
 	                        'where' => array(
-	                                array('eq','subscription.from',$aId->userId()) ,
-	                                array('notLike','stid',"pull|%") ,
+                                    array('notLike','stid',"pull|%") ,
+	                                array(
+                                        "or",
+                                        array('eq','uid',$aId->userId()) ,
+                                        array('eq','subscription.from',$aId->userId()),
+                                    ),
 	                        ) ,
 	                ) ,
 	                'list'=>true,
@@ -82,6 +88,7 @@ class NewStateNumber extends Controller
 	{
         $this->state->prototype()->criteria()->addOrderBy('time',true);
         $this->state->prototype()->criteria()->where()->gt('time',$this->params['time']);
+        $this->state->prototype()->criteria()->setLimit(1000);
         
 	    $this->state->load() ;
 	    echo $this->state->childrenCount();exit;
