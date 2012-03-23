@@ -323,9 +323,9 @@ class ListState extends UserSpace
 	            $a['link'] = @$o->link;
 	            $aRs[$o->type][] = $a;
 	        }
-            
+	        return $aRs;
 	    }
-	    return $aRs;
+	    return null;
 	}
 	
 	function filterLink($str,$service)
