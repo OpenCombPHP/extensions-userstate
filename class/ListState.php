@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\userstate ;
 
+use org\opencomb\coresystem\mvc\controller\UserSpace;
+
 use com\wonei\woneibridge\aspect\NamecardAspect;
 use org\jecat\framework\util\String;
 use org\jecat\framework\bean\BeanFactory;
@@ -9,7 +11,7 @@ use org\jecat\framework\auth\IdManager;
 use org\jecat\framework\message\Message;
 use org\opencomb\coresystem\mvc\controller\Controller;
 
-class ListState extends Controller
+class ListState extends UserSpace
 {
 	public function createBeanConfig()
 	{
