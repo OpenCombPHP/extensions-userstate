@@ -237,7 +237,7 @@ class ListState extends Controller
 	        }
 	        $o->setData("title",$this->filterLink($o->title,$o->service));
 	        $o->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $o->title));
-	        
+	        $o->setData("attachmentsFilterArray",$this->filterAttachments($o->child('attachments')));
 	        
 	        if($o->forwardtid)
 	        {
@@ -264,6 +264,7 @@ class ListState extends Controller
 	            	}
 	                $oClone->setData("title",$this->filterLink($oClone->title,$oClone->service));
 	                $oClone->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $oClone->title));
+	                $oClone->setData("attachmentsFilterArray",$this->filterAttachments($oClone->child('attachments')));
 	            }
 	            
 	            $o->addChild($oStateClone,'source');
@@ -286,6 +287,7 @@ class ListState extends Controller
 	        }
 	        
 	    }
+	     //$this->state->printStruct();
 	    /**
 	     * 获得oauth信息，以后放到oauth扩展
 	     */
@@ -303,6 +305,27 @@ class ListState extends Controller
 	     */
 	}
 	
+	
+	function filterAttachments($oAttachments)
+	{
+	    foreach($oAttachments->childIterator() as $o)
+	    {
+	        $aRs = array();
+	        if(@$o->type)
+	        {
+	            $a['aid'] = @$o->aid;
+	            $a['stid'] = @$o->stid;
+	            $a['type'] = @$o->type;
+	            $a['title'] = @$o->title;
+	            $a['url'] = @$o->url;
+	            $a['thumbnail_pic'] = @$o->thumbnail_pic;
+	            $a['link'] = @$o->link;
+	            $aRs[$o->type][] = $a;
+	        }
+            
+	    }
+	    return $aRs;
+	}
 	
 	function filterLink($str,$service)
 	{
