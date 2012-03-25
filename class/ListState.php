@@ -309,9 +309,9 @@ class ListState extends UserSpace
 	
 	function filterAttachments($oAttachments)
 	{
+	    $aRs = array();
 	    foreach($oAttachments->childIterator() as $o)
 	    {
-	        $aRs = array();
 	        if(@$o->type)
 	        {
 	            $a['aid'] = @$o->aid;
