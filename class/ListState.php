@@ -325,7 +325,7 @@ class ListState extends UserSpace
 	        }
 	        return $aRs;
 	    }
-	    return null;
+	    return @$aRs;
 	}
 	
 	function filterLink($str,$service)
