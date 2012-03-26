@@ -297,6 +297,7 @@ class ListState extends UserSpace
 	    {
 	        $this->auser->load($aId->userId(),'uid') ;
 	    }
+	    
 	    /**
 	     * 打印model
 	     * $this->state->printStruct();
