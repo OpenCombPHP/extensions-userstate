@@ -251,26 +251,29 @@ class ListState extends UserSpace
                 $oStateCloneCriteria->setLimit(1);
 	            $oStateClone->load($oStateCloneCriteria);
 	            
-	            foreach($oStateClone->childIterator() as $oClone)
+	            if($oStateClone->childrenCount() > 0)
 	            {
-        	        if(!$oClone->title)
-        	        {
-        	            $oClone->setData("title",$oClone->body);
-        	            $oClone->setData("body","");
-        	        }
-	                preg_match("/pull\|(.*?)\|/", $oClone->stid,$aService2);
+	                foreach($oStateClone->childIterator() as $oClone)
+	                {
+	                    if(!$oClone->title)
+	                    {
+	                        $oClone->setData("title",$oClone->body);
+	                        $oClone->setData("body","");
+	                    }
+	                    preg_match("/pull\|(.*?)\|/", $oClone->stid,$aService2);
 	                
-	            	if($aService2){
-	            		$oClone->setData("service",$aService2['1']);
-	            	}else{
-	            		$oClone->setData("service",'wownei');
-	            	}
-	                $oClone->setData("title",$this->filterLink($oClone->title,$oClone->service));
-	                $oClone->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $oClone->title));
-	                $oClone->setData("attachmentsFilterArray",$this->filterAttachments($oClone->child('attachments')));
+	                    if($aService2){
+	                        $oClone->setData("service",$aService2['1']);
+	                    }else{
+	                        $oClone->setData("service",'wownei');
+	                    }
+	                    $oClone->setData("title",$this->filterLink($oClone->title,$oClone->service));
+	                    $oClone->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $oClone->title));
+	                    $oClone->setData("attachmentsFilterArray",$this->filterAttachments($oClone->child('attachments')));
+	                }
+	                
+	                $o->addChild($oStateClone,'source');
 	            }
-	            
-	            $o->addChild($oStateClone,'source');
 	        }
 	        
 	        /**
