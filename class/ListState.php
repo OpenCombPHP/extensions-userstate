@@ -224,7 +224,7 @@ class ListState extends UserSpace
         
         $t = microtime(1) ;
 	    $this->state->load() ;
-	    
+	    //DB::singleton()->executeLog() ;
 	    foreach($this->state->childIterator() as $k => $o)
 	    {
 	        if(!$o->title)
@@ -411,16 +411,30 @@ class ListState extends UserSpace
 	 * @param int $nTime
 	 * @return string 时间
 	 */
-	public function getCreateTime($nTime){
-		$nTime=(int)$nTime;
-		$nPassedTime=time()-$nTime;
-		if($nPassedTime < 60)
-		{
-			return $nPassedTime . '秒前';
-		}else if($nPassedTime < 3600){
-			return $nPassedTime%60 . '分钟前';
-		}else{
-			return gmdate("Y年m月d日 h:i", $nTime);
-		}
+	public function getCreateTime($date)
+	{
+	    $limit = time() - $date;
+        if($limit < 60)
+        {
+            return $limit . '秒钟之前';
+        }
+         if($limit >= 60 && $limit < 3600)
+        {
+         return floor($limit/60) . '分钟之前';
+        }
+        if($limit >= 3600 && $limit < 86400)
+        {
+         return floor($limit/3600) . '小时之前';
+        }
+        if($limit >= 86400 and $limit<259200)
+        {
+         return floor($limit/86400) . '天之前';
+         }
+        if($limit >= 259200)
+        {
+           return date('Y-m-d H:i:s', $date);
+        }else{
+          return '';
+         }
 	}
 }
