@@ -405,4 +405,22 @@ class ListState extends UserSpace
 		// 		limit 20 ;
 		DB::singleton()->executeLog() ;
 	}
+	
+	/**
+	 * 如果是半小时内,就显示:"xx分钟以前",如果是半小时以后,就显示日期时间
+	 * @param int $nTime
+	 * @return string 时间
+	 */
+	public function getCreateTime($nTime){
+		$nTime=(int)$nTime;
+		$nPassedTime=time()-$nTime;
+		if($nPassedTime < 60)
+		{
+			return $nPassedTime . '秒前';
+		}else if($nPassedTime < 3600){
+			return $nPassedTime%60 . '分钟前';
+		}else{
+			return gmdate("Y年m月d日 h:i", $nTime);
+		}
+	}
 }
