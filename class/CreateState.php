@@ -128,6 +128,7 @@ class CreateState extends Controller
 		    
 		    
 			$this->state->setData("forwardtid",$this->params['forwardtid']);
+			$this->state->setData("forwardcount",$this->params['forwardcount']);
 			$this->state->setData("stid","pull|".$this->params['stid']);
 			$this->state->setData('system',$this->params['system']) ;
 			if($this->params->has('uid')){
