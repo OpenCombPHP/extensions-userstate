@@ -223,7 +223,7 @@ class ListState extends UserSpace
         $this->state->prototype()->criteria()->setLimit($this->params['limitlen']?$this->params['limitlen']:$nPageNum,$this->params['limitfrom']?$this->params['limitfrom']:0);
         
         /*测试用: 只显示某网站的数据*/
-        $this->state->prototype()->criteria()->where()->like('stid','pull|renren.com%');
+//         $this->state->prototype()->criteria()->where()->like('stid','pull|renren.com%');
         ////////////////////////////////////////////////
         
         $t = microtime(1) ;
