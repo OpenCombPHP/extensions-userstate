@@ -32,6 +32,12 @@ class ListState extends UserSpace
             				'tokeys'=>'stid',
         		            'keys'=>array('service','sid'),
             			) , 
+        		        'hasOne:user' => array(    //一对一
+        		                'table' => 'coresystem:user',
+        		                'fromkeys'=>'uid',
+        		                'tokeys'=>'uid',
+        		                //'columns' => '*' ,
+        		        ) ,
         		        'hasOne:info' => array(    //一对一
         		                'table' => 'coresystem:userinfo',
         		                'fromkeys'=>'uid',
@@ -93,6 +99,12 @@ class ListState extends UserSpace
             				'tokeys'=>'stid',
         		            'keys'=>array('service','sid'),
             			) , 
+        		        'hasOne:user' => array(    //一对一
+        		                'table' => 'coresystem:user',
+        		                'fromkeys'=>'uid',
+        		                'tokeys'=>'uid',
+        		                //'columns' => '*' ,
+        		        ) ,
         		        'hasOne:info' => array(    //一对一
         		                'table' => 'coresystem:userinfo',
         		                'fromkeys'=>'uid',
@@ -138,6 +150,12 @@ class ListState extends UserSpace
                 				'tokeys'=>'stid',
             		            'keys'=>array('service','sid'),
                 			) , 
+            		        'hasOne:user' => array(    //一对一
+            		                'table' => 'coresystem:user',
+            		                'fromkeys'=>'uid',
+            		                'tokeys'=>'uid',
+            		                //'columns' => '*' ,
+            		        ) ,
             		        'hasOne:info' => array(    //一对一
             		                'table' => 'coresystem:userinfo',
             		                'fromkeys'=>'uid',
@@ -174,7 +192,6 @@ class ListState extends UserSpace
 	
 	public function process()
 	{
-	    
 	    /**
 	     * @wiki /CoreSystem
 	     * 用户系统
