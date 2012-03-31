@@ -336,6 +336,10 @@ class CreateState extends Controller
 			if($arrUrl['type']!==''){
 				continue;
 			}
+			//腾讯的图片?,告诉它检测用的分辨率
+			if( strpos($arrUrl['url'],'http://app.qpic.cn/mblogpic/') === 0 ){
+				$arrUrl['url'] .= '/120';
+			}
 			$arrUrlPart = parse_url ( $arrUrl['url'] );
 			$address = $arrUrlPart ['host'];
 			$query = @$arrUrlPart ['query'] ? '?'.$arrUrlPart ['query'] : '';
@@ -437,5 +441,3 @@ class CreateState extends Controller
 		}
 	}
 }
-
-?>
