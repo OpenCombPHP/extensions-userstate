@@ -151,7 +151,7 @@ class CreateState extends Controller
 			$this->state->child("astate")->createChild()
 			->setData("stid","pull|".$this->params['stid'])
 			->setData("service",$this->params['service'])
-			->setData("sid",$this->params['id']);
+			->setData("sid",sprintf('%s',$this->params['id']));
 			
 			
 			for($i = 0; $i < count($this->params['attachment']); $i++){
