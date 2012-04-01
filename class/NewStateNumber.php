@@ -42,21 +42,34 @@ class NewStateNumber extends Controller
 	                                'tokeys'=>'to',
 	                                'table'=>'friends:subscription',
 	                        ),
-	                        'where' => array(
-                                    "or",
-                                    array('eq','subscription.from',$aId->userId()) ,
-                                    array('eq','uid',$aId->userId()) ,
-	                        ) ,
 	                ) ,
 	                'list'=>true,
 	        );
 	    
+	        $aUid = array();
+	        foreach (IdManager::singleton()->iterator() as $v){
+	            $aUid[] = $v->userId();
+	        }
+	        if(count($aUid) > 1)
+	        {
+	            $aOrm['model:state']['orm']['where'] = array(
+	                    "or",
+	                    array('in','subscription.from',$aUid) ,
+	                    array('eq','uid',$aId->userId()) ,
+	            );
+	        }else{
+	            $aOrm['model:state']['orm']['where'] = array(
+	                    "or",
+	                    array('eq','subscription.from',$aId->userId()) ,
+	                    array('eq','uid',$aId->userId()) ,
+	            );
+	        }
 	    }
 	    
 	    
 	    if( $this->params["channel"] == "wownei")
 	    {
-	        $aId = $this->requireLogined() ;
+	        //$aId = $this->requireLogined() ;
 	        $aOrm['model:state'] = array(
 	                'class' => 'model' ,
 	                'orm' => array(
@@ -69,11 +82,12 @@ class NewStateNumber extends Controller
 	                        ),
 	                        'where' => array(
                                     array('notLike','stid',"pull|%") ,
+	                                /*
 	                                array(
                                         "or",
                                         array('eq','uid',$aId->userId()) ,
                                         array('eq','subscription.from',$aId->userId()),
-                                    ),
+                                    ),*/
 	                        ) ,
 	                ) ,
 	                'list'=>true,
