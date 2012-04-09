@@ -281,11 +281,11 @@ class ListState extends UserSpace
 	        if($o->forwardtid)
 	        {
 	            $oStateClone = $this->state->prototype()->createModel(true);
-	            $oStateCloneCriteria = $oStateClone->createCriteria();
-                $oStateCloneCriteria->where()->clear();
-                $oStateCloneCriteria->where()->eq('stid',$o->forwardtid);
-                $oStateCloneCriteria->setLimit(1);
-	            $oStateClone->load($oStateCloneCriteria);
+// 	            $oStateCloneCriteria = $oStateClone->createCriteria();
+//                 $oStateCloneCriteria->where()->clear();
+//                 $oStateCloneCriteria->where()->eq('stid',$o->forwardtid);
+//                 $oStateCloneCriteria->setLimit(1);
+	            $oStateClone->loadSql("`stid` = @1 " , array($o->forwardtid));
 	            
 	            if($oStateClone->childrenCount() > 0)
 	            {
