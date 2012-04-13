@@ -133,19 +133,20 @@ class ListState extends UserSpace
 	        }
 	        if(count($aUid) > 1)
 	        {
-	            $aOrm['model:state']['orm']['where'] = array(
-	                                    "or",
-	                                    array('in','subscription.from',$aUid) ,
-	                                    array('eq','uid',$aId->userId()) ,
-	            );
+	        	$sSql = '';
+	        	foreach($aUid as $nKey => $nUid)
+	        	{
+	        		if($nKey)
+	        		{
+	        			$sSql .= ',';
+	        		}
+	        		$sSql.='@'.($nKey+1);
+	        	}
+	        	$aUid[] =  $aId->userId();
+	            $aOrm['model:state']['orm']['where'] = array( "subscription.from in ( {$sSql} ) or uid = @" . count($aUid)+1 , $aUid );
 	        }else{
-	            $aOrm['model:state']['orm']['where'] = array(
-	                    "or",
-	                    array('eq','subscription.from',$aId->userId()) ,
-	                    array('eq','uid',$aId->userId()) ,
-	            );
+	            $aOrm['model:state']['orm']['where'] = array( 'subscription.from = @1 or uid = @2' , $aId->userId() , $aId->userId() );
 	        }
-	        
 	    }
 	    
 	    
@@ -186,20 +187,13 @@ class ListState extends UserSpace
 	                                'tokeys'=>'to',
 	                                'table'=>'friends:subscription',
 	                        ),
-	                        'where' => array(
-                                    array('notLike','stid',"pull|%") ,
-	                                /*
-	                                array(
-                                        "or",
-                                        array('eq','uid',$aId->userId()) ,
-                                        array('eq','subscription.from',$aId->userId()),
-                                    ),*/
-	                        ) ,
+	                        'where' => array( 'stid not like @1',"pull|%") ,
 	                ) ,
 	                'list'=>true,
 	        );
 	    
 	    }
+	    $aOrm['model:state']['orm']['orderDesc'] = 'time';
 	    
 	    return  $aOrm;
 	}
@@ -229,36 +223,40 @@ class ListState extends UserSpace
 	    }
 	    
 	    $oState = new State();
+	    $sSql = '';
+	    $arrParamsForSql = array();
 	    
-	    /**
- 	     * @example sql操作
-	     * @forwiki /mvc/模型/模型(Model)
-	     */
-	    {
-        $this->state->prototype()->criteria()->addOrderBy('time',true);
-        //$this->state->prototype()->criteria()->where()->eq('uid',$aId->userId());
-	    }
         if($this->params["system"])
         {
-            $this->state->prototype()->criteria()->where()->eq('system',$this->params["system"]);
+            $sSql.= 'system = @1';
+            $arrParamsForSql[] = $this->params["system"];
         }
         if($this->params["sex"])
         {
-            $this->state->prototype()->criteria()->where()->eq('info.sex',$this->params["sex"]);
+        	$nSqlNum = 1;
+			if(!empty($sSql)){
+				$sSql.= ' and ';
+				$nSqlNum = 2;
+			}
+            $sSql.= 'info.sex = @' . $nSqlNum;
+            $arrParamsForSql[] = $this->params["sex"];
         }
+       
+        /*测试用: 只显示某网站的数据*/
+//         $this->state->prototype()->criteria()->where()->like('stid','pull|renren.com%');
+        ////////////////////////////////////////////////
+        
+        
         //默认30个条目
         $nPageNum = 30;
         if($this->params()->has("pageNum")){
         	$nPageNum = $this->params()->int("pageNum");
         }
-        $this->state->prototype()->criteria()->setLimit($this->params['limitlen']?$this->params['limitlen']:$nPageNum,$this->params['limitfrom']?$this->params['limitfrom']:0);
+        $this->state->prototype()->setLimit($this->params['limitlen']?$this->params['limitlen']:$nPageNum,$this->params['limitfrom']?$this->params['limitfrom']:0);
         
-        /*测试用: 只显示某网站的数据*/
-//         $this->state->prototype()->criteria()->where()->like('stid','pull|renren.com%');
-        ////////////////////////////////////////////////
         
         $t = microtime(1) ;
-	    $this->state->load() ;
+	    $this->state->loadSql($sSql,$arrParamsForSql) ;
 	    
 	    //DB::singleton()->executeLog() ;
 	    foreach($this->state->childIterator() as $k => $o)
@@ -384,62 +382,6 @@ class ListState extends UserSpace
 	    $str = preg_replace(array("/http:\/\/(.*?) /u","/ http:\/\/(.*)$/u"), array("<a href='http://$1'>http://$1</a>","<a href='http://$1'>http://$1</a>"), $str);
 	    
 	    return $str;
-	}
-	
-	
-	/**
-	 * @example /MVC模式/模型/Bean配置/Where条件
-	 * 
-	 * （这个方法不会被执行，它只是做为 model/orm 的 bean config 数组的例子）
-	 */
-	private function exampleBeanOrmWhere()
-	{
-		// 定一个 model 的 bean config
-		$arrConfig = array(
-			'class' => 'model' ,
-			'list' => true ,
-			'orm' => array(
-				'table' => 'userstate:some_table_name' ,	// 数据表
-				'keys' => 'id' ,				// 数据表主键
-				'columns' => array('column_a','column_b','column_c') ,	// 返回字段
-				'order' => array('column_e','column_f') ,
-				'limit' => 10 ,
-				'where' => array(
-					
-					// where数组中的第一项元素如果字符串，则表示条件之间的逻辑关系，缺省为 and
-					'and' , 
-						
-					// where 数组中的每一项array元素都做为一项sql条件表达式
-					// array内的第一个元素必须时字符串格式，做为条件表达式的运算符(Restriction 类的方法名称)，
-					// 后面的元素是参与运算的内容
-					array('eq','column_a','abc') ,		// column_a='abc'
-					array('gt','column_b',123) ,		// column_b>123
-						
-					// restriction 类型的 array，是一个条件分组，
-					// 第二个元素必须是一个数组，其结构跟 where 数组完全一致（where - restriction 构成了一个无穷递归的结构）。
-					array( 'restriction' , array(
-						'or' ,
-						array('le','column_c',56) ,		// column_c<=56
-						array('ge','column_d',789) ,	// column_d>=789
-					) )
-				)
-			)
-		) ;
-		
-		// 用 bean config 数组创建 model 对象
-		$aModel = BeanFactory::singleton()->createBean($arrConfig) ;
-		
-		// model 载入数据
-		$aModel->load() ;
-		
-		// 打印sql执行日志，输出：
-		// select column_a, column_b, column_c from some_table_name  
-		// 		where column_a='abc' and column_b>123 and (
-		//			column_c<=56 or column_d>=789
-		//		)
-		//		order by column_e desc, column_f desc
-		// 		limit 20 ;
-		DB::singleton()->executeLog() ;
 	}
 	
 	/**

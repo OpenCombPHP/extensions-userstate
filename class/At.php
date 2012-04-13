@@ -36,9 +36,7 @@ class At extends Controller
             				'tokeys'=>'uid',
                             //'columns' => '*' ,        
             			) ,  
-            			'where' => array(
-            				array('eq','uid',$aId->userId()) ,
-            			) ,
+            			'where' => array( 'uid = @1',$aId->userId() ) ,
             		) ,
                     'list'=>true,
             ) ,

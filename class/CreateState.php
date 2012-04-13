@@ -116,11 +116,8 @@ class CreateState extends Controller
 		    /**
 		     * 判断是否重复
 		     */
-		    $aStateModelInfo = clone $this->astate->prototype()->criteria()->where();
 		    $this->astate->clearData();
-		    $aStateModelInfo->eq('service',$this->params['service']);
-		    $aStateModelInfo->eq('sid',$this->params['id']);
-		    $this->astate->load($aStateModelInfo);
+		    $this->astate->loadSql('service = @1 and sid = @2' , $this->params['service'] ,$this->params['id']);
 		    if($this->astate->stid)
 		    {
 		        return;

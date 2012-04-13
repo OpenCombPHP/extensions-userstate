@@ -29,9 +29,7 @@ class Tag extends Controller
             				'fromkeys'=>'stid',
             				'tokeys'=>'stid',
             			) ,  
-            			'where' => array(
-            				array('eq','title',$this->params['tag']) ,
-            			) ,
+            			'where' => array( 'title = @1',$this->params['tag']) ,
             		) ,
                     'list'=>true,
             ) ,

@@ -112,7 +112,4 @@ class NewStateNumber extends Controller
 	     * $this->state->printStruct();
 	     */
 	}
-	
 }
-
-?>
