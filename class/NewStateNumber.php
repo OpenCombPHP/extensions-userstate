@@ -45,24 +45,26 @@ class NewStateNumber extends Controller
 	                ) ,
 	                'list'=>true,
 	        );
-	    
+	        
 	        $aUid = array();
 	        foreach (IdManager::singleton()->iterator() as $v){
 	            $aUid[] = $v->userId();
 	        }
 	        if(count($aUid) > 1)
 	        {
-	            $aOrm['model:state']['orm']['where'] = array(
-	                    "or",
-	                    array('in','subscription.from',$aUid) ,
-	                    array('eq','uid',$aId->userId()) ,
-	            );
+	            $sSql = '';
+	            foreach($aUid as $nKey => $nUid)
+	            {
+	                if($nKey)
+	                {
+	                    $sSql .= ',';
+	                }
+	                $sSql.='@'.($nKey+1);
+	            }
+	            $aUid[] =  $aId->userId();
+	            $aOrm['model:state']['orm']['where'] = array( "subscription.from in ( {$sSql} ) or uid = @" . count($aUid)+1 , $aUid );
 	        }else{
-	            $aOrm['model:state']['orm']['where'] = array(
-	                    "or",
-	                    array('eq','subscription.from',$aId->userId()) ,
-	                    array('eq','uid',$aId->userId()) ,
-	            );
+	            $aOrm['model:state']['orm']['where'] = array( 'subscription.from = @1 or uid = @2' , $aId->userId() , $aId->userId() );
 	        }
 	    }
 	    
@@ -80,15 +82,7 @@ class NewStateNumber extends Controller
 	                                'tokeys'=>'to',
 	                                'table'=>'friends:subscription',
 	                        ),
-	                        'where' => array(
-                                    array('notLike','stid',"pull|%") ,
-	                                /*
-	                                array(
-                                        "or",
-                                        array('eq','uid',$aId->userId()) ,
-                                        array('eq','subscription.from',$aId->userId()),
-                                    ),*/
-	                        ) ,
+	                        'where' => array( 'stid not like @1',"pull|%") ,
 	                ) ,
 	                'list'=>true,
 	        );

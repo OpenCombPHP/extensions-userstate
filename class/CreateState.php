@@ -81,7 +81,7 @@ class CreateState extends Controller
 	        ) ,
 		        
 			// 视图
-			'view:stateForm' => array(
+			'view' => array(
 				'template' => 'userstate:CreateState.html' ,
 				'model' => 'state' ,
 			) ,
@@ -92,6 +92,13 @@ class CreateState extends Controller
 	{
 		//如果没有数据传来,只显示表单
 		if(!$this->params['title'] && !$this->params['body'] && !$this->params['attachment']){
+		    
+		    $oOauth = DB::singleton()->query("SELECT * FROM `oauth:user` WHERE uid = @1",IdManager::singleton()->currentId()->userId());
+		    foreach ($oOauth as $k => $v){
+		        $aOauthList[$v['service']] = 1; 
+		    }
+		    
+            $this->view->variables()->set('aOauthList',$aOauthList) ;
 			return;
 		}
 		
@@ -213,7 +220,6 @@ class CreateState extends Controller
 		    }
 		}
 		
-		
         try{
 			$this->state->save(true);
         }catch (ExecuteException $e)
@@ -228,6 +234,7 @@ class CreateState extends Controller
         }
         
         return $this->state->stid;
+        
 	}
 	
 	/**

@@ -252,7 +252,9 @@ class ListState extends UserSpace
         if($this->params()->has("pageNum")){
         	$nPageNum = $this->params()->int("pageNum");
         }
-        $this->state->prototype()->setLimit($this->params['limitlen']?$this->params['limitlen']:$nPageNum,$this->params['limitfrom']?$this->params['limitfrom']:0);
+        $nPageNum = $this->params['limitlen']?$this->params['limitlen']:$nPageNum;
+        
+        $this->state->setPagination($nPageNum,$this->params['limitfrom']?Ceil(($this->params['limitfrom']/$nPageNum)+1):1);
         
         
         $t = microtime(1) ;
