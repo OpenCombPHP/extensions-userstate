@@ -274,8 +274,9 @@ class ListState extends UserSpace
 	        }else{
 	        	$o->setData("service",'wownei');
 	        }
-	        $o->setData("title",$this->filterLink($o->title,$o->service));
-	        $o->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $o->title));
+	        $title = $o->title;
+	        $o->setData("title",$this->filterLink($title,$o->service));
+	        $o->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $title));
 	        $o->setData("attachmentsFilterArray",$this->filterAttachments($o->child('attachments')));
 	        
 	        if($o->forwardtid)
@@ -303,8 +304,9 @@ class ListState extends UserSpace
 	                    }else{
 	                        $oClone->setData("service",'wownei');
 	                    }
-	                    $oClone->setData("title",$this->filterLink($oClone->title,$oClone->service));
-	                    $oClone->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $oClone->title));
+	                    $title = $oClone->title;
+	                    $oClone->setData("title",$this->filterLink($title,$oClone->service));
+	                    $oClone->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $title));
 	                    $oClone->setData("attachmentsFilterArray",$this->filterAttachments($oClone->child('attachments')));
 	                }
 	                
