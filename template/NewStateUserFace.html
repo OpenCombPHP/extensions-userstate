@@ -4,13 +4,13 @@
 <div class='namecard_normal' id="namecard_normal_{=$aModel['uid']}">
 <div class='namecard_normal_card_simple'>
 	<div class='namecard_normal_card_face'>
-		<img src='{=$theWidget->faceUrl()}' width=48 height=48/>
+		<img src='{=$theWidget->faceUrl($aModel)}' width=48 height=48/>
 	</div>
 </div>
 <div class='namecard_normal_card_full'>
 	<div class='namecard_normal_card_face_part'>
 		<div class='namecard_normal_card_face'>
-			<img src='{=$theWidget->faceUrl()}' width=60 height=60/>
+			<img src='{=$theWidget->faceUrl($aModel)}' width=60 height=60/>
 		</div>
 		<div class='namecard_normal_card_name'>
 			{=$aModel['username']}
