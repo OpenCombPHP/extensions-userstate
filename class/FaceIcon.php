@@ -16,8 +16,11 @@ class FaceIcon{
         {
             $aFaceIcon = $this::$aFaceIcon[$service];
             foreach ($aFaceIcon as $k => $v){
-                $aSource[] = $k;
-                $aTarget[] = '<img src="'.$v.'">';
+                if(!empty($v))
+                {
+                    $aSource[] = $k;
+                    $aTarget[] = '<img src="'.$v.'">';
+                }
             }
             $title = str_replace($aSource, $aTarget, $title);
             return $title;
@@ -26,8 +29,11 @@ class FaceIcon{
         {
             $aFaceIcon = $this::$aWowneiToWeibo;
             foreach ($aFaceIcon as $k => $v){
-                $aSource[] = $k;
-                $aTarget[] = $v[$service];
+                if(!empty($v[$service]))
+                {
+                    $aSource[] = $k;
+                    $aTarget[] = $v[$service];
+                }
             }
             $title = str_replace($aSource, $aTarget, $title);
             return $title;

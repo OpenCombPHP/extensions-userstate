@@ -32,29 +32,11 @@ class ListState extends UserSpace
             				'tokeys'=>'stid',
         		            'keys'=>array('service','sid'),
             			) , 
-        		        'hasOne:user' => array(    //一对一
-        		                'table' => 'coresystem:user',
-        		                'fromkeys'=>'uid',
-        		                'tokeys'=>'uid',
-        		                //'columns' => '*' ,
-        		        ) ,
-        		        'hasOne:info' => array(    //一对一
-        		                'table' => 'coresystem:userinfo',
-        		                'fromkeys'=>'uid',
-        		                'tokeys'=>'uid',
-        		                //'columns' => '*' ,
-        		        ) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
                 		        'table'=>'userstate:state_attachment',
                 		),
-    			        'hasOne:subscription'=>array(    //一对多
-    			                'keys'=>array('from','to') ,
-    			                'fromkeys'=>'uid',
-    			                'tokeys'=>'to',
-    			                'table'=>'friends:subscription',
-    			        ),
             		) ,
                     'list'=>true,
             ) ,
@@ -100,18 +82,6 @@ class ListState extends UserSpace
             				'tokeys'=>'stid',
         		            'keys'=>array('service','sid'),
             			) , 
-        		        'hasOne:user' => array(    //一对一
-        		                'table' => 'coresystem:user',
-        		                'fromkeys'=>'uid',
-        		                'tokeys'=>'uid',
-        		                //'columns' => '*' ,
-        		        ) ,
-        		        'hasOne:info' => array(    //一对一
-        		                'table' => 'coresystem:userinfo',
-        		                'fromkeys'=>'uid',
-        		                'tokeys'=>'uid',
-        		                //'columns' => '*' ,
-        		        ) ,
                 		'hasMany:attachments'=>array(    //一对多
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
@@ -143,9 +113,10 @@ class ListState extends UserSpace
 	        		$sSql.='@'.($nKey+1);
 	        	}
 	        	$aUid[] =  $aId->userId();
-	            $aOrm['model:state']['orm']['where'] = array( "subscription.from in ( {$sSql} ) or uid = @" . count($aUid)+1 , $aUid );
+	        	
+	            $aOrm['model:state']['orm']['where'] = array( "(subscription.from in ( {$sSql} ) or uid = @" . count($aUid)+1 .')', $aUid );
 	        }else{
-	            $aOrm['model:state']['orm']['where'] = array( 'subscription.from = @1 or uid = @2' , $aId->userId() , $aId->userId() );
+	            $aOrm['model:state']['orm']['where'] = array( '(subscription.from = @1 or uid = @2)' , $aId->userId() , $aId->userId() );
 	        }
 	    }
 	    
@@ -164,18 +135,6 @@ class ListState extends UserSpace
                 				'tokeys'=>'stid',
             		            'keys'=>array('service','sid'),
                 			) , 
-            		        'hasOne:user' => array(    //一对一
-            		                'table' => 'coresystem:user',
-            		                'fromkeys'=>'uid',
-            		                'tokeys'=>'uid',
-            		                //'columns' => '*' ,
-            		        ) ,
-            		        'hasOne:info' => array(    //一对一
-            		                'table' => 'coresystem:userinfo',
-            		                'fromkeys'=>'uid',
-            		                'tokeys'=>'uid',
-            		                //'columns' => '*' ,
-            		        ) ,
 	                        'hasMany:attachments'=>array(    //一对多
 	                                'fromkeys'=>'stid',
 	                                'tokeys'=>'stid',
@@ -258,9 +217,9 @@ class ListState extends UserSpace
         
         
         $t = microtime(1) ;
+        
 	    $this->state->loadSql($sSql,$arrParamsForSql) ;
 	    
-	    //DB::singleton()->executeLog() ;
 	    foreach($this->state->childIterator() as $k => $o)
 	    {
 	        if(!$o->title)
@@ -323,7 +282,6 @@ class ListState extends UserSpace
             $aData = json_decode($o->data,true);
             $aLastData[$o->service]['max_id'] =  @$aData['cursor_id'];
             @$aLastData[$o->service]['num'] ++;
-	            
 	            
             if($k == $this->state->childrenCount()-1)
 	        {
