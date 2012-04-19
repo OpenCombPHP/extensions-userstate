@@ -93,7 +93,9 @@ class CreateState extends Controller
 		//如果没有数据传来,只显示表单
 		if(!$this->params['title'] && !$this->params['body'] && !$this->params['attachment']){
 		    
+		    
 		    $oOauth = DB::singleton()->query("SELECT * FROM `oauth:user` WHERE uid = @1",IdManager::singleton()->currentId()->userId());
+		    $aOauthList = array();
 		    foreach ($oOauth as $k => $v){
 		        $aOauthList[$v['service']] = 1; 
 		    }
