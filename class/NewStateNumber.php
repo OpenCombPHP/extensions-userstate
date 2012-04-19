@@ -101,7 +101,7 @@ class NewStateNumber extends Controller
 	{
         $this->state->prototype()->criteria()->addOrderBy('time',true);
         $this->state->prototype()->criteria()->where()->gt('time',$this->params['time']);
-        $this->state->prototype()->criteria()->setLimit(1000);
+        $this->state->setPagination(1000,1);
         
 	    $this->state->load() ;
 	    echo $this->state->childrenCount();exit;
