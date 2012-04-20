@@ -14,12 +14,15 @@ class FaceIcon{
         }
         public function changePic($title,$service)
         {
-            $aFaceIcon = $this::$aFaceIcon[$service];
-            foreach ($aFaceIcon as $k => $v){
-                $aSource[] = $k;
-                $aTarget[] = '<img src="'.$v.'">';
+            if(!empty($this::$aFaceIcon[$service]))
+            {
+                $aFaceIcon = $this::$aFaceIcon[$service];
+                foreach ($aFaceIcon as $k => $v){
+                    $aSource[] = $k;
+                    $aTarget[] = '<img src="'.$v.'">';
+                }
+                $title = str_replace($aSource, $aTarget, $title);
             }
-            $title = str_replace($aSource, $aTarget, $title);
             return $title;
         }
         public function changeTag($title,$service)

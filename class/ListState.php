@@ -25,14 +25,16 @@ class ListState extends UserSpace
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'userstate:state' ,
-                        'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,     
+                        'columns' => array("system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,     
             			'hasMany:astate' => array(    //一对一
+                            'columns' => array("service","sid","pullcommenttime","old_comment_page") ,   
             				'table' => 'oauth:state',
             				'fromkeys'=>'stid',
             				'tokeys'=>'stid',
         		            'keys'=>array('service','sid'),
             			) , 
                 		'hasMany:attachments'=>array(    //一对多
+                                'columns' => array("aid","stid","type","title","url","thumbnail_pic","link") ,   
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
                 		        'table'=>'userstate:state_attachment',
@@ -46,6 +48,7 @@ class ListState extends UserSpace
              */
             'model:auser' => array(
                     'orm' => array(
+                            'columns' => array("uid","service","suid","username","nickname","token","token_secret","valid","actiontime","verified","pulltime","pullnexttime","pulldata") ,   
                             'table' => 'oauth:user' ,
                             'keys'=>array('uid','suid'),
                     ) ,
@@ -75,19 +78,22 @@ class ListState extends UserSpace
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'userstate:state' ,
-                        'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
+                        'columns' => array("system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
             			'hasMany:astate' => array(    //一对一
+                            'columns' => array("service","sid","pullcommenttime","old_comment_page") ,  
             				'table' => 'oauth:state',
             				'fromkeys'=>'stid',
             				'tokeys'=>'stid',
         		            'keys'=>array('service','sid'),
             			) , 
                 		'hasMany:attachments'=>array(    //一对多
+                                'columns' => array("aid","stid","type","title","url","thumbnail_pic","link") ,   
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
                 		        'table'=>'userstate:state_attachment',
                 		),
     			        'hasOne:subscription'=>array(    //一对多
+                                'columns' => array("from","to") ,  
     			                'keys'=>array('from','to') ,
     			                'fromkeys'=>'uid',
     			                'tokeys'=>'to',
@@ -128,19 +134,22 @@ class ListState extends UserSpace
 	                'class' => 'model' ,
 	                'orm' => array(
 	                        'table' => 'userstate:state' ,
-	                        'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,
+	                        'columns' => array("system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,
                 			'hasMany:astate' => array(    //一对一
+                            'columns' => array("service","sid","pullcommenttime","old_comment_page") ,  
                 				'table' => 'oauth:state',
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
             		            'keys'=>array('service','sid'),
                 			) , 
 	                        'hasMany:attachments'=>array(    //一对多
+                                    'columns' => array("aid","stid","type","title","url","thumbnail_pic","link") ,   
 	                                'fromkeys'=>'stid',
 	                                'tokeys'=>'stid',
 	                                'table'=>'userstate:state_attachment',
 	                        ),
 	                        'hasOne:subscription'=>array(    //一对多
+                                    'columns' => array("from","to") ,  
 	                                'keys'=>array('from','to') ,
 	                                'fromkeys'=>'uid',
 	                                'tokeys'=>'to',

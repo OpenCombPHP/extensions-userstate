@@ -23,6 +23,7 @@ class NewStateNumber extends Controller
 	            'model:state' => array(
 	                    'class' => 'model' ,
 	                    'orm' => array(
+                                'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
 	                            'table' => 'userstate:state' ,
 	                    ) ,
 	                    'list'=>true,
@@ -80,6 +81,7 @@ class NewStateNumber extends Controller
 	        $aOrm['model:state'] = array(
 	                'class' => 'model' ,
 	                'orm' => array(
+                            'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
 	                        'table' => 'userstate:state' ,
 	                        'hasOne:subscription'=>array(    //一对多
 	                                'keys'=>array('from','to') ,
@@ -99,11 +101,31 @@ class NewStateNumber extends Controller
 	
 	public function process()
 	{
+	    $oState = new State();
+	    $sSql = '';
+	    $arrParamsForSql = array();
+	    
+        if($this->params["system"])
+        {
+            $sSql.= 'system = @1';
+            $arrParamsForSql[] = $this->params["system"];
+        }
+        if($this->params["sex"])
+        {
+        	$nSqlNum = 1;
+			if(!empty($sSql)){
+				$sSql.= ' and ';
+				$nSqlNum = 2;
+			}
+            $sSql.= 'info.sex = @' . $nSqlNum;
+            $arrParamsForSql[] = $this->params["sex"];
+        }
+        
         $this->state->prototype()->criteria()->addOrderBy('time',true);
         $this->state->prototype()->criteria()->where()->gt('time',$this->params['time']);
         $this->state->setPagination(1000,1);
         
-	    $this->state->load() ;
+	    $this->state->loadSql($sSql,$arrParamsForSql) ;
 	    echo $this->state->childrenCount();exit;
 	    
 	    /**
