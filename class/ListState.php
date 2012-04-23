@@ -191,22 +191,22 @@ class ListState extends UserSpace
 	    }
 	    
 	    $oState = new State();
-	    $sSql = '';
+	    $sSql = array();
 	    $arrParamsForSql = array();
 	    
         if($this->params["system"])
         {
-            $sSql.= 'system = @1';
+            $sSql[] = 'system = @' . (count($sSql)+1);
             $arrParamsForSql[] = $this->params["system"];
+        }
+        if($this->params["service"])
+        {
+            $sSql[] = 'astate.service = @' . (count($sSql)+1);
+            $arrParamsForSql[] = $this->params["service"];
         }
         if($this->params["sex"])
         {
-        	$nSqlNum = 1;
-			if(!empty($sSql)){
-				$sSql.= ' and ';
-				$nSqlNum = 2;
-			}
-            $sSql.= 'info.sex = @' . $nSqlNum;
+            $sSql[] = 'info.sex = @' . (count($sSql)+1);
             $arrParamsForSql[] = $this->params["sex"];
         }
        
@@ -227,7 +227,7 @@ class ListState extends UserSpace
         
         $t = microtime(1) ;
         
-	    $this->state->loadSql($sSql,$arrParamsForSql) ;
+	    $this->state->loadSql(implode(" and ", $sSql),$arrParamsForSql) ;
 	    
 	    foreach($this->state->childIterator() as $k => $o)
 	    {
