@@ -25,7 +25,7 @@ class ListState extends UserSpace
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'userstate:state' ,
-                        'columns' => array("system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,     
+                        'columns' => array("stid","system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,     
             			'hasMany:astate' => array(    //一对一
                             'columns' => array("service","sid","pullcommenttime","old_comment_page") ,   
             				'table' => 'oauth:state',
@@ -39,6 +39,7 @@ class ListState extends UserSpace
                 				'tokeys'=>'stid',
                 		        'table'=>'userstate:state_attachment',
                 		),
+            		    'groupby'=>'stid'
             		) ,
                     'list'=>true,
             ) ,
@@ -78,7 +79,7 @@ class ListState extends UserSpace
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'userstate:state' ,
-                        'columns' => array("system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
+                        'columns' => array("stid","system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
             			'hasMany:astate' => array(    //一对一
                             'columns' => array("service","sid","pullcommenttime","old_comment_page") ,  
             				'table' => 'oauth:state',
@@ -99,6 +100,7 @@ class ListState extends UserSpace
     			                'tokeys'=>'to',
     			                'table'=>'friends:subscription',
     			        ),
+            		    'groupby'=>'stid'
             		) ,
                     'list'=>true,
             );
@@ -134,7 +136,7 @@ class ListState extends UserSpace
 	                'class' => 'model' ,
 	                'orm' => array(
 	                        'table' => 'userstate:state' ,
-	                        'columns' => array("system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,
+	                        'columns' => array("stid","system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,
                 			'hasMany:astate' => array(    //一对一
                             'columns' => array("service","sid","pullcommenttime","old_comment_page") ,  
                 				'table' => 'oauth:state',
@@ -156,6 +158,7 @@ class ListState extends UserSpace
 	                                'table'=>'friends:subscription',
 	                        ),
 	                        'where' => array( 'stid not like @1',"pull|%") ,
+            		        'groupby'=>'stid'
 	                ) ,
 	                'list'=>true,
 	        );
@@ -213,7 +216,7 @@ class ListState extends UserSpace
             $sSql[] = 'info.sex = @' . (count($sSql)+1);
             $arrParamsForSql[] = $this->params["sex"];
         }
-       
+        
         /*测试用: 只显示某网站的数据*/
 //         $this->state->prototype()->criteria()->where()->like('stid','pull|renren.com%');
         ////////////////////////////////////////////////

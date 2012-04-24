@@ -71,7 +71,7 @@ class FaceIcon{
                 '/流泪'=>'http://mat1.gtimg.com/www/mb/images/face/5.gif',
                 '/害羞'=>'http://mat1.gtimg.com/www/mb/images/face/6.gif',
                 '/闭嘴'=>'http://mat1.gtimg.com/www/mb/images/face/7.gif',
-                '/睡'=>'/http://mat1.gtimg.com/www/mb/images/face/8.gif',
+                '/睡'=>'http://mat1.gtimg.com/www/mb/images/face/8.gif',
                 '/大哭'=>'http://mat1.gtimg.com/www/mb/images/face/9.gif',
                 '/尴尬'=>'http://mat1.gtimg.com/www/mb/images/face/10.gif',
                 '/发怒'=>'http://mat1.gtimg.com/www/mb/images/face/11.gif',

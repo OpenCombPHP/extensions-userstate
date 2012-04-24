@@ -123,41 +123,37 @@ class NewStateNumber extends Controller
 	public function process()
 	{
 	    $oState = new State();
-	    $sSql = '';
+	    $sSql = array();
 	    $arrParamsForSql = array();
 	    
-        if($this->params["system"])
-        {
-            $sSql.= 'system = @1';
-            $arrParamsForSql[] = $this->params["system"];
-        }
-        if($this->params["service"])
-        {
-            if($this->params["service"] == "wownei.com"){
-                $sSql[] = "stid not like 'pull|%'" ;
-            }else{
-                $sSql[] = 'astate.service = @' . (count($sSql)+1);
-                $arrParamsForSql[] = $this->params["service"];
-            }
-        }
-        if($this->params["sex"])
-        {
-        	$nSqlNum = 1;
-			if(!empty($sSql)){
-				$sSql.= ' and ';
-				$nSqlNum = 2;
-			}
-            $sSql.= 'info.sex = @' . $nSqlNum;
-            $arrParamsForSql[] = $this->params["sex"];
-        }
+	    if($this->params["system"])
+	    {
+	        $sSql[] = 'system = @' . (count($sSql)+1);
+	        $arrParamsForSql[] = $this->params["system"];
+	    }
+	    if($this->params["service"])
+	    {
+	        if($this->params["service"] == "wownei.com"){
+	            $sSql[] = "stid not like 'pull|%'" ;
+	        }else{
+	            $sSql[] = 'astate.service = @' . (count($sSql)+1);
+	            $arrParamsForSql[] = $this->params["service"];
+	        }
+	    }
+	    
+	    if($this->params["sex"])
+	    {
+	        $sSql[] = 'info.sex = @' . (count($sSql)+1);
+	        $arrParamsForSql[] = $this->params["sex"];
+	    }
+        $sSql[] = 'time > @' . (count($sSql)+1);
+        $arrParamsForSql[] = $this->params['time'];
         
         $this->state->prototype()->criteria()->addOrderBy('time',true);
-        $this->state->prototype()->criteria()->where()->gt('time',$this->params['time']);
         $this->state->setPagination(1000,1);
         
-	    $this->state->loadSql($sSql,$arrParamsForSql) ;
+	    $this->state->loadSql(implode(" and ", $sSql),$arrParamsForSql) ;
 	    echo $this->state->childrenCount();exit;
-	    
 	    /**
 	     * 打印model
 	     * $this->state->printStruct();
