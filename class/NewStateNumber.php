@@ -25,6 +25,13 @@ class NewStateNumber extends Controller
 	                    'orm' => array(
                                 'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
 	                            'table' => 'userstate:state' ,
+                    			'hasMany:astate' => array(    //一对一
+                                    'columns' => array("service","sid","pullcommenttime","old_comment_page") ,   
+                    				'table' => 'oauth:state',
+                    				'fromkeys'=>'stid',
+                    				'tokeys'=>'stid',
+                		            'keys'=>array('service','sid'),
+                    			) , 
 	                    ) ,
 	                    'list'=>true,
 	            ) ,
@@ -41,6 +48,13 @@ class NewStateNumber extends Controller
             		'orm' => array(
             			'table' => 'userstate:state' ,
                         'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
+            			'hasMany:astate' => array(    //一对一
+                            'columns' => array("service","sid","pullcommenttime","old_comment_page") ,  
+            				'table' => 'oauth:state',
+            				'fromkeys'=>'stid',
+            				'tokeys'=>'stid',
+        		            'keys'=>array('service','sid'),
+            			) , 
     			        'hasOne:subscription'=>array(    //一对多
     			                'keys'=>array('from','to') ,
     			                'fromkeys'=>'uid',
@@ -83,6 +97,13 @@ class NewStateNumber extends Controller
 	                'orm' => array(
                             'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
 	                        'table' => 'userstate:state' ,
+                			'hasMany:astate' => array(    //一对一
+                                'columns' => array("service","sid","pullcommenttime","old_comment_page") ,  
+                				'table' => 'oauth:state',
+                				'fromkeys'=>'stid',
+                				'tokeys'=>'stid',
+            		            'keys'=>array('service','sid'),
+                			) , 
 	                        'hasOne:subscription'=>array(    //一对多
 	                                'keys'=>array('from','to') ,
 	                                'fromkeys'=>'uid',
@@ -109,6 +130,15 @@ class NewStateNumber extends Controller
         {
             $sSql.= 'system = @1';
             $arrParamsForSql[] = $this->params["system"];
+        }
+        if($this->params["service"])
+        {
+            if($this->params["service"] == "wownei.com"){
+                $sSql[] = "stid not like 'pull|%'" ;
+            }else{
+                $sSql[] = 'astate.service = @' . (count($sSql)+1);
+                $arrParamsForSql[] = $this->params["service"];
+            }
         }
         if($this->params["sex"])
         {
