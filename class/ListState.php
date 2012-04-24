@@ -201,8 +201,12 @@ class ListState extends UserSpace
         }
         if($this->params["service"])
         {
-            $sSql[] = 'astate.service = @' . (count($sSql)+1);
-            $arrParamsForSql[] = $this->params["service"];
+            if($this->params["service"] == "wownei.com"){
+                $sSql[] = "stid not like 'pull|%'" ;
+            }else{
+                $sSql[] = 'astate.service = @' . (count($sSql)+1);
+                $arrParamsForSql[] = $this->params["service"];
+            }
         }
         if($this->params["sex"])
         {
