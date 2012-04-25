@@ -29,20 +29,20 @@ class ListState extends UserSpace
             		'orm' => array(
             			'table' => 'userstate:state' ,
                         'columns' => array("stid","system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,     
-            			'hasMany:astate' => array(    //一对一
+            			'hasMany:astate' => array(    //一对多
                             'columns' => array("service","sid","pullcommenttime","old_comment_page") ,   
             				'table' => 'oauth:state',
             				'fromkeys'=>'stid',
             				'tokeys'=>'stid',
         		            'keys'=>array('service','sid'),
-            			) , 
+            			) ,
                 		'hasMany:attachments'=>array(    //一对多
                                 'columns' => array("aid","stid","type","title","url","thumbnail_pic","link") ,   
                 				'fromkeys'=>'stid',
                 				'tokeys'=>'stid',
                 		        'table'=>'userstate:state_attachment',
                 		),
-            		    'groupby'=>'stid' ,
+            			'forceIndex'=>'time-stid' ,
 	    				'orderDesc' => 'time' ,
             		) ,
                     'list'=>true,
@@ -80,7 +80,16 @@ class ListState extends UserSpace
 	    	if($this->params["service"] == "wownei.com"){
 	    		$aOrm['model:state']['orm']['where'] = array("stid not like 'pull|%'") ;
 	    	}else{
-	    		$aOrm['model:state']['orm']['hasMany:astate']['where'] = array('service = @1',$this->params["service"]) ;
+	    		// 增加一个用于查询条件的表
+	    		$aOrm['model:state']['orm']['hasOne:sorce'] = array(    //一对一
+	    				'columns' => array() ,
+	    				'table' => 'oauth:state',
+	    				'fromkeys'=>'stid',
+	    				'tokeys'=>'stid',
+	    				'keys'=>array('service','sid'),
+	    		) ;
+	    		// 增加条件
+	    		$aOrm['model:state']['orm']['where'] = array('sorce.service = @1',$this->params["service"]) ;
 	    	}
 	    }
 	    
@@ -203,6 +212,11 @@ class ListState extends UserSpace
         
 	    $this->state->loadSql(implode(" and ", $sSql),$arrParamsForSql) ;
 	    
+	    // 查询 forward state 时，不能使用和 state 相同的索引
+	    $aForwardPrototype = clone $this->state->prototype() ;
+	    $aForwardPrototype->setSqlForceIndex(null) ;
+	    
+	    
 	    foreach($this->state->childIterator() as $k => $o)
 	    {
 	        if(!$o->title)
@@ -223,16 +237,16 @@ class ListState extends UserSpace
 	        
 	        if($o->forwardtid)
 	        {
-	            $oStateClone = $this->state->prototype()->createModel(true);
-// 	            $oStateCloneCriteria = $oStateClone->createCriteria();
-//                 $oStateCloneCriteria->where()->clear();
-//                 $oStateCloneCriteria->where()->eq('stid',$o->forwardtid);
-//                 $oStateCloneCriteria->setLimit(1);
-	            $oStateClone->loadSql("`stid` = @1 " , array($o->forwardtid));
+	            $aForwardState = $aForwardPrototype->createModel(true);
+// 	            $aForwardStateCriteria = $aForwardState->createCriteria();
+//                 $aForwardStateCriteria->where()->clear();
+//                 $aForwardStateCriteria->where()->eq('stid',$o->forwardtid);
+//                 $aForwardStateCriteria->setLimit(1);
+	            $aForwardState->loadSql("`stid` = @1 " , array($o->forwardtid));
 	            
-	            if($oStateClone->childrenCount() > 0)
+	            if($aForwardState->childrenCount() > 0)
 	            {
-	                foreach($oStateClone->childIterator() as $oClone)
+	                foreach($aForwardState->childIterator() as $oClone)
 	                {
 	                    if(!$oClone->title)
 	                    {
@@ -252,7 +266,7 @@ class ListState extends UserSpace
 	                    $oClone->setData("attachmentsFilterArray",$this->filterAttachments($oClone->child('attachments')));
 	                }
 	                
-	                $o->addChild($oStateClone,'source');
+	                $o->addChild($aForwardState,'source');
 	            }
 	        }
 	        
