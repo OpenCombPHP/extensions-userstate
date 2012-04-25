@@ -15,7 +15,10 @@ class ListState extends UserSpace
 {
 	public function createBeanConfig()
 	{
+        
 	    $aOrm = array(
+	    		
+	    	'title' => '动态墙' ,
 		
     		/**
     		 * 模型
@@ -39,7 +42,8 @@ class ListState extends UserSpace
                 				'tokeys'=>'stid',
                 		        'table'=>'userstate:state_attachment',
                 		),
-            		    'groupby'=>'stid'
+            		    'groupby'=>'stid' ,
+	    				'orderDesc' => 'time' ,
             		) ,
                     'list'=>true,
             ) ,
@@ -51,7 +55,7 @@ class ListState extends UserSpace
                     'orm' => array(
                             'columns' => array("uid","service","suid","username","nickname","token","token_secret","valid","actiontime","verified","pulltime","pullnexttime","pulldata") ,   
                             'table' => 'oauth:user' ,
-                            'keys'=>array('uid','suid'),
+                            'keys'=>array('uid','suid') ,
                     ) ,
                     'list' => true,
             ) ,
@@ -69,8 +73,18 @@ class ListState extends UserSpace
 				'model' => 'state' ,
 			) ,
 		) ;
+	    	    
+		// 所属网站
+	    if($this->params["service"])
+	    {
+	    	if($this->params["service"] == "wownei.com"){
+	    		$aOrm['model:state']['orm']['where'] = array("stid not like 'pull|%'") ;
+	    	}else{
+	    		$aOrm['model:state']['orm']['hasMany:astate']['where'] = array('service = @1',$this->params["service"]) ;
+	    	}
+	    }
 	    
-	    
+	    // 频道
 	    if( $this->params["channel"] == "friends")
 	    {
 	        $aId = $this->requireLogined() ;
@@ -128,44 +142,6 @@ class ListState extends UserSpace
 	        }
 	    }
 	    
-	    
-	    if( $this->params["channel"] == "wownei")
-	    {
-	        //$aId = $this->requireLogined() ;
-	        $aOrm['model:state'] = array(
-	                'class' => 'model' ,
-	                'orm' => array(
-	                        'table' => 'userstate:state' ,
-	                        'columns' => array("stid","system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,
-                			'hasMany:astate' => array(    //一对一
-                            'columns' => array("service","sid","pullcommenttime","old_comment_page") ,  
-                				'table' => 'oauth:state',
-                				'fromkeys'=>'stid',
-                				'tokeys'=>'stid',
-            		            'keys'=>array('service','sid'),
-                			) , 
-	                        'hasMany:attachments'=>array(    //一对多
-                                    'columns' => array("aid","stid","type","title","url","thumbnail_pic","link") ,   
-	                                'fromkeys'=>'stid',
-	                                'tokeys'=>'stid',
-	                                'table'=>'userstate:state_attachment',
-	                        ),
-	                        'hasOne:subscription'=>array(    //一对多
-                                    'columns' => array("from","to") ,  
-	                                'keys'=>array('from','to') ,
-	                                'fromkeys'=>'uid',
-	                                'tokeys'=>'to',
-	                                'table'=>'friends:subscription',
-	                        ),
-	                        'where' => array( 'stid not like @1',"pull|%") ,
-            		        'groupby'=>'stid'
-	                ) ,
-	                'list'=>true,
-	        );
-	    
-	    }
-	    $aOrm['model:state']['orm']['orderDesc'] = 'time';
-	    
 	    return  $aOrm;
 	}
 	
@@ -201,15 +177,6 @@ class ListState extends UserSpace
         {
             $sSql[] = 'system = @' . (count($sSql)+1);
             $arrParamsForSql[] = $this->params["system"];
-        }
-        if($this->params["service"])
-        {
-            if($this->params["service"] == "wownei.com"){
-                $sSql[] = "stid not like 'pull|%'" ;
-            }else{
-                $sSql[] = 'astate.service = @' . (count($sSql)+1);
-                $arrParamsForSql[] = $this->params["service"];
-            }
         }
         if($this->params["sex"])
         {
