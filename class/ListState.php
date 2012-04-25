@@ -192,7 +192,6 @@ class ListState extends UserSpace
             $sSql[] = 'info.sex = @' . (count($sSql)+1);
             $arrParamsForSql[] = $this->params["sex"];
         }
-        
         /*测试用: 只显示某网站的数据*/
 //         $this->state->prototype()->criteria()->where()->like('stid','pull|renren.com%');
         ////////////////////////////////////////////////
