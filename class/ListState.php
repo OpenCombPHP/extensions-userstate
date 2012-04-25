@@ -73,25 +73,6 @@ class ListState extends UserSpace
 				'model' => 'state' ,
 			) ,
 		) ;
-	    	    
-		// 所属网站
-	    if($this->params["service"])
-	    {
-	    	if($this->params["service"] == "wownei.com"){
-	    		$aOrm['model:state']['orm']['where'] = array("stid not like 'pull|%'") ;
-	    	}else{
-	    		// 增加一个用于查询条件的表
-	    		$aOrm['model:state']['orm']['hasOne:sorce'] = array(    //一对一
-	    				'columns' => array() ,
-	    				'table' => 'oauth:state',
-	    				'fromkeys'=>'stid',
-	    				'tokeys'=>'stid',
-	    				'keys'=>array('service','sid'),
-	    		) ;
-	    		// 增加条件
-	    		$aOrm['model:state']['orm']['where'] = array('sorce.service = @1',$this->params["service"]) ;
-	    	}
-	    }
 	    
 	    // 频道
 	    if( $this->params["channel"] == "friends")
@@ -123,34 +104,67 @@ class ListState extends UserSpace
     			                'tokeys'=>'to',
     			                'table'=>'friends:subscription',
     			        ),
-            		    'groupby'=>'stid'
+            		    'groupby'=>'stid',
+	    				'orderDesc' => 'time' ,
             		) ,
                     'list'=>true,
             );
 	        
 	        $aUid = array();
 	        foreach (IdManager::singleton()->iterator() as $v){
-	            $aUid[] = $v->userId();
+	            $aUid["@".$v->userId()] = $v->userId();
 	        }
 	        if(count($aUid) > 1)
 	        {
-	        	$sSql = '';
+	        	$sSql = array();
 	        	foreach($aUid as $nKey => $nUid)
 	        	{
-	        		if($nKey)
-	        		{
-	        			$sSql .= ',';
-	        		}
-	        		$sSql.='@'.($nKey+1);
+	        		$sSql[] ='@'.$nUid;
 	        	}
-	        	$aUid[] =  $aId->userId();
-	        	
-	            $aOrm['model:state']['orm']['where'] = array( "(subscription.from in ( {$sSql} ) or uid = @" . count($aUid)+1 .')', $aUid );
+	        	$aUid['@me'] =  $nUid;
+	            $aOrm['model:state']['orm']['where'] = array( "(subscription.from in ( ".implode(',',$sSql)." ) or uid = @me )", $aUid );
 	        }else{
-	            $aOrm['model:state']['orm']['where'] = array( '(subscription.from = @1 or uid = @2)' , $aId->userId() , $aId->userId() );
+	            $aOrm['model:state']['orm']['where'] = array( '(subscription.from = @meuid1 or uid = @meuid2)' , array("@meuid1"=>$aId->userId() , "@meuid2"=>$aId->userId()) );
 	        }
 	    }
 	    
+	    
+	    // 所属网站
+	    if($this->params["service"])
+	    {
+	        if($this->params["service"] == "wownei.com"){
+	            if(empty($aOrm['model:state']['orm']['where']))
+	            {
+	                $aOrm['model:state']['orm']['where'] = array("stid not like 'pull|%'");
+	            }else{
+	                $aWhere[0] = $aOrm['model:state']['orm']['where'][0]." and stid not like 'pull|%'";
+	                $aWhere[1] = $aOrm['model:state']['orm']['where'][1];
+	                $aOrm['model:state']['orm']['where'] = array($aWhere[0],$aWhere[1]) ;
+	            }
+	            
+	        }else{
+	            // 增加一个用于查询条件的表
+	            $aOrm['model:state']['orm']['hasOne:sorce'] = array(    //一对一
+	                    'columns' => array() ,
+	                    'table' => 'oauth:state',
+	                    'fromkeys'=>'stid',
+	                    'tokeys'=>'stid',
+	                    'keys'=>array('service','sid'),
+	            ) ;
+	            // 增加条件
+	            if(empty($aOrm['model:state']['orm']['where']))
+	            {
+	                $aOrm['model:state']['orm']['where'] = array('sorce.service = @service',array('@service'=>$this->params["service"])) ;
+	            }else 
+              {
+	                $aWhere[0] = $aOrm['model:state']['orm']['where'][0].' and sorce.service = @service';
+	                $aWhere[1] = $aOrm['model:state']['orm']['where'][1];
+	                $aWhere[1]['@service'] = $this->params["service"];
+	                $aOrm['model:state']['orm']['where'] = array($aWhere[0],$aWhere[1]) ;
+	            }
+	            
+	        }
+	    }
 	    return  $aOrm;
 	}
 	

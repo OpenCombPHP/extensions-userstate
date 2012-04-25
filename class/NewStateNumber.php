@@ -16,107 +16,103 @@ class NewStateNumber extends Controller
 	    
 	    $aOrm = array(
 	    
-	    /**
-	     * 模型
+	            'title' => '动态墙' ,
+	    
+	            /**
+	             * 模型
 	    * list = true 返回多条记录
 	    */
 	            'model:state' => array(
 	                    'class' => 'model' ,
 	                    'orm' => array(
-                                'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
 	                            'table' => 'userstate:state' ,
-                    			'hasMany:astate' => array(    //一对一
-                                    'columns' => array("service","sid","pullcommenttime","old_comment_page") ,   
-                    				'table' => 'oauth:state',
-                    				'fromkeys'=>'stid',
-                    				'tokeys'=>'stid',
-                		            'keys'=>array('service','sid'),
-                    			) , 
+	                            'columns' => array("stid","system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,
+	                            'forceIndex'=>'time-stid' ,
+	                            'orderDesc' => 'time' ,
 	                    ) ,
 	                    'list'=>true,
 	            ) ,
 	    
 	    ) ;
 	    
-	    
+	    // 频道
 	    if( $this->params["channel"] == "friends")
 	    {
-	    $aId = $this->requireLogined() ;
-	        
-	        $aOrm['model:state'] = array(
-            		'class' => 'model' ,
-            		'orm' => array(
-            			'table' => 'userstate:state' ,
-                        'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
-            			'hasMany:astate' => array(    //一对一
-                            'columns' => array("service","sid","pullcommenttime","old_comment_page") ,  
-            				'table' => 'oauth:state',
-            				'fromkeys'=>'stid',
-            				'tokeys'=>'stid',
-        		            'keys'=>array('service','sid'),
-            			) , 
-    			        'hasOne:subscription'=>array(    //一对多
-    			                'keys'=>array('from','to') ,
-    			                'fromkeys'=>'uid',
-    			                'tokeys'=>'to',
-    			                'table'=>'friends:subscription',
-    			        ),
-            		) ,
-                    'list'=>true,
-            );
-	        
-	        $aUid = array();
-	        foreach (IdManager::singleton()->iterator() as $v){
-	            $aUid[] = $v->userId();
-	        }
-	        if(count($aUid) > 1)
-	        {
-	        	$sSql = '';
-	        	foreach($aUid as $nKey => $nUid)
-	        	{
-	        		if($nKey)
-	        		{
-	        			$sSql .= ',';
-	        		}
-	        		$sSql.='@'.($nKey+1);
-	        	}
-	        	$aUid[] =  $aId->userId();
-	        	
-	            $aOrm['model:state']['orm']['where'] = array( "(subscription.from in ( {$sSql} ) or uid = @" . count($aUid)+1 .')', $aUid );
-	        }else{
-	            $aOrm['model:state']['orm']['where'] = array( '(subscription.from = @1 or uid = @2)' , $aId->userId() , $aId->userId() );
-	        }
-	    }
+	        $aId = $this->requireLogined() ;
 	    
-	    
-	    if( $this->params["channel"] == "wownei")
-	    {
-	        //$aId = $this->requireLogined() ;
 	        $aOrm['model:state'] = array(
 	                'class' => 'model' ,
 	                'orm' => array(
-                            'columns' => array("system","stid","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
 	                        'table' => 'userstate:state' ,
-                			'hasMany:astate' => array(    //一对一
-                                'columns' => array("service","sid","pullcommenttime","old_comment_page") ,  
-                				'table' => 'oauth:state',
-                				'fromkeys'=>'stid',
-                				'tokeys'=>'stid',
-            		            'keys'=>array('service','sid'),
-                			) , 
+	                        'columns' => array("stid","system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,
 	                        'hasOne:subscription'=>array(    //一对多
+	                                'columns' => array("from","to") ,
 	                                'keys'=>array('from','to') ,
 	                                'fromkeys'=>'uid',
 	                                'tokeys'=>'to',
 	                                'table'=>'friends:subscription',
 	                        ),
-	                        'where' => array( 'stid not like @1',"pull|%") ,
+	                        'groupby'=>'stid',
+	                        'orderDesc' => 'time' ,
 	                ) ,
 	                'list'=>true,
 	        );
 	    
+	        $aUid = array();
+	        foreach (IdManager::singleton()->iterator() as $v){
+	            $aUid["@".$v->userId()] = $v->userId();
+	        }
+	        if(count($aUid) > 1)
+	        {
+	            $sSql = array();
+	            foreach($aUid as $nKey => $nUid)
+	            {
+	                $sSql[] ='@'.$nUid;
+	            }
+	            $aUid['@me'] =  $nUid;
+	            $aOrm['model:state']['orm']['where'] = array( "(subscription.from in ( ".implode(',',$sSql)." ) or uid = @me )", $aUid );
+	        }else{
+	            $aOrm['model:state']['orm']['where'] = array( '(subscription.from = @meuid1 or uid = @meuid2)' , array("@meuid1"=>$aId->userId() , "@meuid2"=>$aId->userId()) );
+	        }
 	    }
 	    
+	    
+	    // 所属网站
+	    if($this->params["service"])
+	    {
+	        if($this->params["service"] == "wownei.com"){
+	            if(empty($aOrm['model:state']['orm']['where']))
+	            {
+	                $aOrm['model:state']['orm']['where'] = array("stid not like 'pull|%'");
+	            }else{
+	                $aWhere[0] = $aOrm['model:state']['orm']['where'][0]." and stid not like 'pull|%'";
+	                $aWhere[1] = $aOrm['model:state']['orm']['where'][1];
+	                $aOrm['model:state']['orm']['where'] = array($aWhere[0],$aWhere[1]) ;
+	            }
+	    
+	        }else{
+	            // 增加一个用于查询条件的表
+	            $aOrm['model:state']['orm']['hasOne:sorce'] = array(    //一对一
+	                    'columns' => array() ,
+	                    'table' => 'oauth:state',
+	                    'fromkeys'=>'stid',
+	                    'tokeys'=>'stid',
+	                    'keys'=>array('service','sid'),
+	            ) ;
+	            // 增加条件
+	            if(empty($aOrm['model:state']['orm']['where']))
+	            {
+	                $aOrm['model:state']['orm']['where'] = array('sorce.service = @service',array('@service'=>$this->params["service"])) ;
+	            }else
+	            {
+	                $aWhere[0] = $aOrm['model:state']['orm']['where'][0].' and sorce.service = @service';
+	                $aWhere[1] = $aOrm['model:state']['orm']['where'][1];
+	                $aWhere[1]['@service'] = $this->params["service"];
+	                $aOrm['model:state']['orm']['where'] = array($aWhere[0],$aWhere[1]) ;
+	            }
+	    
+	        }
+	    }
 	    return  $aOrm;
 	}
 	
@@ -131,15 +127,6 @@ class NewStateNumber extends Controller
 	        $sSql[] = 'system = @' . (count($sSql)+1);
 	        $arrParamsForSql[] = $this->params["system"];
 	    }
-	    if($this->params["service"])
-	    {
-	        if($this->params["service"] == "wownei.com"){
-	            $sSql[] = "stid not like 'pull|%'" ;
-	        }else{
-	            $sSql[] = 'astate.service = @' . (count($sSql)+1);
-	            $arrParamsForSql[] = $this->params["service"];
-	        }
-	    }
 	    
 	    if($this->params["sex"])
 	    {
@@ -149,7 +136,6 @@ class NewStateNumber extends Controller
         $sSql[] = 'time > @' . (count($sSql)+1);
         $arrParamsForSql[] = $this->params['time'];
         
-        $this->state->prototype()->criteria()->addOrderBy('time',true);
         $this->state->setPagination(1000,1);
         
 	    $this->state->loadSql(implode(" and ", $sSql),$arrParamsForSql) ;
