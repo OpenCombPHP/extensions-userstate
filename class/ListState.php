@@ -211,8 +211,8 @@ class ListState extends UserSpace
         ////////////////////////////////////////////////
         
         
-        //默认30个条目
-        $nPageNum = 30;
+        //默认15个条目
+        $nPageNum = 15;
         if($this->params()->has("pageNum")){
         	$nPageNum = $this->params()->int("pageNum");
         }
