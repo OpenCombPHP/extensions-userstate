@@ -12,11 +12,30 @@ class FaceIcon{
         {
             return empty($this::$aForward[$tag][$service])?$tag:$this::$aForward[$tag][$service];
         }
-        public function changePic($title,$service)
+        public function changePic($title,$service,$forwardService=0)
         {
             if(!empty($this::$aFaceIcon[$service]))
             {
                 $aFaceIcon = $this::$aFaceIcon[$service];
+                foreach ($aFaceIcon as $k => $v){
+                    $aSource[] = $k;
+                    $aTarget[] = '<img src="'.$v.'">';
+                }
+                $title = str_replace($aSource, $aTarget, $title);
+            }
+            
+            if(!empty($forwardService))
+            {
+                if(!empty($this::$aFaceIcon[$forwardService]))
+                {
+                    $aFaceIcon = $this::$aFaceIcon[$forwardService];
+                    foreach ($aFaceIcon as $k => $v){
+                        $aSource[] = $k;
+                        $aTarget[] = '<img src="'.$v.'">';
+                    }
+                    $title = str_replace($aSource, $aTarget, $title);
+                }
+                $aFaceIcon = $this::$aFaceIcon['wownei'];
                 foreach ($aFaceIcon as $k => $v){
                     $aSource[] = $k;
                     $aTarget[] = '<img src="'.$v.'">';

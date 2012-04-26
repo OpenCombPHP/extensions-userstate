@@ -160,6 +160,7 @@ class ListState extends UserSpace
 	                $aWhere[0] = $aOrm['model:state']['orm']['where'][0].' and sorce.service = @service';
 	                $aWhere[1] = $aOrm['model:state']['orm']['where'][1];
 	                $aWhere[1]['@service'] = $this->params["service"];
+	                
 	                $aOrm['model:state']['orm']['where'] = array($aWhere[0],$aWhere[1]) ;
 	            }
 	            
@@ -237,25 +238,25 @@ class ListState extends UserSpace
 	            $o->setData("title",$o->body);
 	            $o->setData("body","");
 	        }
-	        preg_match("/pull\|(.*?)\|/", $o->stid,$aService);
-	        if($aService){
-	        	$o->setData("service",$aService['1']);
+	        
+	        if(!$o->child('astate')->isEmpty() && $this->params["service"] != "wownei.com"){
+	        	$o->setData("service",$o->child('astate')->child(0)->service);
 	        }else{
 	        	$o->setData("service",'wownei');
 	        }
 	        $title = $o->title;
-	        $o->setData("title",$this->filterLink($title,$o->service));
+	        
+	        $sForwardstid = $o->forwardtid;
+	        preg_match("/pull\|(.*?)\|/", $sForwardstid,$aForwardstid);
+	        if(empty($aForwardstid[1]))$aForwardstid[1] = 0;
+	        $o->setData("title",$this->filterLink($title,$o->service,$aForwardstid[1]));
 	        $o->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $title));
 	        $o->setData("attachmentsFilterArray",$this->filterAttachments($o->child('attachments')));
 	        
 	        if($o->forwardtid)
 	        {
 	            $aForwardState = $aForwardPrototype->createModel(true);
-// 	            $aForwardStateCriteria = $aForwardState->createCriteria();
-//                 $aForwardStateCriteria->where()->clear();
-//                 $aForwardStateCriteria->where()->eq('stid',$o->forwardtid);
-//                 $aForwardStateCriteria->setLimit(1);
-	            $aForwardState->loadSql("`stid` = @1 " , array($o->forwardtid));
+	            $aForwardState->loadSql("`stid` = @1 " , $o->forwardtid);
 	            
 	            if($aForwardState->childrenCount() > 0)
 	            {
@@ -266,15 +267,16 @@ class ListState extends UserSpace
 	                        $oClone->setData("title",$oClone->body);
 	                        $oClone->setData("body","");
 	                    }
-	                    preg_match("/pull\|(.*?)\|/", $oClone->stid,$aService2);
-	                
-	                    if($aService2){
-	                        $oClone->setData("service",$aService2['1']);
+	                    if(!$oClone->child('astate')->isEmpty()){
+	                        $oClone->setData("service",$oClone->child('astate')->child(0)->service);
 	                    }else{
 	                        $oClone->setData("service",'wownei');
 	                    }
 	                    $title = $oClone->title;
-	                    $oClone->setData("title",$this->filterLink($title,$oClone->service));
+            	        $sForwardstid2 = $oClone->forwardtid;
+            	        preg_match("/pull\|(.*?)\|/", $sForwardstid2,$aForwardstid2);
+            	        if(empty($aForwardstid2[1]))$aForwardstid2[1] = 0;
+	                    $oClone->setData("title",$this->filterLink($title,$oClone->service,$aForwardstid2[1]));
 	                    $oClone->setData("title_nolink",preg_replace("/<a .*?>(.*?)<\/a>/u", "$1", $title));
 	                    $oClone->setData("attachmentsFilterArray",$this->filterAttachments($oClone->child('attachments')));
 	                }
@@ -339,7 +341,7 @@ class ListState extends UserSpace
 	    return @$aRs;
 	}
 	
-	function filterLink($str,$service)
+	function filterLink($str,$service,$forwardService=0)
 	{
 	    //去掉现有然A
 	    $str = preg_replace("/<a.*?>(.*)>/u", "$1", $str);
