@@ -256,6 +256,7 @@ class ListState extends UserSpace
 	        if($o->forwardtid)
 	        {
 	            $aForwardState = $aForwardPrototype->createModel(true);
+	            $aForwardState->Prototype()->Criteria()->where()->clear();
 	            $aForwardState->loadSql("`stid` = @1 " , $o->forwardtid);
 	            
 	            if($aForwardState->childrenCount() > 0)
