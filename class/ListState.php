@@ -28,7 +28,7 @@ class ListState extends UserSpace
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'userstate:state' ,
-                        'columns' => array("stid","system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,     
+                        'columns' => array("stid","system","forwardtid","commentcount","replytid","uid","title","body","article_title","article_uid","time","data","client") ,     
             			'hasMany:astate' => array(    //一对多
                             'columns' => array("service","sid","pullcommenttime","old_comment_page") ,   
             				'table' => 'oauth:state',
