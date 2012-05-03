@@ -224,7 +224,9 @@ class CreateState extends Controller
 		}
 		
         try{
-			$this->state->save(true);
+// 			$this->state->save(true);
+			//为了更新comment个数所以去掉了true参数
+			$this->state->save();
         }catch (ExecuteException $e)
         {
             if(!$e->isDuplicate())
