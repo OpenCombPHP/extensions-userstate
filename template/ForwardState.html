@@ -1,0 +1,54 @@
+<h2>转发<a href="javascript:;" onClick="jQuery(this).parent().parent().parent().parent().hide();jQuery('.forward-mask').hide();" title="关闭">X</a></h2>
+			<div class="forward-inner">
+			<p><if "$theModel->child('source')">{=$theModel->child('source')->title}<else/>{=$theModel->title}</if></p>
+			<textarea><if "$theModel->child('source')">||@{=$theModel['info.nickname']}:{=$theModel['title']}<else/></if></textarea>
+			<div class="facebox_forward" style="display:none"><ul><li><a href='javascript:;' onClick='addFace_forward("[em:1:]",this)'><img style="cursor:pointer; position:relative;" onclick="" src="extensions/oc-wonei-bridge/0.1/public/images/face/1.gif" /></a></li><li><a href='javascript:;' onClick='addFace_forward("[em:2:]",this)'><img style="cursor:pointer; position:relative;" onclick="" src="extensions/oc-wonei-bridge/0.1/public/images/face/2.gif"/></a></li><li><a href='javascript:;' onClick='addFace_forward("[em:3:]",this)'><img style="cursor:pointer; position:relative;" onclick="" src="extensions/oc-wonei-bridge/0.1/public/images/face/3.gif"/></a></li><li><a href='javascript:;' onClick='addFace_forward("[em:4:]",this)'><img style="cursor:pointer; position:relative;" onclick="" src="extensions/oc-wonei-bridge/0.1/public/images/face/4.gif"/></a></li><li><a href='javascript:;' onClick='addFace_forward("[em:5:]",this)'><img style="cursor:pointer; position:relative;" onclick="" src="extensions/oc-wonei-bridge/0.1/public/images/face/5.gif"/></a></li><li><a href='javascript:;' onClick='addFace_forward("[em:6:]",this)'><img style="cursor:pointer; position:relative;" onclick="" src="extensions/oc-wonei-bridge/0.1/public/images/face/6.gif"/></a></li><li><a href='javascript:;' onClick='addFace_forward("[em:7:]",this)'><img style="cursor:pointer; position:relative;" onclick="" src="extensions/oc-wonei-bridge/0.1/public/images/face/7.gif"/></a></li><li><a href='javascript:;' onClick='addFace_forward("[em:8:]",this)'><img style="cursor:pointer; position:relative;" onclick="" src="extensions/oc-wonei-bridge/0.1/public/images/face/8.gif"/></a></li><li><a href='javascript:;' onClick='addFace_forward("[em:9:]",this)'><img style="cursor:pointer; position:relative;" onclick="" src="extensions/oc-wonei-bridge/0.1/public/images/face/9.gif"/></a></li><li><a href='javascript:;' onClick='addFace_forward("[em:10:]",this)'><img style="cursor:pointer; position:relative;" onclick="" src="extensions/oc-wonei-bridge/0.1/public/images/face/10.gif"/></a></li><li><a href='javascript:;' onClick='addFace_forward("[em:11:]",this)'><img style="cursor:pointer; position:relative;" onclick="" src="extensions/oc-wonei-bridge/0.1/public/images/face/11.gif"/></a></li></ul></div>
+			<a href="javascript:;" id="" style="float:left" title="插入表情" >
+					<img align="absmiddle" class="" src="extensions/oc-wonei-bridge/0.1/public/images/face/facelist.gif" onclick="selectFace(this)"/>
+			</a>
+			
+			
+<foreach for="$theModel->child('astate')->childIterator()" item="value">
+<if "$value['service']=='weibo.com'">
+					<input type="checkbox" name="pushweibo[]" value="weibo.com" class="weibo_list"/><span title="新浪微博">新浪微博</span>
+</if>
+<if "$value['service']=='t.qq.com'">
+					<input type="checkbox" name="pushweibo[]" value="t.qq.com" class="weibo_list"/><span title="腾讯微博">腾讯微博</span>
+</if>
+<if "$value['service']=='163.com'">
+					<input type="checkbox" name="pushweibo[]" value="163.com" class="weibo_list"/><span title="网易微博">网易微博</span>
+</if>
+<if "$value['service']=='sohu.com'">
+					<input type="checkbox" name="pushweibo[]" value="sohu.com" class="weibo_list"/><span title="搜狐微博">搜狐微博</span>
+</if>
+<if "$value['service']=='douban.com'">
+					<input type="checkbox" name="pushweibo[]" value="douban.com" class="weibo_list"/><span title="豆瓣">豆瓣</span>
+</if>
+<if "$value['service']=='renren.com'">
+					<input type="checkbox" name="pushweibo[]" value="renren.com" class="weibo_list"/><span title="人人">人人</span>
+</if>
+
+</foreach>
+			</div>
+			<div class="forward-btn">
+			<if "$theModel->child('source')">
+				<input type="button" value="提交" onClick="submit_add_source_state('{=$theModel['forwardtid']}',jQuery(this).parent().parent().parent().parent())"/>
+			<else/>
+				<input type="button" value="提交" onClick="submit_add_source_state('{=$theModel['stid']}',jQuery(this).parent().parent().parent().parent())"/>
+			</if>
+			</div>
+			
+			
+			<script>
+			function selectFace(o){
+				jQuery(o).parent().prev().toggle();
+			}
+			function addFace_forward(str,o){
+				
+				var selectFaceText = jQuery(o).parent().parent().parent().prev();
+				var selectFaceDiv = jQuery(o).parent().parent().parent().next().children("img");
+				var facdDiv = jQuery(o).parent().parent().parent();
+				selectFaceText.insertContent(str);
+				facdDiv.toggle();
+			} 
+			</script>
