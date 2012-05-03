@@ -136,7 +136,7 @@ class NewStateNumber extends Controller
         $sSql[] = 'time > @' . (count($sSql)+1);
         $arrParamsForSql[] = $this->params['time'];
         
-        $this->state->setPagination(1000,1);
+        $this->state->setPagination(100,1);
         
 	    $this->state->loadSql(implode(" and ", $sSql),$arrParamsForSql) ;
 	    echo $this->state->childrenCount();exit;
