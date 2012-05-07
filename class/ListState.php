@@ -171,6 +171,7 @@ class ListState extends UserSpace
 	
 	public function process()
 	{
+	    
 	    /**
 	     * @wiki /CoreSystem
 	     * 用户系统
@@ -223,7 +224,6 @@ class ListState extends UserSpace
         
         
         $t = microtime(1) ;
-        
 	    $this->state->loadSql(implode(" and ", $sSql),$arrParamsForSql) ;
 	    
 	    // 查询 forward state 时，不能使用和 state 相同的索引

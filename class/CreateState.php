@@ -94,13 +94,21 @@ class CreateState extends Controller
 		if(!$this->params['title'] && !$this->params['body'] && !$this->params['attachment']){
 		    
 		    
-		    $oOauth = DB::singleton()->query("SELECT * FROM `oauth:user` WHERE uid = @1",IdManager::singleton()->currentId()->userId());
-		    $aOauthList = array();
-		    foreach ($oOauth as $k => $v){
-		        $aOauthList[$v['service']] = 1; 
+		    if(IdManager::singleton()->currentId())
+		    {
+		        $oOauth = DB::singleton()->query("SELECT * FROM `oauth:user` WHERE uid = @1",IdManager::singleton()->currentId()->userId());
+		        $aOauthList = array();
+		        foreach ($oOauth as $k => $v){
+		            $aOauthList[$v['service']] = 1;
+		        }
+                $this->view->variables()->set('aOauthList',$aOauthList) ;
+                
+                $this->view->variables()->set('isLogin','true') ;
+		    }else{
+		        
+		        $this->view->variables()->set('isLogin','false') ;
 		    }
 		    
-            $this->view->variables()->set('aOauthList',$aOauthList) ;
 			return;
 		}
 		
