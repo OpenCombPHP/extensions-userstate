@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\userstate ;
 
+use org\opencomb\userstate\OEmbed\ProviderManager;
+
 use org\opencomb\oauth_userstate_adapter\PushState;
 
 use org\jecat\framework\lang\Exception;
@@ -122,12 +124,54 @@ class CreateState extends Controller
 			//分离附件链接
 			$arrBodyResult = $this->getUrls($this->params['body']);
 			$this->state->setData("body",$arrBodyResult[0]);
+			
 			if($arrBodyResult[1]){
 				foreach($arrBodyResult[1] as $sUrl){
-					$arrAttachment[$sUrl] = array('url'=>$sUrl,'type'=>'');
+				    
+				    if(preg_match("/tudou|youku/s", $sUrl))
+				    {
+				        /**
+				         * 处理视频
+				         * @var unknown_type
+				         */
+				        $videoAbstract = new ProviderManager();
+			            $arr = $videoAbstract -> parse($sUrl);
+			            if($arr['url'])
+			            {
+			                $this->state->child("attachments")->createChild()
+			                ->setData("url",$arr['url'])
+			                ->setData("link",$arr['web_url'])
+			                ->setData("type",'application/x-shockwave-flash')
+			                ->setData("thumbnail_pic",$arr['thumbnail_url'])
+			                ->setData("title",$arr['title']) ;
+			            }else{
+			                $arrAttachment[$sUrl] = array('url'=>$sUrl,'type'=>'');
+			            }
+				    }else{
+				        $arrAttachment[$sUrl] = array('url'=>$sUrl,'type'=>'');
+				    }
 				}
 			}
 			
+			/**
+			 * 处理图片
+			 */
+			$picPath = $this->params['picPath'];
+			if(!empty($picPath))
+			{
+			    $localPath = dirname(dirname(dirname(dirname(__DIR__))));
+			    copy($localPath."/extensions/userstate/upload/tmp/".$picPath,$localPath."/extensions/userstate/upload/pic/".$picPath);
+			    unlink($localPath."/extensions/userstate/upload/tmp/".$picPath);
+
+			    //媒体鉴别
+	            $this->state->child("attachments")->createChild()
+	            ->setData("url","extensions/userstate/upload/pic/".$picPath)
+	            ->setData("link",'')
+	            ->setData("type",'image')
+	            ->setData("thumbnail_pic","extensions/userstate/upload/pic/".$picPath)
+	            ->setData("title",'') ;
+			}
+			 
 		}else{ //系统内部直接保存数据
 		    
 		    /**

@@ -1,6 +1,12 @@
 <?php
 namespace org\opencomb\userstate ;
 
+use org\opencomb\userstate\OEmbed\ProviderManager;
+
+use org\opencomb\userstate\OEmbed\TudouProvider;
+
+use org\opencomb\userstate\OEmbed\LinkProvider;
+
 use org\opencomb\coresystem\mvc\controller\UserSpace;
 
 use com\wonei\woneibridge\aspect\NamecardAspect;
