@@ -21,6 +21,16 @@ class FaceIcon{
                     $aSource[] = $k;
                     $aTarget[] = '<img src="'.$v.'">';
                 }
+                
+                if($service != 'wownei')
+                {
+                    $aFaceIcon = $this::$aFaceIcon['wownei'];
+                    foreach ($aFaceIcon as $k => $v){
+                        $aSource[] = $k;
+                        $aTarget[] = '<img src="'.$v.'">';
+                    }
+                }
+                
                 $title = str_replace($aSource, $aTarget, $title);
             }
             
