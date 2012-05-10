@@ -177,7 +177,6 @@ class ListState extends UserSpace
 	
 	public function process()
 	{
-	    
 	    /**
 	     * @wiki /CoreSystem
 	     * 用户系统

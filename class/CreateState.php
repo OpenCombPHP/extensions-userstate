@@ -159,7 +159,7 @@ class CreateState extends Controller
 			$picPath = $this->params['picPath'];
 			if(!empty($picPath))
 			{
-			    $localPath = dirname(dirname(dirname(dirname(__DIR__))));
+			    $localPath = dirname(dirname(dirname(dirname(dirname(dirname(dirname(dirname(__DIR__))))))));
 			    copy($localPath."/extensions/userstate/upload/tmp/".$picPath,$localPath."/extensions/userstate/upload/pic/".$picPath);
 			    unlink($localPath."/extensions/userstate/upload/tmp/".$picPath);
 
