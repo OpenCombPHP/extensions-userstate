@@ -119,6 +119,21 @@ class CreateState extends Controller
 		if( Request::isUserRequest($this->params) ){//用户提交来的表单
 			$this->state->setData('system',NULL) ;  //防止作弊
 			$this->state->setData('forwardtid',sprintf('%s',$this->params['forwardtid']));
+			
+			
+			/**
+			 * 增加转发数量
+			 */
+			if($this->state->forwardtid)
+			{
+			    $stateClone = clone $this->state;
+			    $stateClone->loadSql('stid = @1' , $this->state->forwardtid );
+			    $stateClone->setData("forwardcount",$stateClone->forwardcount+1);
+			    $stateClone->save();
+			}
+			
+			
+			
 			$this->state->setData('uid',IdManager::singleton()->currentId()->userId()) ;
 			$this->state->setData('time',time()) ;
 			//分离附件链接
@@ -186,7 +201,7 @@ class CreateState extends Controller
 		    
 		    
 			$this->state->setData("forwardtid",sprintf('%s', $this->params['forwardtid']));
-			$this->state->setData("forwardcount",$this->params['forwardcount']);
+			$this->state->setData("forwardcount",0);
 			$this->state->setData("commentcount",$this->params['commentcount']);
 			$this->state->setData("stid","pull|".sprintf('%s',$this->params['stid']));
 			$this->state->setData('system',$this->params['system']) ;
@@ -210,6 +225,8 @@ class CreateState extends Controller
 			$this->state->child("astate")->createChild()
 			->setData("stid","pull|".sprintf('%s', $this->params['stid']))
 			->setData("service",$this->params['service'])
+			->setData("service",$this->params['service'])
+			->setData("forwardcount",$this->params['forwardcount'])
 			->setData("sid",sprintf('%s',$this->params['id']));
 			
 			

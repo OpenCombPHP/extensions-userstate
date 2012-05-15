@@ -34,9 +34,9 @@ class ListState extends UserSpace
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'userstate:state' ,
-                        'columns' => array("stid","system","forwardtid","commentcount","replytid","uid","title","body","article_title","article_uid","time","data","client") ,     
+                        'columns' => array("stid","system","forwardtid","forwardcount","commentcount","replytid","uid","title","body","article_title","article_uid","time","data","client") ,     
             			'hasMany:astate' => array(    //一对多
-                            'columns' => array("service","sid","pullcommenttime","old_comment_page") ,   
+                            'columns' => array("service","sid","forwardcount","pullcommenttime","old_comment_page") ,   
             				'table' => 'oauth:state',
             				'fromkeys'=>'stid',
             				'tokeys'=>'stid',
@@ -89,9 +89,9 @@ class ListState extends UserSpace
             		'class' => 'model' ,
             		'orm' => array(
             			'table' => 'userstate:state' ,
-                        'columns' => array("stid","system","forwardtid","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
+                        'columns' => array("stid","system","forwardtid","forwardcount","replytid","uid","title","body","article_title","article_uid","time","data","client") ,  
             			'hasMany:astate' => array(    //一对一
-                            'columns' => array("service","sid","pullcommenttime","old_comment_page") ,  
+                            'columns' => array("service","sid","forwardcount","pullcommenttime","old_comment_page") ,  
             				'table' => 'oauth:state',
             				'fromkeys'=>'stid',
             				'tokeys'=>'stid',
@@ -232,6 +232,7 @@ class ListState extends UserSpace
         $t = microtime(1) ;
 	    $this->state->loadSql(implode(" and ", $sSql),$arrParamsForSql) ;
 	    
+	    
 	    // 查询 forward state 时，不能使用和 state 相同的索引
 	    $aForwardPrototype = clone $this->state->prototype() ;
 	    $aForwardPrototype->setSqlForceIndex(null) ;
@@ -239,6 +240,16 @@ class ListState extends UserSpace
 	    
 	    foreach($this->state->childIterator() as $k => $o)
 	    {
+	        if($this->params["service"] == "" && !$o->child('astate')->isEmpty())
+	        {
+	            $forwardNumber =  $o->forwardcount;
+	            foreach($o->child("astate")->childIterator() as $k2 => $o2){
+	                $forwardNumber = $forwardNumber + $o2->forwardcount;
+	            }
+	            $o->setData("forwardcount",$forwardNumber);
+	        }
+	        
+	            
 	        if(!$o->title)
 	        {
 	            $o->setData("title",$o->body);
